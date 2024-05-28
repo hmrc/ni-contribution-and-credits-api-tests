@@ -6,7 +6,7 @@
 package uk.gov.hmrc.test.api.service
 
 import uk.gov.hmrc.test.api.StableIdentifiers
-import uk.gov.hmrc.test.api.client.{HttpClient, ServiceResponse}
+import uk.gov.hmrc.test.api.client.HttpClient
 import uk.gov.hmrc.test.api.conf.TestConfiguration
 import uk.gov.hmrc.test.api.models.IndUseCase
 
@@ -17,7 +17,7 @@ class NewPersonParamsService(client: HttpClient) extends StableIdentifiers {
   val host: String = TestConfiguration.url(NewPersonParams)
 
 
-  def getNiInfo(authToken: String, niInfo: String, correlationId: String): ServiceResponse =
+  def getNiInfo(authToken: String, niInfo: String, correlationId: String): String =
     Await.result(
       client.get(
         s"$host/nino/$niInfo",
