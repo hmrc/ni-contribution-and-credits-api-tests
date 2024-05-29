@@ -31,5 +31,6 @@ object TestConfiguration {
   def desEnvironment: String = envConfig.getString("desEnvironment")
 
   def desBearerToken: String = envConfig.getString("desBearerToken")
+  def getConfigValue(url: String): String = envConfig.getString(url)
 
 }

@@ -25,6 +25,12 @@ class ExampleSpec extends BaseSpec {
       Then("I am returned the individuals details")
       actualUser shouldBe ninoUser
     }
+    Scenario("Verify Nino Endpoints happy path") {
+      val consignorToken = givenGetToken(ninoUser.nino)
+      val response       = newUser(token,nino)
+      thenValidateResponseCode(response, 200)
+      //checkJsonValue(response, "tfc_account_status", "active")
+    }
 
   }
 
