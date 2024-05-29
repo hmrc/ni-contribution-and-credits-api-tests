@@ -7,7 +7,7 @@ package uk.gov.hmrc.api.models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class User(firstName: String, lastName: String, nino: String, dateOfBirth: String)
+case class User(firstName: String, surName: String, nino: String, dateOfBirth: String)
 
 object User {
 
