@@ -3,24 +3,17 @@
  *
  */
 
-package uk.gov.hmrc.test.api.specs
-import org.scalatest._
-import org.scalatest.concurrent.Eventually
+package uk.gov.hmrc.api.specs
+
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
-import uk.gov.hmrc.test.api.StableIdentifiers
-import uk.gov.hmrc.test.api.client.HttpClient
-import uk.gov.hmrc.test.api.service._
+import org.scalatest.GivenWhenThen
+import uk.gov.hmrc.api.helpers.{AuthHelper, IndividualsMatchingHelper, TestDataHelper}
 
-trait BaseSpec
-    extends AnyFeatureSpec
-    with GivenWhenThen
-    with BeforeAndAfterAll
-    with Matchers
-    with Eventually
-    with StableIdentifiers {
-  val httpClient                           = new HttpClient
-  val authService                          = new AuthService(httpClient)
-  val newPersonParamsService               = new NewPersonParamsService(httpClient)
+trait BaseSpec extends AnyFeatureSpec with GivenWhenThen with Matchers {
+
+  val authHelper                = new AuthHelper
+  val testDataHelper            = new TestDataHelper
+  val individualsMatchingHelper = new IndividualsMatchingHelper
 
 }
