@@ -2,7 +2,7 @@ import sbt.*
 
 object Dependencies {
 
-  val test: Seq[ModuleID] = Seq(
+   val test: Seq[ModuleID] = Seq(
     "com.typesafe"         % "config"                  % "1.4.3"  % Test,
     "com.typesafe.play"   %% "play-ahc-ws-standalone"  % "2.2.5"  % Test,
     "com.typesafe.play"   %% "play-ws-standalone-json" % "2.2.5"  % Test,
