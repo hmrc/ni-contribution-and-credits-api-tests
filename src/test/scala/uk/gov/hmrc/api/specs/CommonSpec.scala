@@ -78,4 +78,5 @@ trait CommonSpec extends BaseSpec with HttpClient with RestAssured {
       .get(url + s"$nino")
       .andReturn()
   }
+}
 
