@@ -18,20 +18,23 @@ package uk.gov.hmrc.api.specs
 
 class ExampleSpec extends BaseSpec {
 
-  Feature("Example of using the Individuals Matching API") {
+  Feature("Example of using the Contributions and Credits API") {
 
-    Scenario("Get an individuals details by MatchId") {
+    Scenario("Retrieve Class 1 and Class 2 data for given NINO") {
 
-      Given("There is an existing individual with a MatchId")
+      Given("There is an existing NINO and range of tax years")
       //val authBearerToken: String    = authHelper.getAuthBearerToken
      // val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
 
-      When("I use that MatchId to retrieve the same individuals details")
+      When("I use the date of birth to retrieve the Class 1 and Class2 details")
       val response =
         niccService.postniccMakeRequest("testBearerToken", "testuser")
 
-      Then("I am returned the individuals details")
-response.status shouldBe 200
+      Then("I am returned the Class 1 and Class 2 details")
+      response.header("correlationId")
+      response.body.contains("niContribution").shouldBe().toString
+      response.body.contains("niCredit").equals()
+      response.status shouldBe 200
     }
     Scenario("Verify Nino Endpoints happy path") {
      // val consignorToken = givenGetToken(ninoUser.nino)

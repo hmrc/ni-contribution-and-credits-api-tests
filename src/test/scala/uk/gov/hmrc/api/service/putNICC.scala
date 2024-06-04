@@ -45,7 +45,7 @@ class putNICC extends HttpClient {
     Await.result(
       post(
         url,
-        Json.stringify(individualPayload),
+        Json.stringify(ccPayload),
         ("Authorization", authToken),
         ("CorrelationId", "e470d658-99f7-4292-a4a1-ed12c72f1337"),
         ("gov-uk-originator-d", "DWP")
