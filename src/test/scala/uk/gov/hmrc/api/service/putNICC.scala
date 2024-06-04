@@ -20,7 +20,7 @@ import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
 import uk.gov.hmrc.api.conf.TestConfiguration
 import play.api.libs.ws.json.Json
-import uk.gov.hmrc.api.models.User
+import uk.gov.hmrc.api.models.Request
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -40,7 +40,7 @@ class putNICC extends HttpClient {
       10.seconds
     )*/
   val url: String = s"$host/nps-json-service/nps/v1/api/national-insurance/AB123456C/contributions-and-credits/from/2019/to/2023"
-  def postniccMakeRequest(authToken: String, user: User): StandaloneWSRequest#Self#Response = {
+  def postniccMakeRequest(authToken: String, user: Request): StandaloneWSRequest#Self#Response = {
     val ccPayload = Json.toJsObject(user)
     Await.result(
       post(

@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.api.specs
 
+import uk.gov.hmrc.api.models.Request
+
 class ExampleSpec extends BaseSpec {
 
   Feature("Example of using the Contributions and Credits API") {
@@ -28,12 +30,12 @@ class ExampleSpec extends BaseSpec {
 
       When("I use the date of birth to retrieve the Class 1 and Class2 details")
       val response =
-        niccService.postniccMakeRequest("testBearerToken", "testuser")
+        niccService.postniccMakeRequest("testBearerToken", Request("1960-04-05"))
 
       Then("I am returned the Class 1 and Class 2 details")
-      response.header("correlationId")
-      response.body.contains("niContribution").shouldBe().toString
-      response.body.contains("niCredit").equals()
+      response.header("correlationId") shouldBe "78789980980909"
+      response.body.contains("niContribution") shouldBe true
+      response.body.contains("niCredit") shouldBe true
       response.status shouldBe 200
     }
     Scenario("Verify Nino Endpoints happy path") {
