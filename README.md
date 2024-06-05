@@ -1,6 +1,6 @@
 **This is the template README. Please update this with project specific content.**
 
-# bereavement-support-payment-api-tests
+# ni-contribution-and-credits-api-tests
 
 <SERVICE_NAME> API tests.
 
