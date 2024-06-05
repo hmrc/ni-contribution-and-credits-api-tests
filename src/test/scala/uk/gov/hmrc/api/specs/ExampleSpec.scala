@@ -56,15 +56,27 @@ class ExampleSpec extends BaseSpec {
         response.status shouldBe 400
     }
 
-      Scenario("Passing incorrect start tax year") {
+      Scenario("Passing start year after end year") {
         val response =
           niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2022", "2021")
         response.status shouldBe 422
       }
 
-    Scenario("Passing incorrect start tax year after CY-1") {
+    Scenario("Passing start tax year pre 1975") {
+      val response =
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "1974", "2000")
+      response.status shouldBe 422
+    }
+
+    Scenario("Passing start tax year after CY-1") {
       val response =
         niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2023", "2025")
+      response.status shouldBe 422
+    }
+
+    Scenario("Passing end tax year after CY-1") {
+      val response =
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2023", "2024")
       response.status shouldBe 422
     }
 
