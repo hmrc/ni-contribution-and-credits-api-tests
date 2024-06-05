@@ -30,7 +30,7 @@ class ExampleSpec extends BaseSpec {
 
       When("I use the date of birth to retrieve the Class 1 and Class2 details")
       val response =
-        niccService.postniccMakeRequest("testBearerToken", Request("1960-04-05"))
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2019", "2021")
 
       Then("I am returned the Class 1 and Class 2 details")
       response.header("correlationId") shouldBe "78789980980909"

@@ -20,11 +20,11 @@ import org.scalatest.GivenWhenThen
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.api.helpers.AuthHelper
-import uk.gov.hmrc.api.service.putNICC
+import uk.gov.hmrc.api.service.NiccService
 
 trait BaseSpec extends AnyFeatureSpec with GivenWhenThen with Matchers {
 
   val authHelper                = new AuthHelper
-  val niccService = new putNICC
+  val niccService = new NiccService
 
 }

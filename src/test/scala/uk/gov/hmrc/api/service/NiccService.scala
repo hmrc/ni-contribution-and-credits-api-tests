@@ -16,18 +16,18 @@
 
 package uk.gov.hmrc.api.service
 
+import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
 import uk.gov.hmrc.api.conf.TestConfiguration
-import play.api.libs.ws.json.Json
 import uk.gov.hmrc.api.models.Request
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-class putNICC extends HttpClient {
+class NiccService extends HttpClient {
 
-  val host: String                   = TestConfiguration.url("ims")
+  val host: String                   = TestConfiguration.url("hip")
   //val url: String = s"$host/nino-info?nino=PA622389C&forename=john&surname=doe&dateOfBirth=22051999&dateRange=someDate"
   /*def niccMakeRequest(authToken: String, nino: String): StandaloneWSRequest#Self#Response =
     Await.result(
@@ -39,13 +39,13 @@ class putNICC extends HttpClient {
       ),
       10.seconds
     )*/
-  val url: String = s"$host/nps-json-service/nps/v1/api/national-insurance/AB123456C/contributions-and-credits/from/2019/to/2023"
-  def postniccMakeRequest(authToken: String, user: Request): StandaloneWSRequest#Self#Response = {
-    val ccPayload = Json.toJsObject(user)
+  def makeRequest(authToken: String, request: Request, nino: String, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
+    val url: String = s"$host/nps-json-service/nps/v1/api/national-insurance/$nino/contributions-and-credits/from/$startTaxYear/to/$endTaxYear"
+    val requestPayload = Json.toJsObject(request)
     Await.result(
       post(
         url,
-        Json.stringify(ccPayload),
+        Json.stringify(requestPayload),
         ("Authorization", authToken),
         ("CorrelationId", "e470d658-99f7-4292-a4a1-ed12c72f1337"),
         ("gov-uk-originator-d", "DWP")
