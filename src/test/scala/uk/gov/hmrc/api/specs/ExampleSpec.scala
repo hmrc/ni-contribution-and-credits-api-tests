@@ -33,6 +33,7 @@ class ExampleSpec extends BaseSpec {
         niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2019", "2021")
 
       Then("I am returned the Class 1 and Class 2 details")
+
       response.header("correlationId") shouldBe "78789980980909"
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
@@ -43,6 +44,46 @@ class ExampleSpec extends BaseSpec {
      // val response       = newUser(token, nino)
      // thenValidateResponseCode(response, 200)
       // checkJsonValue(response, "tfc_account_status", "active")
+    }
+
+  }
+
+  Feature("Example of using the NIContributions and NICredits API Negative Scenarios") {
+
+    Scenario("Passing invalid NINO") {
+      val response =
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456", "2019", "2021")
+        response.status shouldBe 400
+    }
+
+      Scenario("Passing incorrect start tax year") {
+        val response =
+          niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2022", "2021")
+        response.status shouldBe 422
+      }
+
+    Scenario("Passing incorrect start tax year after CY-1") {
+      val response =
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2023", "2025")
+      response.status shouldBe 422
+    }
+
+    Scenario("Passing Tax year range greater than six years") {
+      val response =
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2016", "2023")
+      response.status shouldBe 422
+    }
+
+    Scenario("Resource not found") {
+      val response =
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2022", "2023")
+      response.status shouldBe 403
+    }
+
+    Scenario("Internal Server Error") {
+      val response =
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2022", "2023")
+      response.status shouldBe 500
     }
 
   }
