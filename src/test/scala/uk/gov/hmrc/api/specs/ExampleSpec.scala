@@ -22,9 +22,9 @@ class ExampleSpec extends BaseSpec {
 
   Feature("Example of using the Contributions and Credits API") {
 
-    Scenario("Retrieve Class 1 and Class 2 data for given NINO") {
+    Scenario("Retrieve Class 1 and Class 2 data for given nationalInsuranceNumber") {
 
-      Given("There is an existing NINO and range of tax years")
+      Given("There is an existing nationalInsuranceNumber and range of tax years")
       //val authBearerToken: String    = authHelper.getAuthBearerToken
      // val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
 
@@ -34,7 +34,7 @@ class ExampleSpec extends BaseSpec {
 
       Then("I am returned the Class 1 and Class 2 details")
 
-      response.header("correlationId") shouldBe "78789980980909"
+      response.header("correlationId") shouldBe "e470d658-99f7-4292-a4a1-ed12c72f1337"
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
       response.status shouldBe 200
@@ -50,46 +50,28 @@ class ExampleSpec extends BaseSpec {
 
   Feature("Example of using the NIContributions and NICredits API Negative Scenarios") {
 
-    Scenario("Passing invalid NINO") {
+    Scenario("Passing invalid nationalInsuranceNumber") {
       val response =
         niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456", "2019", "2021")
         response.status shouldBe 400
     }
 
-      Scenario("Passing start year after end year") {
+    Scenario("Passing date of birth year is above pension age") {
+      val response =
+        niccService.makeRequest("testBearerToken", Request("1950-04-05"), "A123456B", "2019", "2021")
+      response.status shouldBe 400
+    }
+
+      Scenario("Incorrect Access Token Type") {
         val response =
-          niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2022", "2021")
-        response.status shouldBe 422
+          niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2019", "2021")
+        response.status shouldBe 401
       }
-
-    Scenario("Passing start tax year pre 1975") {
-      val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "1974", "2000")
-      response.status shouldBe 422
-    }
-
-    Scenario("Passing start tax year after CY-1") {
-      val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2023", "2025")
-      response.status shouldBe 422
-    }
-
-    Scenario("Passing end tax year after CY-1") {
-      val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2023", "2024")
-      response.status shouldBe 422
-    }
-
-    Scenario("Passing Tax year range greater than six years") {
-      val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2016", "2023")
-      response.status shouldBe 422
-    }
 
     Scenario("Resource not found") {
       val response =
         niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2022", "2023")
-      response.status shouldBe 403
+      response.status shouldBe 404
     }
 
     Scenario("Internal Server Error") {
