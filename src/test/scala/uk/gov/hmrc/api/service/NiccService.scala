@@ -27,7 +27,7 @@ import scala.concurrent.duration._
 
 class NiccService extends HttpClient {
 
-  val host: String                   = TestConfiguration.url("hip")
+  val host: String                   = TestConfiguration.url("nicc")
   //val url: String = s"$host/nino-info?nino=PA622389C&forename=john&surname=doe&dateOfBirth=22051999&dateRange=someDate"
   /*def niccMakeRequest(authToken: String, nino: String): StandaloneWSRequest#Self#Response =
     Await.result(

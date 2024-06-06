@@ -39,9 +39,9 @@ object TestConfiguration {
 
   def serviceRoute(serviceName: String): String = envConfig.getString(s"services.$serviceName.productionRoute")
 
-  def desEnvironment: String = envConfig.getString("desEnvironment")
+  //def desEnvironment: String = envConfig.getString("desEnvironment")
 
-  def desBearerToken: String              = envConfig.getString("desBearerToken")
+  //def desBearerToken: String              = envConfig.getString("desBearerToken")
   def getConfigValue(url: String): String = envConfig.getString(url)
 
 }

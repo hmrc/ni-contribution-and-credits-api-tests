@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models
+package uk.gov.hmrc.api.client
 
-import play.api.libs.json.{Json, OFormat}
+//import uk.gov.hmrc.api.conf.TestConfiguration
+//import uk.gov.hmrc.api.utils.Zap.{isEnabled, proxyPort, proxyServer}
 
-case class Request(dateOfBirth: String)
-
-object Request {
-
-  implicit val requestJsonFormat: OFormat[Request] = Json.format[Request]
-  val ninoUser: Request                         = Request("1960-04-06")
+trait RestAssured {
+   /*val url: String  = TestConfiguration.url("nicc") + "/" + TestConfiguration.getConfigValue("nicc-api-uri")
+   def initiateProxy(requestSpec: RequestSpecification): Unit =
+      if(isEnabled){
+         val proxySpec = ProxySpecification.host(proxyServer).withPort(proxyPort).withSchema("http")
+         requestSpec.proxy(proxySpec)
+      }*/
 
 }

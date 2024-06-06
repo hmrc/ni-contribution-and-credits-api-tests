@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models
+package uk.gov.hmrc.api.utils
 
-import play.api.libs.json.{Json, OFormat}
 
-case class Request(dateOfBirth: String)
+object Zap {
 
-object Request {
-
-  implicit val requestJsonFormat: OFormat[Request] = Json.format[Request]
-  val ninoUser: Request                         = Request("1960-04-06")
+  var isEnabled: Boolean = System.getProperty("zap.proxy", "false").toBoolean
+  var proxyPort: Int = System.getProperty("zap.proxyPort", "11000").toInt
+  var proxyServer: String = "localhost"
 
 }
