@@ -28,6 +28,8 @@ import scala.concurrent.duration._
 class NiccService extends HttpClient {
 
   val host: String                   = TestConfiguration.url("nicc")
+  //val url: String = s"$host/nicc-json-service/nicc/v1/api/national-insurance"
+
   //val url: String = s"$host/nino-info?nino=PA622389C&forename=john&surname=doe&dateOfBirth=22051999&dateRange=someDate"
   /*def niccMakeRequest(authToken: String, nino: String): StandaloneWSRequest#Self#Response =
     Await.result(
@@ -53,6 +55,21 @@ class NiccService extends HttpClient {
       10.seconds
     )
   }
+
+  /*private def postWithProxyIfEnabled(
+                                     url: String,request: Request
+                                     headers: (String,String)*
+                                   ): Future[StandaloneWSRequest#Self#Response] =
+    if (Zap.enabled) {
+      wsClient
+        .url(url)
+        .withHttpHeaders(headers: _*)
+        .withProxyServer(DefaultWSProxyServer("localhost", 11000))
+        .get()
+    } else {
+      get(url, headers: _*)
+    }*/
+
 }
 
 

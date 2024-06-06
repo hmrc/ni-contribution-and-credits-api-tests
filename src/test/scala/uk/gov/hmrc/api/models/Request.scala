@@ -23,6 +23,6 @@ case class Request(dateOfBirth: String)
 object Request {
 
   implicit val requestJsonFormat: OFormat[Request] = Json.format[Request]
-  val ninoUser: Request                         = Request("1960-04-06")
+  //val ninoUser: Request                         = Request("1960-04-06")
 
 }

@@ -19,8 +19,6 @@ package uk.gov.hmrc.api.utils
 
 object Zap {
 
-  var isEnabled: Boolean = System.getProperty("zap.proxy", "false").toBoolean
-  var proxyPort: Int = System.getProperty("zap.proxyPort", "11000").toInt
-  var proxyServer: String = "localhost"
+  val enabled: Boolean = sys.props.get("zap.proxy").isDefined
 
 }

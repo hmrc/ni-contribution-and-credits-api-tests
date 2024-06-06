@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.api.specs
 
+import play.api.libs.json.Json
 import uk.gov.hmrc.api.models.Request
 
 class ExampleSpec extends BaseSpec {
@@ -24,26 +25,23 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Retrieve Class 1 and Class 2 data for given nationalInsuranceNumber") {
 
-      Given("There is an existing nationalInsuranceNumber and range of tax years")
+      Given("The NICC API is up and running")
       //val authBearerToken: String    = authHelper.getAuthBearerToken
      // val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
 
-      When("I use the date of birth to retrieve the Class 1 and Class2 details")
+      When("A request for NINC is sent")
       val response =
         niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2019", "2021")
 
-      Then("I am returned the Class 1 and Class 2 details")
+      val request = Json.parse(response.body).as[Seq[Request]]
 
+      Then("Class 1 and Class 2 details are returned")
+      response.status shouldBe 200
       response.header("correlationId") shouldBe "e470d658-99f7-4292-a4a1-ed12c72f1337"
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
-      response.status shouldBe 200
-    }
-    Scenario("Verify Nino Endpoints happy path") {
-     // val consignorToken = givenGetToken(ninoUser.nino)
-     // val response       = newUser(token, nino)
-     // thenValidateResponseCode(response, 200)
-      // checkJsonValue(response, "tfc_account_status", "active")
+      request.nonEmpty shouldBe true
+
     }
 
   }
@@ -86,9 +84,9 @@ class ExampleSpec extends BaseSpec {
         response.status shouldBe 401
       }
 
-    Scenario("Resource not found") {
+    Scenario("NICC details are not returned when not passing dateOfBirth") {
       val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2022", "2023")
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "", "2022", "2023")
       response.status shouldBe 404
     }
 
