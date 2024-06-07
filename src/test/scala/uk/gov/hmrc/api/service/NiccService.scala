@@ -27,7 +27,7 @@ import scala.concurrent.duration._
 
 class NiccService extends HttpClient {
 
-  val host: String                   = TestConfiguration.url("nicc")
+  val host: String                   = TestConfiguration.url("nps")
   //val url: String = s"$host/nicc-json-service/nicc/v1/api/national-insurance"
 
   //val url: String = s"$host/nino-info?nino=PA622389C&forename=john&surname=doe&dateOfBirth=22051999&dateRange=someDate"
