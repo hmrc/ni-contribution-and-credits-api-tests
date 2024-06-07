@@ -60,6 +60,12 @@ class ExampleSpec extends BaseSpec {
       response.status shouldBe 400
     }
 
+    Scenario("Passing date of birth is exact 16 years old") {
+      val response =
+        niccService.makeRequest("testBearerToken", Request("2007-11-05"), "A123456B", "2019", "2021")
+      response.status shouldBe 400
+    }
+
     Scenario("Passing Start Tax Year after end tax year") {
       val response =
         niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456B", "2022", "2021")
