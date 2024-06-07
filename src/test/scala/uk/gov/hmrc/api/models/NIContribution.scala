@@ -16,10 +16,15 @@
 
 package uk.gov.hmrc.api.models
 
-case class NIContribution(taxYear: Int ,contributionCategoryLetter: String,
-                          contributionCategory: String, totalContribution: Double,
-                          primaryContribution: Double,  class1ContributionStatus:String,
-                          primaryPaidEarnings:Double)  {
+import play.api.libs.json.{Json, OFormat}
+
+case class NIContribution(taxYear: Int,
+                          contributionCategoryLetter: String,
+                          contributionCategory: String,
+                          totalContribution: BigDecimal,
+                          primaryContribution: BigDecimal,
+                          class1ContributionStatus: String,
+                          primaryPaidEarnings: BigDecimal) {
 
 
   /*taxYear: 2022,
@@ -29,5 +34,11 @@ case class NIContribution(taxYear: Int ,contributionCategoryLetter: String,
   "primaryContribution": 99999999999999.98,
   "class1ContributionStatus": "COMPLIANCE & YIELD INCOMPLETE",
   "primaryPaidEarnings": 99999999999999.98*/
+
+}
+
+object NIContribution {
+
+  implicit val format: OFormat[NIContribution] = Json.format[NIContribution]
 
 }

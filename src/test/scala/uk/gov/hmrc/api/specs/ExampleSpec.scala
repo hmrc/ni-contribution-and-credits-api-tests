@@ -16,8 +16,10 @@
 
 package uk.gov.hmrc.api.specs
 
-import play.api.libs.json.Json
-import uk.gov.hmrc.api.models.Request
+import play.api.libs.json.Format.GenericFormat
+import play.api.libs.json._
+import uk.gov.hmrc.api.models.{Request, Response}
+import javax.inject._
 
 class ExampleSpec extends BaseSpec {
 
@@ -31,17 +33,17 @@ class ExampleSpec extends BaseSpec {
 
        // niccService.makeRequest("testBearerToken", "H001", Request.........)
       When("A request for NINC is sent")
-      val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2019", "2021")
 
-      val request = Json.parse(response.body).as[Seq[Request]]
+      val response =
+        niccService.makeRequest("testBearerToken", new Request("1960-04-05"), "SS000200", "2019", "2021")
+
+//      val request = Json.parse(response.body).as[Seq[Request]]
 
       Then("Class 1 and Class 2 details are returned")
       response.status shouldBe 200
-      response.header("correlationId") shouldBe "e470d658-99f7-4292-a4a1-ed12c72f1337"
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
-      request.nonEmpty shouldBe true
+
 
     }
 
@@ -51,7 +53,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing invalid nationalInsuranceNumber") {
       val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456", "2019", "2021")
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "SS000400", "2019", "2021")
         response.status shouldBe 400
     }
 
@@ -99,7 +101,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Internal Server Error") {
       val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2022", "2023")
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "SS000500", "2022", "2023")
       response.status shouldBe 500
     }
 

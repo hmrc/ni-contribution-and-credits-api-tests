@@ -16,46 +16,17 @@
 
 package uk.gov.hmrc.api.models
 
-case class Response(niContribution: Seq[NIContribution], niCredit: Seq[NICredit])
+import play.api.libs.json.{Json, OFormat}
 
-/*object NIContribution {
-  implicit val format: OFormat[NIContribution] = Json.format[NIContribution]
-}
-object NICredit {
-  implicit val format: OFormat[NICredit] = Json.format[NICredit]
-}*/
+case class Response(niContribution: Seq[NIContribution],
+                     niCredit: Seq[NICredit])
 
- //implicit val builder = Json.newBuilder
- //val nIContributionsList = new mutable.ListBuffer[NIContribution]()
- //val nICreditList = new mutable.ListBuffer[NICredit]()
+object Response {
 
-/*nIContributionsList += new NIContribution(2022,
-  "s",
-  "(NONE)",
-  99999999999999.98,
-  99999999999999.98,
-  "COMPLIANCE & YIELD INCOMPLETE",
-  99999999999999.98)
-nICreditList += new NICredit(2022,
-  53,
-  "C2",
-  "CLASS 2 - NORMAL RATE",
-  99999999999999.98,
-  99999999999999.98,
-  "NOT KNOWN/NOT APPLICABLE")
-
-builder += ("niContribution" -> nIContributionsList)
-builder += ("niCredit" -> nICreditList)
-
- val result = builder.result()
-
-object Request {
-
-  implicit val userJsonFormat: OFormat[Request] = Json.format[Request]
- val ninoUser: Request                         = Request("1960-04-06")
+  implicit val format: OFormat[Response] = Json.format[Response]
 
 }
-{
+/*{
   "niContribution": [
   {
     "taxYear": 2022,

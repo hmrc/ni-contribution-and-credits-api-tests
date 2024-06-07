@@ -16,9 +16,14 @@
 
 package uk.gov.hmrc.api.models
 
-case class NICredit(taxYear: Int, numberOfCredits: Int,
-                    contributionCreditTypeCode: String, contributionCreditType: String,
-                    class2Or3EarningsFactor: Double, class2NicAmount: Double,
+import play.api.libs.json.{Json, OFormat}
+
+case class NICredit(taxYear: Int,
+                    numberOfCredits: Int,
+                    contributionCreditTypeCode: String,
+                    contributionCreditType: String,
+                    class2Or3EarningsFactor: BigDecimal,
+                    class2NicAmount: BigDecimal,
                     class2Or3CreditStatus: String) {
 
 
@@ -29,5 +34,11 @@ case class NICredit(taxYear: Int, numberOfCredits: Int,
     "class2Or3EarningsFactor": 99999999999999.98,
     "class2NicAmount": 99999999999999.98,
     "class2Or3CreditStatus": "NOT KNOWN/NOT APPLICABLE"*/
+
+}
+
+object NICredit {
+
+  implicit val format: OFormat[NICredit] = Json.format[NICredit]
 
 }
