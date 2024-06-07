@@ -18,13 +18,44 @@ package uk.gov.hmrc.api.models
 
 case class Response(niContribution: Seq[NIContribution], niCredit: Seq[NICredit])
 
-/*object Request {
+/*object NIContribution {
+  implicit val format: OFormat[NIContribution] = Json.format[NIContribution]
+}
+object NICredit {
+  implicit val format: OFormat[NICredit] = Json.format[NICredit]
+}*/
+
+ //implicit val builder = Json.newBuilder
+ //val nIContributionsList = new mutable.ListBuffer[NIContribution]()
+ //val nICreditList = new mutable.ListBuffer[NICredit]()
+
+/*nIContributionsList += new NIContribution(2022,
+  "s",
+  "(NONE)",
+  99999999999999.98,
+  99999999999999.98,
+  "COMPLIANCE & YIELD INCOMPLETE",
+  99999999999999.98)
+nICreditList += new NICredit(2022,
+  53,
+  "C2",
+  "CLASS 2 - NORMAL RATE",
+  99999999999999.98,
+  99999999999999.98,
+  "NOT KNOWN/NOT APPLICABLE")
+
+builder += ("niContribution" -> nIContributionsList)
+builder += ("niCredit" -> nICreditList)
+
+ val result = builder.result()
+
+object Request {
 
   implicit val userJsonFormat: OFormat[Request] = Json.format[Request]
  val ninoUser: Request                         = Request("1960-04-06")
 
-}*/
-/*{
+}
+{
   "niContribution": [
   {
     "taxYear": 2022,

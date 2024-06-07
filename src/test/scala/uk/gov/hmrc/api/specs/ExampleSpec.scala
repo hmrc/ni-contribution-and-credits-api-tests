@@ -29,6 +29,7 @@ class ExampleSpec extends BaseSpec {
       //val authBearerToken: String    = authHelper.getAuthBearerToken
      // val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
 
+       // niccService.makeRequest("testBearerToken", "H001", Request.........)
       When("A request for NINC is sent")
       val response =
         niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2019", "2021")

@@ -21,6 +21,7 @@ case class NICredit(taxYear: Int, numberOfCredits: Int,
                     class2Or3EarningsFactor: Double, class2NicAmount: Double,
                     class2Or3CreditStatus: String) {
 
+
   /*"taxYear": 2022,
     "numberOfCredits": 53,
     "contributionCreditTypeCode": "C2",

@@ -38,5 +38,5 @@ class ZAPSpec extends BaseSpec {
     }
 
   }
-  
+
 }

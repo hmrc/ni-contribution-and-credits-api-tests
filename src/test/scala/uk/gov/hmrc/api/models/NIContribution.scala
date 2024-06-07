@@ -21,6 +21,7 @@ case class NIContribution(taxYear: Int ,contributionCategoryLetter: String,
                           primaryContribution: Double,  class1ContributionStatus:String,
                           primaryPaidEarnings:Double)  {
 
+
   /*taxYear: 2022,
   "contributionCategoryLetter": "s",
   "contributionCategory": "(NONE)",
