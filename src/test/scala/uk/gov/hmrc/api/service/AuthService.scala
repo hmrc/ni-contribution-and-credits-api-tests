@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.service
+/*package uk.gov.hmrc.api.service
 
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
@@ -24,7 +24,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 
 class AuthService extends HttpClient {
-  val host: String = TestConfiguration.url("auth")
+  val host: String = TestConfiguration.url()
 
   val authPayload: String =
     s"""
@@ -63,4 +63,4 @@ class AuthService extends HttpClient {
     )
   }
 
-}
+}*/
