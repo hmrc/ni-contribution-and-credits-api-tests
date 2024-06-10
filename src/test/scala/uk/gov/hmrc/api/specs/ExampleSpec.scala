@@ -36,13 +36,12 @@ class ExampleSpec extends BaseSpec {
       val response =
         niccService.makeRequest("testBearerToken", new Request("1960-04-05"), "SS000200", "2019", "2021")
 
-//      val request = Json.parse(response.body).as[Seq[Request]]
+      val responseBody: Response = Json.parse(response.body).as[Response]
 
       Then("Class 1 and Class 2 details are returned")
       response.status shouldBe 200
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
-
 
     }
 
