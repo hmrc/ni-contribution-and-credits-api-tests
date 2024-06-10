@@ -24,21 +24,18 @@ case class NICredit(taxYear: Int,
                     contributionCreditType: String,
                     class2Or3EarningsFactor: BigDecimal,
                     class2NicAmount: BigDecimal,
-                    class2Or3CreditStatus: String) {
-
-
-  /*"taxYear": 2022,
-    "numberOfCredits": 53,
-    "contributionCreditTypeCode": "C2",
-    "contributionCreditType": "CLASS 2 - NORMAL RATE",
-    "class2Or3EarningsFactor": 99999999999999.98,
-    "class2NicAmount": 99999999999999.98,
-    "class2Or3CreditStatus": "NOT KNOWN/NOT APPLICABLE"*/
-
-}
+                    class2Or3CreditStatus: String)
 
 object NICredit {
-
   implicit val format: OFormat[NICredit] = Json.format[NICredit]
-
 }
+
+/*"taxYear": 2022,
+  "numberOfCredits": 53,
+  "contributionCreditTypeCode": "C2",
+  "contributionCreditType": "CLASS 2 - NORMAL RATE",
+  "class2Or3EarningsFactor": 99999999999999.98,
+  "class2NicAmount": 99999999999999.98,
+  "class2Or3CreditStatus": "NOT KNOWN/NOT APPLICABLE"*/
+
+
