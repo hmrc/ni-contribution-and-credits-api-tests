@@ -43,7 +43,7 @@ class ExampleSpec extends BaseSpec {
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
       println(response.body)
-      responseBody.niCredit.head.contributionCreditType shouldBe("CLASS 2 - NORMAL RATE")
+      responseBody.niCredit.head.contributionCreditType shouldBe "CLASS 2 - NORMAL RATE"
 
     }
 
@@ -73,7 +73,7 @@ class ExampleSpec extends BaseSpec {
       val response =
         niccService.makeRequest("testBearerToken", Request("1960-04-05"), "SS000400", "2022", "2021")
       response.status shouldBe 400
-      println((response.body))
+      println(response.body)
     }
 
     Scenario("Passing Start Tax Year after CY-1") {
