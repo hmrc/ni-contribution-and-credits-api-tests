@@ -19,6 +19,7 @@ package uk.gov.hmrc.api.specs
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import uk.gov.hmrc.api.models.{Request, Response}
+
 import javax.inject._
 
 class ExampleSpec extends BaseSpec {
@@ -43,6 +44,8 @@ class ExampleSpec extends BaseSpec {
       response.status shouldBe 200
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
+      println(response.body)
+      responseBody.niCredit.head.contributionCreditType shouldBe("CLASS 2 - NORMAL RATE")
 
     }
 

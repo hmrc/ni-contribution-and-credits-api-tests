@@ -27,7 +27,7 @@ import scala.concurrent.duration._
 
 class NiccService extends HttpClient {
 
-  val host: String                   = TestConfiguration.url("nps")
+  val host: String                   = TestConfiguration.url("nicc")
   //val url: String = s"$host/nicc-json-service/nicc/v1/api/national-insurance"
 
   //val url: String = s"$host/nino-info?nino=PA622389C&forename=john&surname=doe&dateOfBirth=22051999&dateRange=someDate"
@@ -41,38 +41,23 @@ class NiccService extends HttpClient {
       ),
       10.seconds
     )*/
-  def makeRequest(authToken: String, request: Request, nationalInsuranceNumber: String, startTaxYear: String, endTaxYear: String, testScenario: String = "H001"): StandaloneWSRequest#Self#Response = {
+  def makeRequest(authToken: String, request: Request, nationalInsuranceNumber: String, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
     val url: String = s"$host/nicc-json-service/nicc/v1/api/national-insurance/$nationalInsuranceNumber/contributions-and-credits/from/$startTaxYear/to/$endTaxYear"
-    val testUrl: String = s"https://localhost:9001/nps-json-service/nps/v1/api/national-insurance/:nationalInsuranceNumber/contributions-and-credits/from/:startTaxYear/to/:endTaxYear"
+    //val testUrl: String = s"http://localhost:9001/nicc-json-service/nicc/v1/api/national-insurance/$nationalInsuranceNumber/contributions-and-credits/from/:startTaxYear/to/:endTaxYear"
 
     val requestPayload = Json.toJsObject(request)
     Await.result(
       post(
-        testUrl,
+        url,
         Json.stringify(requestPayload),
-        ("Authorization", authToken),
+        //("Authorization", authToken),
         ("CorrelationId", "e470d658-99f7-4292-a4a1-ed12c72f1337"),
         ("gov-uk-originator-d", "DWP"),
-        ("testScenario", testScenario)
+       // ("testScenario", testScenario)
       ),
       10.seconds
     )
   }
-
-  /*private def postWithProxyIfEnabled(
-                                     url: String,request: Request
-                                     headers: (String,String)*
-                                   ): Future[StandaloneWSRequest#Self#Response] =
-    if (Zap.enabled) {
-      wsClient
-        .url(url)
-        .withHttpHeaders(headers: _*)
-        .withProxyServer(DefaultWSProxyServer("localhost", 11000))
-        .get()
-    } else {
-      get(url, headers: _*)
-    }*/
-
 }
 
 
