@@ -20,8 +20,6 @@ import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import uk.gov.hmrc.api.models.{Request, Response}
 
-import javax.inject._
-
 class ExampleSpec extends BaseSpec {
 
   Feature("Example of using the Contributions and Credits API") {
@@ -61,37 +59,38 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing date of birth year is above pension age") {
       val response =
-        niccService.makeRequest("testBearerToken", Request("1950-04-05"), "A123456B", "2019", "2021")
+        niccService.makeRequest("testBearerToken", Request("1950-04-05"), "SS000400", "2019", "2021")
       response.status shouldBe 400
     }
 
     Scenario("Passing date of birth is exact 16 years old") {
       val response =
-        niccService.makeRequest("testBearerToken", Request("2007-11-05"), "A123456B", "2019", "2021")
+        niccService.makeRequest("testBearerToken", Request("2007-11-05"), "SS000400", "2019", "2021")
       response.status shouldBe 400
     }
 
     Scenario("Passing Start Tax Year after end tax year") {
       val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456B", "2022", "2021")
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "SS000400", "2022", "2021")
       response.status shouldBe 400
+      println((response.body))
     }
 
     Scenario("Passing Start Tax Year after CY-1") {
       val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456B", "2024", "2025")
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "SS000400", "2024", "2025")
       response.status shouldBe 400
     }
 
     Scenario("Passing Tax Year range over 6 years") {
       val response =
-        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456B", "2016", "2023")
+        niccService.makeRequest("testBearerToken", Request("1960-04-05"), "SS000400", "2016", "2023")
       response.status shouldBe 400
     }
 
       Scenario("Incorrect Access Token Type") {
         val response =
-          niccService.makeRequest("testBearerToken", Request("1960-04-05"), "A123456C", "2019", "2021")
+          niccService.makeRequest("testBearerToken", Request("1960-04-05"), "SS000401", "2019", "2021")
         response.status shouldBe 401
       }
 

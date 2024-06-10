@@ -28,19 +28,7 @@ import scala.concurrent.duration._
 class NiccService extends HttpClient {
 
   val host: String                   = TestConfiguration.url("nicc")
-  //val url: String = s"$host/nicc-json-service/nicc/v1/api/national-insurance"
 
-  //val url: String = s"$host/nino-info?nino=PA622389C&forename=john&surname=doe&dateOfBirth=22051999&dateRange=someDate"
-  /*def niccMakeRequest(authToken: String, nino: String): StandaloneWSRequest#Self#Response =
-    Await.result(
-      get(
-        url + nino,
-        ("Authorization", authToken),
-        ("CorrelationId", "12345678"),
-        ("Accept", "application/vnd.hmrc.P1.0+json")
-      ),
-      10.seconds
-    )*/
   def makeRequest(authToken: String, request: Request, nationalInsuranceNumber: String, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
     val url: String = s"$host/nicc-json-service/nicc/v1/api/national-insurance/$nationalInsuranceNumber/contributions-and-credits/from/$startTaxYear/to/$endTaxYear"
     //val testUrl: String = s"http://localhost:9001/nicc-json-service/nicc/v1/api/national-insurance/$nationalInsuranceNumber/contributions-and-credits/from/:startTaxYear/to/:endTaxYear"
