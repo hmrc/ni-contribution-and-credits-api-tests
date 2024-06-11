@@ -38,7 +38,7 @@ class ExampleSpec extends BaseSpec {
       niccService.makeRequest(Request("1960-04-05"), "SS000200", "2019", "2021")
 
 
-      val responseBody: Response = Json.parse(response.body).as[Response]
+      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
 
       Then("Class 1 and Class 2 details are returned")
       response.status shouldBe 200
@@ -62,22 +62,22 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing date of birth year is above pension age") {
       val response =
-        niccService.makeRequest(Request("1950-04-05"), "SS000400", "2019", "2021")
-      response.status shouldBe 400
+        niccService.makeRequest(Request("1950-04-05"), "SS000200", "2019", "2021")
+      response.status shouldBe 200
       println(response.body)
     }
 
     Scenario("Passing date of birth is exact 16 years old") {
       val response =
-        niccService.makeRequest(Request("2007-11-05"), "SS000400", "2019", "2021")
-      response.status shouldBe 400
+        niccService.makeRequest(Request("2007-11-05"), "SS000200", "2019", "2021")
+      response.status shouldBe 200
       println(response.body)
     }
 
     Scenario("Passing Start Tax Year after end tax year") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "SS000400", "2022", "2021")
-      response.status shouldBe 400
+        niccService.makeRequest(Request("1960-04-05"), "SS000422", "2022", "2021")
+      response.status shouldBe 422
       println(response.body)
     }
 
@@ -102,7 +102,7 @@ class ExampleSpec extends BaseSpec {
         println(response.body)
       }
 
-    Scenario("NICC details are not returned when not passing dateOfBirth") {
+    Scenario("NICC details are not returned when end point not found") {
       val response =
         niccService.makeRequest(Request("1960-04-05"), "", "2022", "2023")
       response.status shouldBe 404

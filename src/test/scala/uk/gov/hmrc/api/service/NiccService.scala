@@ -42,7 +42,7 @@ class NiccService extends HttpClient {
         Json.stringify(requestPayload),
         //("Authorization", authToken),
         ("CorrelationId", "e470d658-99f7-4292-a4a1-ed12c72f1337"),
-        ("gov-uk-originator-d", "DWP"),
+        ("gov-uk-originator-id", "DWP"),
        // ("testScenario", testScenario)
       ),
       10.seconds

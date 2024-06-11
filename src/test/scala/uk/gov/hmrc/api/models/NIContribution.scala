@@ -27,7 +27,7 @@ case class NIContribution(taxYear: Int,
                           primaryPaidEarnings: BigDecimal)
 
 object NIContribution {
-  implicit val format: OFormat[NIContribution] = Json.format[NIContribution]
+  implicit val format: OFormat[NIContribution] = Json.format[NIContribution]  //case class to json
 }
 
 /*taxYear: 2022,

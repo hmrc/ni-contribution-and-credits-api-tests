@@ -27,7 +27,7 @@ case class NICredit(taxYear: Int,
                     class2Or3CreditStatus: String)
 
 object NICredit {
-  implicit val format: OFormat[NICredit] = Json.format[NICredit]
+  implicit val format: OFormat[NICredit] = Json.format[NICredit] //case class to JSON
 }
 
 /*"taxYear": 2022,
