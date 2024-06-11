@@ -44,7 +44,9 @@ class ExampleSpec extends BaseSpec {
       response.status shouldBe 200
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
-      println(response.body)
+      println("The Response Status Code is : " + response.status)
+      println("The Response Status Text is : " + response.statusText)
+      println("The Response Body is : " + response.body)
       responseBody.niCredit.head.contributionCreditType shouldBe "CLASS 2 - NORMAL RATE"
 
     }
