@@ -44,8 +44,7 @@ class ExampleSpec extends BaseSpec {
       response.status shouldBe 200
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
-      println("The Response Status Code is : " + response.status)
-      println("The Response Status Text is : " + response.statusText)
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
       println("The Response Body is : " + response.body)
       responseBody.niCredit.head.contributionCreditType shouldBe "CLASS 2 - NORMAL RATE"
 
@@ -59,6 +58,7 @@ class ExampleSpec extends BaseSpec {
       val response =
         niccService.makeRequest(Request("1960-04-05"), "SS000400", "2019", "2021")
         response.status shouldBe 400
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
@@ -66,6 +66,7 @@ class ExampleSpec extends BaseSpec {
       val response =
         niccService.makeRequest(Request("1950-04-05"), "SS000200", "2019", "2021")
       response.status shouldBe 200
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
@@ -73,13 +74,15 @@ class ExampleSpec extends BaseSpec {
       val response =
         niccService.makeRequest(Request("2007-11-05"), "SS000200", "2019", "2021")
       response.status shouldBe 200
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
-    Scenario("Passing Start Tax Year after end tax year") {
+   Scenario("Passing Start Tax Year after end tax year") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "SS000422", "2022", "2021")
+        niccService.makeRequest(Request("1976-04-05"), "SS000422", "2022", "2021")
       response.status shouldBe 422
+     println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
@@ -87,6 +90,7 @@ class ExampleSpec extends BaseSpec {
       val response =
         niccService.makeRequest(Request("1960-04-05"), "SS000400", "2024", "2025")
       response.status shouldBe 400
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
@@ -94,6 +98,7 @@ class ExampleSpec extends BaseSpec {
       val response =
         niccService.makeRequest(Request("1960-04-05"), "SS000400", "2016", "2023")
       response.status shouldBe 400
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
@@ -101,6 +106,7 @@ class ExampleSpec extends BaseSpec {
         val response =
           niccService.makeRequest(Request("1960-04-05"), "SS000401", "2019", "2021")
         response.status shouldBe 401
+        println("The Response Status Code is : " + response.status + " " + response.statusText)
         println(response.body)
       }
 
@@ -108,6 +114,7 @@ class ExampleSpec extends BaseSpec {
       val response =
         niccService.makeRequest(Request("1960-04-05"), "", "2022", "2023")
       response.status shouldBe 404
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
@@ -115,6 +122,7 @@ class ExampleSpec extends BaseSpec {
       val response =
         niccService.makeRequest(Request("1960-04-05"), "SS000500", "2022", "2023")
       response.status shouldBe 500
+      println("The Response Status Code is : " + response.status)
       println(response.body)
     }
 
