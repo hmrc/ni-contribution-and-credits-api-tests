@@ -35,7 +35,7 @@ class ExampleSpec extends BaseSpec {
 
       val response =
         //niccService.makeRequest("testBearerToken", new Request("1960-04-05"), "SS000200", "2019", "2021")
-      niccService.makeRequest(Request("1960-04-05"), "SS000200", "2019", "2021")
+      niccService.makeRequest(Request("1960-04-05"), "BB 00 02 00 B", "2019", "2021")
 
 
       val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
@@ -56,7 +56,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing invalid nationalInsuranceNumber") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "SS000400", "2019", "2021")
+        niccService.makeRequest(Request("1960-04-05"), "BB 00 04 00 B", "2019", "2021")
         response.status shouldBe 400
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -64,7 +64,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing date of birth year is above pension age") {
       val response =
-        niccService.makeRequest(Request("1950-04-05"), "SS000200", "2019", "2021")
+        niccService.makeRequest(Request("1950-04-05"), "BB 00 02 00 B", "2019", "2021")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -72,7 +72,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing date of birth is exact 16 years old") {
       val response =
-        niccService.makeRequest(Request("2007-11-05"), "SS000200", "2019", "2021")
+        niccService.makeRequest(Request("2007-11-05"), "BB 00 02 00 B", "2019", "2021")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -80,7 +80,7 @@ class ExampleSpec extends BaseSpec {
 
    Scenario("Passing Start Tax Year after end tax year") {
       val response =
-        niccService.makeRequest(Request("1976-04-05"), "SS000422", "2022", "2021")
+        niccService.makeRequest(Request("1976-04-05"), "BB 00 04 22 B", "2022", "2021")
       response.status shouldBe 422
      println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -88,7 +88,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing Start Tax Year after CY-1") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "SS000400", "2024", "2025")
+        niccService.makeRequest(Request("1960-04-05"), "BB 00 04 00 B", "2024", "2025")
       response.status shouldBe 400
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -96,7 +96,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing Tax Year range over 6 years") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "SS000400", "2016", "2023")
+        niccService.makeRequest(Request("1960-04-05"), "BB 00 04 00 B", "2016", "2023")
       response.status shouldBe 400
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -104,7 +104,7 @@ class ExampleSpec extends BaseSpec {
 
       Scenario("Incorrect Access Token Type") {
         val response =
-          niccService.makeRequest(Request("1960-04-05"), "SS000401", "2019", "2021")
+          niccService.makeRequest(Request("1960-04-05"), "BB 00 04 01 B", "2019", "2021")
         response.status shouldBe 401
         println("The Response Status Code is : " + response.status + " " + response.statusText)
         println(response.body)
@@ -120,7 +120,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Internal Server Error") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "SS000500", "2022", "2023")
+        niccService.makeRequest(Request("1960-04-05"), "BB 00 05 00 B", "2022", "2023")
       response.status shouldBe 500
       println("The Response Status Code is : " + response.status)
       println(response.body)
