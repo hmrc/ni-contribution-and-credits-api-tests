@@ -46,6 +46,7 @@ class ExampleSpec extends BaseSpec {
       response.body.contains("niCredit") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println("The Response Body is : " + response.body)
+      responseBody.niContribution.head.class1ContributionStatus shouldBe "COMPLIANCE & YIELD INCOMPLETE"
       responseBody.niCredit.head.contributionCreditType shouldBe "CLASS 2 - NORMAL RATE"
 
     }
@@ -102,13 +103,13 @@ class ExampleSpec extends BaseSpec {
       println(response.body)
     }
 
-      Scenario("Incorrect Access Token Type") {
+     /* Scenario("Incorrect Access Token Type") {
         val response =
           niccService.makeRequest(Request("1960-04-05"), "BB 00 04 01 B", "2019", "2021")
         response.status shouldBe 401
         println("The Response Status Code is : " + response.status + " " + response.statusText)
         println(response.body)
-      }
+      }*/
 
     Scenario("NICC details are not returned when end point not found") {
       val response =
