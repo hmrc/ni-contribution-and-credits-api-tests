@@ -32,4 +32,4 @@ class AuthHelper {
   }
 
 }*/
-//todo
+/* once got the confirmation on basic auth need to implement*/
