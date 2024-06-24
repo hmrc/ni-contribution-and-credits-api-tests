@@ -63,6 +63,14 @@ class ExampleSpec extends BaseSpec {
       println(response.body)
     }
 
+    Scenario("Passing incorrect date of birth format at request") {
+      val response =
+        niccService.makeRequest(Request("04-05-1960"), "BB 00 04 00 B", "2019", "2021")
+      response.status shouldBe 400
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+      println(response.body)
+    }
+
     Scenario("Passing date of birth year is above pension age") {
       val response =
         niccService.makeRequest(Request("1950-04-05"), "BB 00 02 00 B", "2019", "2021")
@@ -89,21 +97,45 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing Start Tax Year after CY-1") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB 00 04 00 B", "2024", "2025")
-      response.status shouldBe 400
+        niccService.makeRequest(Request("1960-04-05"), "BB 00 04 22 B", "2024", "2025")
+      response.status shouldBe 422
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+      println(response.body)
+    }
+
+    Scenario("Passing End Tax Year after CY-1") {
+      val response =
+        niccService.makeRequest(Request("1960-04-05"), "BB 00 04 22 B", "2022", "2023")
+      response.status shouldBe 422
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+      println(response.body)
+    }
+
+    Scenario("Passing Start Tax Year before 1975") {
+      val response =
+        niccService.makeRequest(Request("1960-04-05"), "BB 00 04 22 B", "1974", "2024")
+      response.status shouldBe 422
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
     Scenario("Passing Tax Year range over 6 years") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB 00 04 00 B", "2016", "2023")
-      response.status shouldBe 400
+        niccService.makeRequest(Request("1960-04-05"), "BB 00 04 22 B", "2016", "2023")
+      response.status shouldBe 422
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
     /* Scenario("Incorrect Access Token Type") {
+        val response =
+          niccService.makeRequest(Request("1960-04-05"), "BB 00 04 01 B", "2019", "2021")
+        response.status shouldBe 401
+        println("The Response Status Code is : " + response.status + " " + response.statusText)
+        println(response.body)
+      }*/
+
+    /* Scenario("No Access Token Type") {
         val response =
           niccService.makeRequest(Request("1960-04-05"), "BB 00 04 01 B", "2019", "2021")
         response.status shouldBe 401
