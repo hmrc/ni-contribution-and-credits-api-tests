@@ -27,27 +27,22 @@ class ExampleSpec extends BaseSpec {
     Scenario("Retrieve Class 1 and Class 2 data for given nationalInsuranceNumber") {
 
       Given("The NICC API is up and running")
-      //val authBearerToken: String    = authHelper.getAuthBearerToken
+      // val authBearerToken: String    = authHelper.getAuthBearerToken
       // val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
-
-      // niccService.makeRequest("testBearerToken", "H001", Request.........)
       When("A request for NINC is sent")
 
-      val response =
-        //niccService.makeRequest("testBearerToken", new Request("1960-04-05"), "SS000200", "2019", "2021")
+      val response               =
         niccService.makeRequest(Request("1960-04-05"), "BB 00 02 00 B", "2019", "2021")
-
-
-      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("Class 1 and Class 2 details are returned")
-      response.status shouldBe 200
-      response.body.contains("niContribution") shouldBe true
-      response.body.contains("niCredit") shouldBe true
+      response.status                                           shouldBe 200
+      response.body.contains("niContribution")                  shouldBe true
+      response.body.contains("niCredit")                        shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println("The Response Body is : " + response.body)
       responseBody.niContribution.head.class1ContributionStatus shouldBe "COMPLIANCE & YIELD INCOMPLETE"
-      responseBody.niCredit.head.contributionCreditType shouldBe "CLASS 2 - NORMAL RATE"
+      responseBody.niCredit.head.contributionCreditType         shouldBe "CLASS 2 - NORMAL RATE"
 
     }
 
@@ -126,6 +121,8 @@ class ExampleSpec extends BaseSpec {
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
+
+    // these scenarios are needed once basic auth is implemented
 
     /* Scenario("Incorrect Access Token Type") {
         val response =
