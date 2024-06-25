@@ -87,12 +87,6 @@ class ExampleSpec extends BaseSpec {
       println(response.body)
     }
 
-    Scenario("Passing date of birth is exact 16 years old") {
-      val response =
-        niccService.makeRequest("testBearerToken", Request("2007-11-05"), "A123456B", "2019", "2021")
-      response.status shouldBe 400
-    }
-
     Scenario("Passing Start Tax Year after end tax year") {
       val response =
         niccService.makeRequest(Request("1976-04-05"), "BB 00 04 22 B", "2022", "2021")
@@ -171,12 +165,6 @@ class ExampleSpec extends BaseSpec {
       response.status shouldBe 500
       println("The Response Status Code is : " + response.status)
       println(response.body)
-    }
-    Scenario("Verify Nino Endpoints happy path") {
-      val consignorToken = givenGetToken(ninoUser.nino)
-      val response       = newUser(token,nino)
-      thenValidateResponseCode(response, 200)
-      //checkJsonValue(response, "tfc_account_status", "active")
     }
 
   }

@@ -44,9 +44,4 @@ object TestConfiguration {
   //def desBearerToken: String              = envConfig.getString("desBearerToken")
   //def getConfigValue(url: String): String = envConfig.getString(url)
 
-  //def desEnvironment: String = envConfig.getString("desEnvironment")
-
-  //def desBearerToken: String              = envConfig.getString("desBearerToken")
-  //def getConfigValue(url: String): String = envConfig.getString(url)
-
 }
