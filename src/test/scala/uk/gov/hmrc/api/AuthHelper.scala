@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.specs
+/*package uk.gov.hmrc.api.helpers
 
-import org.scalatest.GivenWhenThen
-import org.scalatest.featurespec.AnyFeatureSpec
-import org.scalatest.matchers.should.Matchers
-//import uk.gov.hmrc.api.helpers.AuthHelper
-import uk.gov.hmrc.api.service.NiccService
+import org.scalatest.Assertions.fail
+import play.api.libs.ws.StandaloneWSRequest
+//import uk.gov.hmrc.api.service.AuthService
 
-trait BaseSpec extends AnyFeatureSpec with GivenWhenThen with Matchers {
+class AuthHelper {
 
-  //val authHelper                = new AuthHelper
-  val niccService = new NiccService
+  val authAPI: AuthService = new AuthService
 
-}
+  def getAuthBearerToken: String = {
+    val authServiceRequestResponse: StandaloneWSRequest#Self#Response = authAPI.postLogin
+    authServiceRequestResponse
+      .header("Authorization")
+      .getOrElse(fail(s"Could not obtain auth bearer token. Auth Service Response: $authServiceRequestResponse"))
+  }
+
+}*/
+/* once got the confirmation on basic auth need to implement*/

@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.specs
+package uk.gov.hmrc.api.models
 
-import org.scalatest.GivenWhenThen
-import org.scalatest.featurespec.AnyFeatureSpec
-import org.scalatest.matchers.should.Matchers
-//import uk.gov.hmrc.api.helpers.AuthHelper
-import uk.gov.hmrc.api.service.NiccService
+import play.api.libs.json.{Json, OFormat}
 
-trait BaseSpec extends AnyFeatureSpec with GivenWhenThen with Matchers {
+case class Request(dateOfBirth: String)
 
-  //val authHelper                = new AuthHelper
-  val niccService = new NiccService
+object Request {
+
+  implicit val requestJsonFormat: OFormat[Request] = Json.format[Request]
+  //val ninoUser: Request                         = Request("1960-04-06")
 
 }
