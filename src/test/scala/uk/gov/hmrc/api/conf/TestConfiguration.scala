@@ -28,7 +28,7 @@ object TestConfiguration {
   def url(service: String): String = {
     val host = env match {
       case "local" => s"$environmentHost:${servicePort(service)}"
-      case _       => s"${envConfig.getString(s"services.host")}"
+      case _       => s"${envConfig.getString(s"services.$service.host")}"
     }
     s"$host${serviceRoute(service)}"
   }
@@ -38,5 +38,10 @@ object TestConfiguration {
   def servicePort(serviceName: String): String = envConfig.getString(s"services.$serviceName.port")
 
   def serviceRoute(serviceName: String): String = envConfig.getString(s"services.$serviceName.productionRoute")
+
+  //def desEnvironment: String = envConfig.getString("desEnvironment")
+
+  //def desBearerToken: String              = envConfig.getString("desBearerToken")
+  //def getConfigValue(url: String): String = envConfig.getString(url)
 
 }
