@@ -156,7 +156,6 @@ class ExampleSpec extends BaseSpec {
         niccService.makeRequest(Request("1980-04-05"), "BB 00 04 03 B", "2022", "2023")
       response.status shouldBe 500
       println("The Response Status Code is : " + response.status + " " + response.statusText)
-
     }
 
     Scenario("Internal Server Error") {

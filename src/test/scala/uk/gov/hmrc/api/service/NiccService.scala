@@ -29,13 +29,9 @@ class NiccService extends HttpClient {
 
   val host: String                   = TestConfiguration.url("nicc")
 
-  //def makeRequest(authToken: String, request: Request, nationalInsuranceNumber: String, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
   def makeRequest(request: Request, nationalInsuranceNumber: String, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
-    val url: String = s"$host/nicc-json-service/v1/api/national-insurance/$nationalInsuranceNumber/from/$startTaxYear/to/$endTaxYear"
-    //  http://localhost:9000/nicc-json-service/v1/api/national-insurance/BB
-    //val url: String = s"$host/nps-json-service/nps/v1/api/national-insurance/$nationalInsuranceNumber/contributions-and-credits/from/$startTaxYear/to/$endTaxYear"
-    //val testUrl: String = s"http://localhost:9001/nicc-json-service/nicc/v1/api/national-insurance/$nationalInsuranceNumber/contributions-and-credits/from/:startTaxYear/to/:endTaxYear"
 
+    val url: String = s"$host/nicc-json-service/v1/api/national-insurance/$nationalInsuranceNumber/from/$startTaxYear/to/$endTaxYear"
     val requestPayload = Json.toJsObject(request)
     Await.result(
       post(
@@ -45,7 +41,6 @@ class NiccService extends HttpClient {
         ("CorrelationId", "e470d658-99f7-4292-a4a1-ed12c72f1337"),
         ("gov-uk-originator-id", "DWP"),
         ("Content-Type", "application/json")
-        // ("testScenario", testScenario)
       ),
       10.seconds
     )
