@@ -97,7 +97,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing Start Tax Year after CY-1") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000422B", "2024", "2025")
+        niccService.makeRequest(Request("1960-04-05"), "BB000422B", "2023", "2024")
       response.status shouldBe 422
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
