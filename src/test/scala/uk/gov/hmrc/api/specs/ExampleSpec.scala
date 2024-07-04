@@ -35,7 +35,7 @@ class ExampleSpec extends BaseSpec {
 
       val response =
         //niccService.makeRequest("testBearerToken", new Request("1960-04-05"), "SS000200", "2019", "2021")
-        niccService.makeRequest(Request("1960-04-05"), "BB000200B", "2019", "2021")
+        niccService.makeRequest(Request("1960-04-05", "BB000200B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
 
 
       val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
@@ -46,6 +46,10 @@ class ExampleSpec extends BaseSpec {
       response.body.contains("niCredit") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println("The Response Body is : " + response.body)
+      //val readableString: String = Json.prettyPrint(response)
+
+      // assert(responseBody().prettyPrint() == responseMessage, "Response message not as expected")
+
       responseBody.niContribution.head.class1ContributionStatus shouldBe "COMPLIANCE & YIELD INCOMPLETE"
       responseBody.niCredit.head.contributionCreditType shouldBe "CLASS 2 - NORMAL RATE"
 
@@ -57,7 +61,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing invalid nationalInsuranceNumber") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000400B", "2019", "2021")
+        niccService.makeRequest(Request("1960-04-05", "BB000400B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
       response.status shouldBe 400
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -65,7 +69,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing incorrect date of birth format at request") {
       val response =
-        niccService.makeRequest(Request("04-05-1960"), "BB000400B", "2019", "2021")
+        niccService.makeRequest(Request("04-05-1960", "BB000400B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
       response.status shouldBe 400
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -73,7 +77,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing date of birth year is above pension age") {
       val response =
-        niccService.makeRequest(Request("1950-04-05"), "BB000200B", "2019", "2021")
+        niccService.makeRequest(Request("1950-04-05", "BB000200B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -81,7 +85,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing date of birth is exact 16 years old") {
       val response =
-        niccService.makeRequest(Request("2007-11-05"), "BB000200B", "2019", "2021")
+        niccService.makeRequest(Request("2007-11-05", "BB000200B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -89,7 +93,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing Start Tax Year after end tax year") {
       val response =
-        niccService.makeRequest(Request("1976-04-05"), "BB000422B", "2022", "2021")
+        niccService.makeRequest(Request("1976-04-05", "BB000422B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2022", "2021")
       response.status shouldBe 422
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -97,7 +101,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing Start Tax Year after CY-1") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000422B", "2023", "2024")
+        niccService.makeRequest(Request("1960-04-05", "BB000422B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2023", "2024")
       response.status shouldBe 422
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -105,7 +109,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing End Tax Year after CY-1") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000422B", "2022", "2023")
+        niccService.makeRequest(Request("1960-04-05","BB000422B","e470d658-99f7-4292-a4a1-ed12c72f1337"),"2022", "2023")
       response.status shouldBe 422
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -113,7 +117,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing Start Tax Year before 1975") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000422B", "1974", "2024")
+        niccService.makeRequest(Request("1960-04-05", "BB000422B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "1974", "2024")
       response.status shouldBe 422
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -121,7 +125,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Passing Tax Year range over 6 years") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000422B", "2016", "2023")
+        niccService.makeRequest(Request("1960-04-05", "BB000422B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2016", "2023")
       response.status shouldBe 422
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -145,7 +149,7 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("NICC details are not returned when end point not found") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "", "2022", "2023")
+        niccService.makeRequest(Request("1960-04-05", "","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2022", "2023")
       response.status shouldBe 404
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
@@ -153,15 +157,23 @@ class ExampleSpec extends BaseSpec {
 
     Scenario("Forbidden Error") {
       val response =
-        niccService.makeRequest(Request("1980-04-05"), "BB000403B", "2022", "2023")
+        niccService.makeRequest(Request("1980-04-05", "BB000403B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2022", "2023")
       response.status shouldBe 500
       println("The Response Status Code is : " + response.status + " " + response.statusText)
     }
 
     Scenario("Internal Server Error") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000500B", "2022", "2023")
+        niccService.makeRequest(Request("1960-04-05", "BB000500B","e470d658-99f7-4292-a4a1-ed12c72f1337"), "2022", "2023")
       response.status shouldBe 500
+      println("The Response Status Code is : " + response.status)
+      println(response.body)
+    }
+
+    Scenario("Invalid Request") {
+      val response =
+        niccService.makeRequest(Request("1960-04-05", "BB000500B",""), "2022", "2023")
+      response.status shouldBe 400
       println("The Response Status Code is : " + response.status)
       println(response.body)
     }

@@ -29,9 +29,10 @@ class NiccService extends HttpClient {
 
   val host: String                   = TestConfiguration.url("nicc")
 
-  def makeRequest(request: Request, nationalInsuranceNumber: String, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
+  def makeRequest(request: Request, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
 
-    val url: String = s"$host/nicc-json-service/v1/api/national-insurance/$nationalInsuranceNumber/from/$startTaxYear/to/$endTaxYear"
+   // val url: String = s"$host/nicc-json-service/v1/api/national-insurance/$nationalInsuranceNumber/from/$startTaxYear/to/$endTaxYear"
+   val url: String = s"$host/nicc-json-service/v1/api/contribution-and-credits/from/$startTaxYear/to/$endTaxYear"
     val requestPayload = Json.toJsObject(request)
     Await.result(
       post(
