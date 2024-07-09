@@ -35,7 +35,7 @@ class ExampleSpec extends BaseSpec {
 
       val response =
         //niccService.makeRequest("testBearerToken", new Request("1960-04-05"), "SS000200", "2019", "2021")
-        niccService.makeRequest(Request("1960-04-05", "BB000200B", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
+        niccService.makeRequest(Request("BB000200B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
 
 
       val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
@@ -45,7 +45,7 @@ class ExampleSpec extends BaseSpec {
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
-      println("The Response Body is : " + response.body)
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
       //val readableString: String = Json.prettyPrint(response)
 
       // assert(responseBody().prettyPrint() == responseMessage, "Response message not as expected")
