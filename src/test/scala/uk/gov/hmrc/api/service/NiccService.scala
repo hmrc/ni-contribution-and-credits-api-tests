@@ -28,7 +28,7 @@ import scala.concurrent.duration._
 class NiccService extends HttpClient {
 
   val host: String                   = TestConfiguration.url("nicc")
-  val token = generateToken("nicc")
+  //val token = generateToken("nicc")
 
   def makeRequest(request: Request, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
 
@@ -39,7 +39,7 @@ class NiccService extends HttpClient {
       post(
         url,
         Json.stringify(requestPayload),
-        ("Authorization", token),
+       // ("Authorization", token),
         ("Content-Type", "application/json")
       ),
       10.seconds
