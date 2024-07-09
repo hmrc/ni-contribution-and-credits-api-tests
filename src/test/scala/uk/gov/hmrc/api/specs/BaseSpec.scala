@@ -21,11 +21,11 @@ import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.api.client.HttpClient
 import uk.gov.hmrc.api.helpers.AuthHelper
-import uk.gov.hmrc.api.service.{AuthService, NiccService}
+import uk.gov.hmrc.api.service.NiccService
 
 trait BaseSpec extends AnyFeatureSpec with GivenWhenThen with Matchers with HttpClient {
 
-  val authHelper                = new AuthHelper(new AuthService)
+  val authHelper                = new AuthHelper
   val niccService = new NiccService
 
 

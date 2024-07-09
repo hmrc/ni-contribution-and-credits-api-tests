@@ -27,8 +27,7 @@ class ExampleSpec extends BaseSpec {
     Scenario("Retrieve Class 1 and Class 2 data for given nationalInsuranceNumber") {
 
       Given("The NICC API is up and running")
-      //val authBearerToken: String    = authHelper.getAuthBearerToken
-      // val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
+      //val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
 
       // niccService.makeRequest("testBearerToken", "H001", Request.........)
       When("A request for NINC is sent")
@@ -46,9 +45,6 @@ class ExampleSpec extends BaseSpec {
       response.body.contains("niCredit") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
-      //val readableString: String = Json.prettyPrint(response)
-
-      // assert(responseBody().prettyPrint() == responseMessage, "Response message not as expected")
 
       responseBody.niContribution.head.class1ContributionStatus shouldBe "COMPLIANCE & YIELD INCOMPLETE"
       responseBody.niCredit.head.contributionCreditType shouldBe "CLASS 2 - NORMAL RATE"

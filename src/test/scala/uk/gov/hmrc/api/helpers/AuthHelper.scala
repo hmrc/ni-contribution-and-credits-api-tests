@@ -16,14 +16,19 @@
 
 package uk.gov.hmrc.api.helpers
 
-import javax.inject.Inject
 import org.scalatest.Assertions.fail
+import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.service.AuthService
 
-class AuthHelper @Inject() (authService: AuthService) {
+class AuthHelper {
 
-  def getBearerToken: String = {
-    val token = authService.getBearerToken
-    token.header("Authorization").getOrElse(fail("Could not obtain bearer token"))
+  val authAPI: AuthService = new AuthService
+
+  def getAuthBearerToken: String = {
+    val authServiceRequestResponse: StandaloneWSRequest#Self#Response = authAPI.postLogin
+    authServiceRequestResponse
+      .header("Authorization")
+      .getOrElse(fail(s"Could not obtain auth bearer token. Auth Service Response: $authServiceRequestResponse"))
   }
+
 }
