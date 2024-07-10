@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-/*package uk.gov.hmrc.api.helpers
+package uk.gov.hmrc.api.helpers
 
 import org.scalatest.Assertions.fail
 import play.api.libs.ws.StandaloneWSRequest
-//import uk.gov.hmrc.api.service.AuthService
+import uk.gov.hmrc.api.service.AuthService
 
 class AuthHelper {
 
@@ -31,5 +31,4 @@ class AuthHelper {
       .getOrElse(fail(s"Could not obtain auth bearer token. Auth Service Response: $authServiceRequestResponse"))
   }
 
-}*/
-/* once got the confirmation on basic auth need to implement*/
+}

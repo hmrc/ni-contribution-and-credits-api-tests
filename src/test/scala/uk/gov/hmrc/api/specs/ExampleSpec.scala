@@ -27,15 +27,14 @@ class ExampleSpec extends BaseSpec {
     Scenario("Retrieve Class 1 and Class 2 data for given nationalInsuranceNumber") {
 
       Given("The NICC API is up and running")
-      //val authBearerToken: String    = authHelper.getAuthBearerToken
-      // val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
+      //val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
 
       // niccService.makeRequest("testBearerToken", "H001", Request.........)
       When("A request for NINC is sent")
 
       val response =
         //niccService.makeRequest("testBearerToken", new Request("1960-04-05"), "SS000200", "2019", "2021")
-        niccService.makeRequest(Request("1960-04-05"), "BB000200B", "2019", "2021")
+        niccService.makeRequest(Request("BB000200B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
 
 
       val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
@@ -45,7 +44,8 @@ class ExampleSpec extends BaseSpec {
       response.body.contains("niContribution") shouldBe true
       response.body.contains("niCredit") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
-      println("The Response Body is : " + response.body)
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+
       responseBody.niContribution.head.class1ContributionStatus shouldBe "COMPLIANCE & YIELD INCOMPLETE"
       responseBody.niCredit.head.contributionCreditType shouldBe "CLASS 2 - NORMAL RATE"
 
@@ -55,77 +55,41 @@ class ExampleSpec extends BaseSpec {
 
   Feature("Example of using the NIContributions and NICredits API Negative Scenarios") {
 
+    //Response is from backend
+    Scenario("Passing Valid Request but from backend responding 400 ") {
+      val response =
+        niccService.makeRequest(Request("BB000400B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
+      response.status shouldBe 400
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+      println(response.body)
+    }
+
+    //response is from MDTP API only
     Scenario("Passing invalid nationalInsuranceNumber") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000400B", "2019", "2021")
+        niccService.makeRequest(Request("B000400B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
       response.status shouldBe 400
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
     Scenario("Passing incorrect date of birth format at request") {
+
       val response =
-        niccService.makeRequest(Request("04-05-1960"), "BB000400B", "2019", "2021")
+        niccService.makeRequest(Request("BB000400B", "05-1960", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
       response.status shouldBe 400
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
-    Scenario("Passing date of birth year is above pension age") {
+    Scenario("When backend responds 422 statuscode passed to the frontend ") {
       val response =
-        niccService.makeRequest(Request("1950-04-05"), "BB000200B", "2019", "2021")
-      response.status shouldBe 200
-      println("The Response Status Code is : " + response.status + " " + response.statusText)
-      println(response.body)
-    }
-
-    Scenario("Passing date of birth is exact 16 years old") {
-      val response =
-        niccService.makeRequest(Request("2007-11-05"), "BB000200B", "2019", "2021")
-      response.status shouldBe 200
-      println("The Response Status Code is : " + response.status + " " + response.statusText)
-      println(response.body)
-    }
-
-    Scenario("Passing Start Tax Year after end tax year") {
-      val response =
-        niccService.makeRequest(Request("1976-04-05"), "BB000422B", "2022", "2021")
+        niccService.makeRequest(Request("BB000422B", "1976-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2022", "2021")
       response.status shouldBe 422
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
-    Scenario("Passing Start Tax Year after CY-1") {
-      val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000422B", "2023", "2024")
-      response.status shouldBe 422
-      println("The Response Status Code is : " + response.status + " " + response.statusText)
-      println(response.body)
-    }
-
-    Scenario("Passing End Tax Year after CY-1") {
-      val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000422B", "2022", "2023")
-      response.status shouldBe 422
-      println("The Response Status Code is : " + response.status + " " + response.statusText)
-      println(response.body)
-    }
-
-    Scenario("Passing Start Tax Year before 1975") {
-      val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000422B", "1974", "2024")
-      response.status shouldBe 422
-      println("The Response Status Code is : " + response.status + " " + response.statusText)
-      println(response.body)
-    }
-
-    Scenario("Passing Tax Year range over 6 years") {
-      val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000422B", "2016", "2023")
-      response.status shouldBe 422
-      println("The Response Status Code is : " + response.status + " " + response.statusText)
-      println(response.body)
-    }
 
     /* Scenario("Incorrect Access Token Type") {
         val response =
@@ -143,25 +107,33 @@ class ExampleSpec extends BaseSpec {
         println(response.body)
       }*/
 
-    Scenario("NICC details are not returned when end point not found") {
+    Scenario("When the backend responds 404 statuscode the frontend responds 500") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "", "2022", "2023")
-      response.status shouldBe 404
+        niccService.makeRequest(Request("BB000404B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2022", "2023")
+      response.status shouldBe 500
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println(response.body)
     }
 
-    Scenario("Forbidden Error") {
+    Scenario("When the backend responds 403 statuscode the frontend responds 500") {
       val response =
-        niccService.makeRequest(Request("1980-04-05"), "BB000403B", "2022", "2023")
+        niccService.makeRequest(Request("BB000403B", "1980-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2022", "2023")
       response.status shouldBe 500
       println("The Response Status Code is : " + response.status + " " + response.statusText)
     }
 
-    Scenario("Internal Server Error") {
+    Scenario("When the backend responds 500 statuscode the frontend responds 500") {
       val response =
-        niccService.makeRequest(Request("1960-04-05"), "BB000500B", "2022", "2023")
+        niccService.makeRequest(Request("BB000500B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2022", "2023")
       response.status shouldBe 500
+      println("The Response Status Code is : " + response.status)
+      println(response.body)
+    }
+
+    Scenario("When the backend responds 400 statuscode the frontend responds 400") {
+      val response =
+        niccService.makeRequest(Request("BB000400B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2022", "2023")
+      response.status shouldBe 400
       println("The Response Status Code is : " + response.status)
       println(response.body)
     }
