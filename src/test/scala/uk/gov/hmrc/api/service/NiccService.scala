@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.api.service
 
+import org.scalatest.Assertions.fail
 import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
@@ -34,7 +35,7 @@ class NiccService extends HttpClient {
     .headers
     .get("Authorization")
     .flatMap(_.headOption)
-    .getOrElse("")
+    .getOrElse(fail("Couldn't retrieve Auth Token"))
 
   def makeRequest(request: Request, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
 
