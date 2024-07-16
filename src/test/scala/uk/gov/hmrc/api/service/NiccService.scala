@@ -21,6 +21,7 @@ import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
 import uk.gov.hmrc.api.conf.TestConfiguration
 import uk.gov.hmrc.api.models.Request
+import uk.gov.hmrc.api.service.AuthService
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -28,7 +29,12 @@ import scala.concurrent.duration._
 class NiccService extends HttpClient {
 
   val host: String                   = TestConfiguration.url("nicc")
-  //val token = generateToken("nicc")
+  val token: String = new AuthService()
+    .postLogin
+    .headers
+    .get("Authorization")
+    .flatMap(_.headOption)
+    .getOrElse("")
 
   def makeRequest(request: Request, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
 
@@ -39,12 +45,10 @@ class NiccService extends HttpClient {
       post(
         url,
         Json.stringify(requestPayload),
-       // ("Authorization", token),
+        ("Authorization", token),
         ("Content-Type", "application/json")
       ),
       10.seconds
     )
   }
-
-
 }
