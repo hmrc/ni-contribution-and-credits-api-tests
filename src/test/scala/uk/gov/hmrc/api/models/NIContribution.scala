@@ -29,12 +29,3 @@ case class NIContribution(taxYear: Int,
 object NIContribution {
   implicit val format: OFormat[NIContribution] = Json.format[NIContribution]  //case class to json
 }
-
-/*taxYear: 2022,
-"contributionCategoryLetter": "s",
-"contributionCategory": "(NONE)",
-"totalContribution": 99999999999999.98,
-"primaryContribution": 99999999999999.98,
-"class1ContributionStatus": "COMPLIANCE & YIELD INCOMPLETE",
-"primaryPaidEarnings": 99999999999999.98*/
-

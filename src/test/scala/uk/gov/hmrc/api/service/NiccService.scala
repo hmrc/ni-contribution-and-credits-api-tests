@@ -22,7 +22,6 @@ import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
 import uk.gov.hmrc.api.conf.TestConfiguration
 import uk.gov.hmrc.api.models.Request
-import uk.gov.hmrc.api.service.AuthService
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -39,8 +38,7 @@ class NiccService extends HttpClient {
 
   def makeRequest(request: Request, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
 
-   // val url: String = s"$host/nicc-json-service/v1/api/national-insurance/$nationalInsuranceNumber/from/$startTaxYear/to/$endTaxYear"
-   val url: String = s"$host/nicc-json-service/v1/api/contribution-and-credits/from/$startTaxYear/to/$endTaxYear"
+    val url: String = s"$host/nicc-json-service/v1/api/contribution-and-credits/from/$startTaxYear/to/$endTaxYear"
     val requestPayload = Json.toJsObject(request)
     Await.result(
       post(
