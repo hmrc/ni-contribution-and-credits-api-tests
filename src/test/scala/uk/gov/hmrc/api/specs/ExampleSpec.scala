@@ -27,13 +27,10 @@ class ExampleSpec extends BaseSpec {
     Scenario("Retrieve Class 1 and Class 2 data for given nationalInsuranceNumber") {
 
       Given("The NICC API is up and running")
-      //val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
 
-      // niccService.makeRequest("testBearerToken", "H001", Request.........)
       When("A request for NINC is sent")
 
       val response =
-        //niccService.makeRequest("testBearerToken", new Request("1960-04-05"), "SS000200", "2019", "2021")
         niccService.makeRequest(Request("BB000200B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
 
 

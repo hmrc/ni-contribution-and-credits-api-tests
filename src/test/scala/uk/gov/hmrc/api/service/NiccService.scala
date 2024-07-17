@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.api.service
 
+import org.scalatest.Assertions.fail
 import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
@@ -28,23 +29,25 @@ import scala.concurrent.duration._
 class NiccService extends HttpClient {
 
   val host: String                   = TestConfiguration.url("nicc")
-  //val token = generateToken("nicc")
+  val token: String = new AuthService()
+    .postLogin
+    .headers
+    .get("Authorization")
+    .flatMap(_.headOption)
+    .getOrElse(fail("Couldn't retrieve Auth Token"))
 
   def makeRequest(request: Request, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
 
-   // val url: String = s"$host/nicc-json-service/v1/api/national-insurance/$nationalInsuranceNumber/from/$startTaxYear/to/$endTaxYear"
-   val url: String = s"$host/nicc-json-service/v1/api/contribution-and-credits/from/$startTaxYear/to/$endTaxYear"
+    val url: String = s"$host/nicc-json-service/v1/api/contribution-and-credits/from/$startTaxYear/to/$endTaxYear"
     val requestPayload = Json.toJsObject(request)
     Await.result(
       post(
         url,
         Json.stringify(requestPayload),
-       // ("Authorization", token),
+        ("Authorization", token),
         ("Content-Type", "application/json")
       ),
       10.seconds
     )
   }
-
-
 }
