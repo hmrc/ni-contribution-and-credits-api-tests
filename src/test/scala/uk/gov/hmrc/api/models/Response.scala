@@ -18,8 +18,8 @@ package uk.gov.hmrc.api.models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Response(niContribution: Seq[NIContribution],
-                    niCredit: Seq[NICredit])
+case class Response(niClass1: Seq[NIContribution],
+                    niClass2: Seq[NICredit])
 
 
 object Response {

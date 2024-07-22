@@ -36,9 +36,9 @@ class NiccService extends HttpClient {
     .flatMap(_.headOption)
     .getOrElse(fail("Couldn't retrieve Auth Token"))
 
-  def makeRequest(request: Request, startTaxYear: String, endTaxYear: String): StandaloneWSRequest#Self#Response = {
+  def makeRequest(request: Request): StandaloneWSRequest#Self#Response = {
 
-    val url: String = s"$host/v1/api/contribution-and-credits/from/$startTaxYear/to/$endTaxYear"
+    val url: String = s"$host/nicc-service/v1/api/contribution-and-credits/"
     val requestPayload = Json.toJsObject(request)
     Await.result(
       post(
