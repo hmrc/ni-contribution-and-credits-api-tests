@@ -19,12 +19,12 @@ package uk.gov.hmrc.api.models
 import play.api.libs.json.{Json, OFormat}
 
 case class NIContribution(taxYear: Int,
-                          contributionCategoryLetter: String,
-                          contributionCategory: String,
-                          totalContribution: BigDecimal,
-                          primaryContribution: BigDecimal,
-                          class1ContributionStatus: String,
-                          primaryPaidEarnings: BigDecimal)
+                          niContributionCategory: String,
+                          niContributionCategoryName: String,
+                          niContributionType: String,
+                          totalPrimaryContribution: BigDecimal,
+                          contributionStatus: String,
+                          totalEarningsFactor: BigDecimal)
 
 object NIContribution {
   implicit val format: OFormat[NIContribution] = Json.format[NIContribution]  //case class to json
