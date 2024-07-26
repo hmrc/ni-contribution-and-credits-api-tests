@@ -50,4 +50,19 @@ class NiccService extends HttpClient {
       10.seconds
     )
   }
+
+  def makeRequestWithBearerToken(request: Request, bearerToken: String): StandaloneWSRequest#Self#Response = {
+
+    val url: String = s"$host/nicc-service/v1/api/contribution-and-credits/"
+    val requestPayload = Json.toJsObject(request)
+    Await.result(
+      post(
+        url,
+        Json.stringify(requestPayload),
+        ("Authorization", token),
+        ("Content-Type", "application/json")
+      ),
+      10.seconds
+    )
+  }
 }
