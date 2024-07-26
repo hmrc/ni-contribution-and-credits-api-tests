@@ -59,7 +59,7 @@ class NiccService extends HttpClient {
       post(
         url,
         Json.stringify(requestPayload),
-        ("Authorization", token),
+        ("Authorization", bearerToken),
         ("Content-Type", "application/json")
       ),
       10.seconds
