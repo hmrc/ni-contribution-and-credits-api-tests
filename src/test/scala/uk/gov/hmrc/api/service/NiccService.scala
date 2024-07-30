@@ -36,7 +36,7 @@ class NiccService extends HttpClient {
     .flatMap(_.headOption)
     .getOrElse(fail("Couldn't retrieve Auth Token"))
 
-  def makeRequest(request: Request): StandaloneWSRequest#Self#Response = {
+  def makeRequest(request: Request, timeoutDuration: Int = 10): StandaloneWSRequest#Self#Response = {
 
     val url: String = s"$host/nicc-service/v1/api/contribution-and-credits/"
     val requestPayload = Json.toJsObject(request)
@@ -47,7 +47,7 @@ class NiccService extends HttpClient {
         ("Authorization", token),
         ("Content-Type", "application/json")
       ),
-      10.seconds
+      timeoutDuration.seconds
     )
   }
 

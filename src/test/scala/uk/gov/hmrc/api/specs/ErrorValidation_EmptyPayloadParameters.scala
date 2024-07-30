@@ -26,7 +26,7 @@ class ErrorValidation_EmptyPayloadParameters extends BaseSpec{
 
     Scenario("Request with missing NINO receives error response 400 from MDTP"){
       val response =
-        niccService.makeRequest(Request("", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337", "2019", "2021"))
+        niccService.makeRequest(Request("", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe badRequestErrorResponse
@@ -35,7 +35,7 @@ class ErrorValidation_EmptyPayloadParameters extends BaseSpec{
 
     Scenario("Request with missing Date of Birth receives error response 400 from MDTP"){
       val response =
-        niccService.makeRequest(Request("BB000200B", "", "e470d658-99f7-4292-a4a1-ed12c72f1337", "2019", "2021"))
+        niccService.makeRequest(Request("BB000200B", "", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe badRequestErrorResponse
@@ -44,7 +44,7 @@ class ErrorValidation_EmptyPayloadParameters extends BaseSpec{
 
     Scenario("Request with missing start tax year receives error response 400 from MDTP"){
       val response =
-        niccService.makeRequest(Request("BB000200B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337", "", "2021"))
+        niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "", "2021"))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe badRequestErrorResponse
@@ -53,7 +53,7 @@ class ErrorValidation_EmptyPayloadParameters extends BaseSpec{
 
     Scenario("Request with missing end tax year receives error response 400 from MDTP"){
       val response =
-        niccService.makeRequest(Request("BB000200B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337", "2019", ""))
+        niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", ""))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe badRequestErrorResponse

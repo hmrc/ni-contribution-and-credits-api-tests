@@ -27,7 +27,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec{
 
     Scenario("Request with Invalid NINO receives error response 400 from MDTP"){
       val response =
-        niccService.makeRequest(Request("xx", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337", "2019", "2021"))
+        niccService.makeRequest(Request("xx", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe badRequestErrorResponse
@@ -36,7 +36,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec{
 
     Scenario("Request with Date of Birth with invalid format receives error response 400 from MDTP"){
       val response =
-        niccService.makeRequest(Request("BB000200B", "1960/04/05", "e470d658-99f7-4292-a4a1-ed12c72f1337", "2019", "2021"))
+        niccService.makeRequest(Request("BB000200B", "1960/04/05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe badRequestErrorResponse
@@ -45,7 +45,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec{
 
     Scenario("Request with start tax year with invalid format receives error response 400 from MDTP"){
       val response =
-        niccService.makeRequest(Request("BB000200B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337", ":2019", "2021"))
+        niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), ":2019", "2021"))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe badRequestErrorResponse
@@ -54,7 +54,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec{
 
     Scenario("Request with end tax year with invalid format receives error response 400 from MDTP"){
       val response =
-        niccService.makeRequest(Request("BB000200B", "1960-04-05", "e470d658-99f7-4292-a4a1-ed12c72f1337", "2019", ":2021"))
+        niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", ":2021"))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe badRequestErrorResponse
