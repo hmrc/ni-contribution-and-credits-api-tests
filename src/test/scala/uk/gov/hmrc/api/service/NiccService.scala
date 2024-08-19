@@ -38,7 +38,7 @@ class NiccService extends HttpClient {
 
   def makeRequest(request: Request, timeoutDuration: Int = 10): StandaloneWSRequest#Self#Response = {
 
-    val url: String = s"$host/nicc-service/v1/api/contribution-and-credits/"
+    val url: String = s"$host/contribution-and-credits/"
     val requestPayload = Json.toJsObject(request)
     Await.result(
       post(
@@ -53,7 +53,7 @@ class NiccService extends HttpClient {
 
   def makeRequestWithBearerToken(request: Request, bearerToken: String): StandaloneWSRequest#Self#Response = {
 
-    val url: String = s"$host/nicc-service/v1/api/contribution-and-credits/"
+    val url: String = s"$host/contribution-and-credits/"
     val requestPayload = Json.toJsObject(request)
     Await.result(
       post(
