@@ -100,7 +100,57 @@ class PositiveScenarios extends BaseSpec {
       responseBody.niClass2.get.head.contributionStatus shouldBe "NOT KNOWN/NOT APPLICABLE"
     }
 
-  }
+    Scenario("NICC_TC_P005: Retrieve only Class 2 data for given NINO") {
+      Given("The NICC API is up and running")
+      When("A request for NICC is sent")
+      val response =
+        niccService.makeRequest(Request("WP103133", "1981-10-03", None, "2019", "2023"))
 
+      println(Json.parse(response.body))
+      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+
+      Then("Class 2 details are returned")
+      response.status shouldBe 200
+      response.body.contains("niClass2") shouldBe true
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+
+      responseBody.niClass2.get.head.contributionStatus shouldBe "VALID"
+    }
+
+    Scenario("NICC_TC_P006: Retrieve only Class 2 data for given NINO and date of birth is 1956-10-03") {
+      Given("The NICC API is up and running")
+      When("A request for NICC is sent")
+      val response =
+        niccService.makeRequest(Request("JA000017B", "1956-10-03", None, "2019", "2020"))
+
+      println(Json.parse(response.body))
+      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+
+      Then("Class 2 details are returned")
+      response.status shouldBe 200
+      response.body.contains("niClass2") shouldBe true
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+
+      responseBody.niClass2.get.head.contributionStatus shouldBe "VALID"
+    }
+
+    Scenario("NICC_TC_P007: Retrieve null for given NINO") {
+      Given("The NICC API is up and running")
+      When("A request for NICC is sent")
+      val response =
+        niccService.makeRequest(Request("NY634367C", "1956-10-03", None, "2019", "2020"))
+
+      println(Json.parse(response.body))
+      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+
+      Then("No Response Body returned")
+      response.status shouldBe 200
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+    }
+
+  }
 
 }
