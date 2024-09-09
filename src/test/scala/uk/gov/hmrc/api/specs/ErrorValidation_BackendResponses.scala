@@ -91,5 +91,14 @@ class ErrorValidation_BackendResponses extends BaseSpec {
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe ""
     }
+
+    Scenario("Request receives 404 error response from backend"){
+      val response =
+        niccService.makeRequest(Request("JA000017B", "1956-11-03", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
+      response.status shouldBe 404
+      println("Response Status Code is : " + response.status + " " + response.statusText)
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
+      println("Response Body is: " + response.body)
+    }
 }
 }
