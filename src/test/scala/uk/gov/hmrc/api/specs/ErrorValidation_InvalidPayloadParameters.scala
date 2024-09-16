@@ -72,16 +72,25 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec{
 
     Scenario("Request with Tax year range greater than six years, receives error response 422 from MDTP") {
       val response =
-        niccService.makeRequest(Request("AA271213C", "1981-10-23", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2017", "2024"))
+        niccService.makeRequest(Request("AA271213C", "1981-10-23", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2016", "2023"))
       response.status shouldBe 422
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe "{\"failures\":[{\"reason\":\"Tax year range greater than six years\",\"code\":\"63500\"}]}"
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with Date of Birth Year with 8888 receives error response 400 from MDTP") {
+    Scenario("Request with endTaxYear is 2004 as startTaxYear and endTaxYear cannot be this year 2024, receives error response 422 from MDTP") {
       val response =
-        niccService.makeRequest(Request("AA271213C", "8888-10-23", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2017", "2024"))
+        niccService.makeRequest(Request("AA271213C", "1981-10-23", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2017", "2024"))
+      response.status shouldBe 422
+      println("Response Status Code is : " + response.status + " " + response.statusText)
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Start tax year after CY-1\",\"code\":\"63498\"}]}"
+      println("Response Body is: " + response.body)
+    }
+
+    Scenario("Request with Date of Birth Year >= 16 receives error response 400 from MDTP") {
+      val response =
+        niccService.makeRequest(Request("AA271213C", "2008-10-13", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2023", "2023"))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe "{\"failures\":[{\"reason\":\"Constraint Violation - Invalid/Missing input parameter\",\"code\":\"400.1\"}]}"
@@ -90,7 +99,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec{
 
     Scenario("Request with Start tax year before 1975 receives error response 422 from MDTP") {
       val response =
-        niccService.makeRequest(Request("BE699233A", "1981-08-24", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "1974", "2021"))
+        niccService.makeRequest(Request("BE699233A", "1981-08-24", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "1973", "1975"))
       response.status shouldBe 422
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body shouldBe "{\"failures\":[{\"reason\":\"Start tax year before 1975\",\"code\":\"63497\"}]}"
@@ -100,9 +109,9 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec{
     Scenario("Request with given NINO AA123456C receives error response 404 Not Found from MDTP") {
       val response =
         niccService.makeRequest(Request("AA123456C", "1981-08-24", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "1974", "2021"))
-      response.status shouldBe 404
+      response.status shouldBe 422
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Tax year range greater than six years\",\"code\":\"63500\"}]}"
       println("Response Body is: " + response.body)
     }
 
