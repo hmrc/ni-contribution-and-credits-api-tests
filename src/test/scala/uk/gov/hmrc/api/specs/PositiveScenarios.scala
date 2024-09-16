@@ -104,7 +104,7 @@ class PositiveScenarios extends BaseSpec {
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
       val response =
-        niccService.makeRequest(Request("WP103133", "1981-10-03", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2023"))
+        niccService.makeRequest(Request("WP103133", "1970-03-12", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2023"))
 
       println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
@@ -140,7 +140,7 @@ class PositiveScenarios extends BaseSpec {
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
       val response =
-        niccService.makeRequest(Request("NY634367C", "1956-10-03", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2020"))
+        niccService.makeRequest(Request("NY634367C", "1999-01-27", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2020"))
 
       println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
@@ -150,6 +150,7 @@ class PositiveScenarios extends BaseSpec {
       println("The Response Status Code is : " + response.status + " " + response.statusText)
 
     }
+
 
   }
 
