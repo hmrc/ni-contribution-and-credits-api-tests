@@ -28,17 +28,15 @@ import scala.concurrent.duration._
 
 class NiccService extends HttpClient {
 
-  val host: String                   = TestConfiguration.url("nicc")
-  val token: String = new AuthService()
-    .postLogin
-    .headers
+  val host: String  = TestConfiguration.url("nicc")
+  val token: String = new AuthService().postLogin.headers
     .get("Authorization")
     .flatMap(_.headOption)
     .getOrElse(fail("Couldn't retrieve Auth Token"))
 
   def makeRequest(request: Request, timeoutDuration: Int = 10): StandaloneWSRequest#Self#Response = {
 
-    val url: String = s"$host/contribution-and-credits/"
+    val url: String    = s"$host/contribution-and-credits/"
     val requestPayload = Json.toJsObject(request)
     Await.result(
       post(
@@ -53,7 +51,7 @@ class NiccService extends HttpClient {
 
   def makeRequestWithBearerToken(request: Request, bearerToken: String): StandaloneWSRequest#Self#Response = {
 
-    val url: String = s"$host/contribution-and-credits/"
+    val url: String    = s"$host/contribution-and-credits/"
     val requestPayload = Json.toJsObject(request)
     Await.result(
       post(

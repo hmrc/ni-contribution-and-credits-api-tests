@@ -19,8 +19,9 @@ package uk.gov.hmrc.api.specs
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import uk.gov.hmrc.api.models.{Request, Response}
+import uk.gov.hmrc.api.helpers.BaseHelper
 
-class PositiveScenarios extends BaseSpec {
+class PositiveScenarios extends BaseSpec with BaseHelper {
 
   Feature("POSITIVE SCENARIOS") {
 
@@ -28,13 +29,15 @@ class PositiveScenarios extends BaseSpec {
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
       val response =
-        niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
+        niccService.makeRequest(
+          Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
+        )
 
       println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("Class 1 and Class 2 details are returned")
-      response.status shouldBe 200
+      response.status                    shouldBe 200
       response.body.contains("niClass1") shouldBe true
       response.body.contains("niClass2") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
@@ -47,13 +50,15 @@ class PositiveScenarios extends BaseSpec {
       Given("The NICC API is up and running")
       When("A request for NINC is sent")
       val response =
-        niccService.makeRequest(Request("BB000200", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
+        niccService.makeRequest(
+          Request("BB000200", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
+        )
 
       println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("Class 1 and Class 2 details are returned")
-      response.status shouldBe 200
+      response.status                    shouldBe 200
       response.body.contains("niClass1") shouldBe true
       response.body.contains("niClass2") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
@@ -67,13 +72,15 @@ class PositiveScenarios extends BaseSpec {
       Given("The NICC API is up and running")
       When("A request for NINC is sent")
       val response =
-        niccService.makeRequest(Request("BB000200A", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
+        niccService.makeRequest(
+          Request("BB000200A", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
+        )
 
       println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("Only Class 1 details are returned")
-      response.status shouldBe 200
+      response.status                    shouldBe 200
       response.body.contains("niClass1") shouldBe true
       response.body.contains("niClass2") shouldBe false
       println("The Response Status Code is : " + response.status + " " + response.statusText)
@@ -87,10 +94,10 @@ class PositiveScenarios extends BaseSpec {
         niccService.makeRequest(Request("BB000200B", "1960-04-05", None, "2019", "2021"))
 
       println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("Class 1 and Class 2 details are returned")
-      response.status shouldBe 200
+      response.status                    shouldBe 200
       response.body.contains("niClass1") shouldBe true
       response.body.contains("niClass2") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
@@ -104,13 +111,15 @@ class PositiveScenarios extends BaseSpec {
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
       val response =
-        niccService.makeRequest(Request("WP103133", "1970-03-12", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2023"))
+        niccService.makeRequest(
+          Request("WP103133", "1970-03-12", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2023")
+        )
 
       println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("Class 2 details are returned")
-      response.status shouldBe 200
+      response.status                    shouldBe 200
       response.body.contains("niClass2") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
@@ -122,13 +131,15 @@ class PositiveScenarios extends BaseSpec {
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
       val response =
-      niccService.makeRequest(Request("JA000017B", "1956-10-03", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2020"))
+        niccService.makeRequest(
+          Request("JA000017B", "1956-10-03", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2020")
+        )
 
       println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("Class 2 details are returned")
-      response.status shouldBe 200
+      response.status                    shouldBe 200
       response.body.contains("niClass2") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
@@ -138,19 +149,22 @@ class PositiveScenarios extends BaseSpec {
 
     Scenario("NICC_TC_P007: Retrieve null for given NINO") {
       Given("The NICC API is up and running")
+      And("Given nino is greater than 16 years old")
+      val dob      = "1999-01-27"
+      ValidateDOB(dob)
       When("A request for NICC is sent")
+      val testdataPath =
       val response =
-        niccService.makeRequest(Request("NY634367C", "1999-01-27", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2020"))
+        niccService.makeRequest(Request("NY634367C", dob, Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2020"))
 
       println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("No Response Body returned")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
 
     }
-
 
   }
 

@@ -18,49 +18,53 @@ package uk.gov.hmrc.api.specs
 
 import uk.gov.hmrc.api.models.Request
 
+class ErrorValidation_EmptyPayloadParameters extends BaseSpec {
 
-class ErrorValidation_EmptyPayloadParameters extends BaseSpec{
-
-  val badRequestErrorResponse = "{\"failures\":[{\"reason\":\"There was a problem with the request\",\"code\":\"400\"}]}"
+  val badRequestErrorResponse =
+    "{\"failures\":[{\"reason\":\"There was a problem with the request\",\"code\":\"400\"}]}"
   Feature("VALIDATION OF ERROR CODES FOR MISSING INPUT") {
 
-    Scenario("Request with missing NINO receives error response 400 from MDTP"){
+    Scenario("Request with missing NINO receives error response 400 from MDTP") {
       val response =
         niccService.makeRequest(Request("", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe badRequestErrorResponse
+      response.body   shouldBe badRequestErrorResponse
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with missing Date of Birth receives error response 400 from MDTP"){
+    Scenario("Request with missing Date of Birth receives error response 400 from MDTP") {
       val response =
         niccService.makeRequest(Request("BB000200B", "", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe badRequestErrorResponse
+      response.body   shouldBe badRequestErrorResponse
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with missing start tax year receives error response 400 from MDTP"){
+    Scenario("Request with missing start tax year receives error response 400 from MDTP") {
       val response =
-        niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "", "2021"))
+        niccService.makeRequest(
+          Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "", "2021")
+        )
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe badRequestErrorResponse
+      response.body   shouldBe badRequestErrorResponse
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with missing end tax year receives error response 400 from MDTP"){
+    Scenario("Request with missing end tax year receives error response 400 from MDTP") {
       val response =
-        niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", ""))
+        niccService.makeRequest(
+          Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "")
+        )
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe badRequestErrorResponse
+      response.body   shouldBe badRequestErrorResponse
       println("Response Body is: " + response.body)
     }
 
-    //uncomment after the implementation is completed in the service
+    // uncomment after the implementation is completed in the service
 //    Scenario("Request with missing customer correlation ID receives error response 400 from MDTP"){
 //      val response =
 //        niccService.makeRequest(Request("BB000200B", "1960-04-05", "", "2019", ""))
