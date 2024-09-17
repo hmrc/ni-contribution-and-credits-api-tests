@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.utils
+/*package uk.gov.hmrc.api.utils
 
 import com.google.inject.Inject
-import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
-import sun.tools.java.Environment
+import play.api.Environment
 
 import java.io.{FileInputStream, InputStream}
-import javax.inject.Inject
+
 import scala.io.Source
 
 class JsonUtils @Inject()(environment: Environment) {
@@ -49,4 +48,4 @@ class JsonUtils @Inject()(environment: Environment) {
     }
   }
 
-}
+}*/
