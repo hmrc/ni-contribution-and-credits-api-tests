@@ -8,7 +8,8 @@ object Dependencies {
     "com.typesafe.play"   %% "play-ws-standalone-json" % "2.2.5"  % Test,
     "com.vladsch.flexmark" % "flexmark-all"            % "0.64.8" % Test,
     "org.scalatest"       %% "scalatest"               % "3.2.18" % Test,
-    "org.slf4j"            % "slf4j-simple"            % "2.0.9"  % Test
+    "org.slf4j"            % "slf4j-simple"            % "2.0.9"  % Test,
+    "com.google.inject"    % "guice"                   % "5.1.0"  % Test
   )
 
 }

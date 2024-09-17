@@ -19,8 +19,11 @@ package uk.gov.hmrc.api.specs
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import uk.gov.hmrc.api.models.{Request, Response}
+import uk.gov.hmrc.api.helpers.BaseHelper
 
-class PositiveScenarios extends BaseSpec {
+import javax.inject.Inject
+
+class PositiveScenarios extends BaseSpec with BaseHelper @Inject() (jsonUtils: JsonUtils){
 
   Feature("POSITIVE SCENARIOS") {
 
@@ -138,9 +141,12 @@ class PositiveScenarios extends BaseSpec {
 
     Scenario("NICC_TC_P007: Retrieve null for given NINO") {
       Given("The NICC API is up and running")
+      And("Validate the given NINO is greater than 16 years old")
+      val d0b = "1999-01-27"
+     ValidateDOB(d0b)
       When("A request for NICC is sent")
       val response =
-        niccService.makeRequest(Request("NY634367C", "1999-01-27", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2020"))
+        niccService.makeRequest(Request("NY634367C", d0b, Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2020"))
 
       println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
