@@ -17,9 +17,10 @@
 package uk.gov.hmrc.api.specs
 
 import uk.gov.hmrc.api.models.Request
+import uk.gov.hmrc.api.helpers.BaseHelper
 
 
-class ErrorValidation_InvalidPayloadParameters extends BaseSpec{
+class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper{
 
   val badRequestErrorResponse = "{\"failures\":[{\"reason\":\"There was a problem with the request\",\"code\":\"400\"}]}"
 
@@ -107,6 +108,12 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec{
     }
 
     Scenario("Verify 422 Unprocessable Entity response when calling nino AA123456C with invalid tax year range") {
+      And("Validate the given NINO is greater than 16 years old")
+      val d0b = "1999-01-27"
+      ValidateDOB(d0b)
+      val startTaxYear = "1974"
+      val year = ValidateStartTaxYear(startTaxYear)
+      println("valid year", year)
       val response =
         niccService.makeRequest(Request("AA123456C", "1969-12-09", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "1974", "2021"))
       response.status shouldBe 422

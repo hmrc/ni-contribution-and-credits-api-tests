@@ -146,8 +146,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper {
       val year = ValidateStartTaxYear(startTaxYear)
       println("valid year", year)
       When("A request for NICC is sent")
-      val response =
-        niccService.makeRequest(Request("NY634367C", d0b, Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), startTaxYear, "2020"))
+      val response = niccService.makeRequest(Request("NY634367C", d0b, Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), startTaxYear, "2020"))
 
       println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
