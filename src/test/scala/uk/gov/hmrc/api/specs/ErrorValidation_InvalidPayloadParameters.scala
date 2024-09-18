@@ -115,6 +115,5 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec{
       println("Response Body is: " + response.body)
     }
 
-
   }
 }

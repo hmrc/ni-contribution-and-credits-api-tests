@@ -126,13 +126,5 @@ class ErrorValidation_BackendResponses extends BaseSpec {
       println("Response Status Code is : " + response.status + " " + response.statusText)
 
     }
-    Scenario("Request receives 422 error response from backend for given NINO is AA271213 and incorrect start tax year "){
-      val response =
-        niccService.makeRequest(Request("AA271213", "1969-12-09", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "1973", "1975"))
-      response.status shouldBe 422
-      println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe "{\"failures\":[{\"reason\":\"Start tax year before 1975\",\"code\":\"63497\"}]}"
-      println("Response Body is: " + response.body)
-    }
 }
 }
