@@ -1,6 +1,8 @@
 package uk.gov.hmrc.api.helpers
-import java.time.{LocalDate, Period}
 import java.time.format.{DateTimeFormatter, DateTimeParseException}
+import java.time.{LocalDate, Period}
+import java.util.Calendar
+
 
 trait BaseHelper {
   def ValidateDOB(dateString: String): Boolean = {
@@ -17,11 +19,13 @@ trait BaseHelper {
     }
   }
 
-  def ValidateStartTaxYear(yearString: String, minYear: Int = 1975, maxYear: Int = 2023): Boolean = {
-
+  def ValidateStartTaxYear(yearString: String): Boolean = {
+    val minYear: Int = 1975
+    val cal: Calendar = Calendar.getInstance()
+    val currentYear: Int = cal.get(Calendar.YEAR)
 yearString.matches("""\d{4}""") && {
   val year = yearString.toInt
-  year >= minYear && year  <= maxYear
+  year >= minYear && year  <= currentYear
 }
   }
 }
