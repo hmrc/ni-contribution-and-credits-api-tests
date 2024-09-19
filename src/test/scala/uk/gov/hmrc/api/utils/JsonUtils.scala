@@ -1,33 +1,20 @@
-/*
- * Copyright 2024 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*package uk.gov.hmrc.api.utils
+package uk.gov.hmrc.api.utils
 
 import scala.io.Source
 import io.circe._
 import io.circe.parser._
-import io.circe.generic.auto._
 import play.api.libs.json.{JsValue, Json}
-import java.io.File
 
 import java.io.FileInputStream
 
-case class NIDetails(nationalInsuranceNumber: String ,dateOfBirth: String, customerCorrelationID: String,startTaxYear: Int, endTaxYear: Int)
- def parseJsonFile(file: File): Either[ParsingFailure, Json] = {
-  val source = Source.fromFile(file)
-  val jsonString = try source.mkString finally source.close()
-  parse(jsonString)
-}*/
+object JsonUtils {
+  def readJsonFile(filePath: String): String = {
+    val source = Source.fromResource(filePath)
+    try source.getLines().mkString
+    finally source.close()
+  }
+
+  def parseJson(jsonString: String): Either[ParsingFailure, Json] = {
+    parse(jsonString)
+  }
+}

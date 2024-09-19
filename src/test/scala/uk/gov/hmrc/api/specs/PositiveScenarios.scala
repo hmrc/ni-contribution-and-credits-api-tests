@@ -20,16 +20,27 @@ import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.{Request, Response}
+import uk.gov.hmrc.api.utils.JsonUtils
 
-class PositiveScenarios extends BaseSpec with BaseHelper {
+class PositiveScenarios extends BaseSpec with BaseHelper  {
 
   Feature("POSITIVE SCENARIOS") {
 
     Scenario("NICC_TC_P001: Retrieve Class 1 and Class 2 data for given NINO with suffix") {
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
+      val jsonString = JsonUtils.readJsonFile("uk/gov/hmrc/api/helpers/NY634367C.json")
+      val json = JsonUtils.parseJson(jsonString) match {
+        case Left(failure) => fail(s"Parsing error: $failure")
+        case Right(json) => json
+          val cursor = json.hcursor
+          val nino = cursor.get[String]("nationalInsuranceNumber")
+          println(nino)
+      }
+
       val response =
         niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
+      //val response = jsonUtils.readJsonFile(s"src/test/scala/uk.gov.hmrc.api/helpers/NY634367.json")
 
       println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
