@@ -21,23 +21,26 @@ import play.api.libs.json._
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.{Request, Response}
 import uk.gov.hmrc.api.utils.JsonUtils
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.ConfigMap
 
-class PositiveScenarios extends BaseSpec with BaseHelper {
+class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
+  var PayloadMapping: Map[String, Request] = _
+
+  override def beforeAll(): Unit = {
+    super.beforeAll()
+    val jsonString = JsonUtils.readJsonFile("uk/gov/hmrc/api/testData/testData.json")
+    PayloadMapping = JsonUtils.parseJsonToMap(jsonString) match {
+      case Left(failure) => fail(s"Parsing failed: $failure")
+      case Right(map)    => map
+    }
+  }
   Feature("POSITIVE SCENARIOS") {
 
     Scenario("NICC_TC_P001: Retrieve Class 1 and Class 2 data for given NINO with suffix") {
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
-      val jsonString = JsonUtils.readJsonFile("uk/gov/hmrc/api/testData/NY634367C.json")
-      val json: Unit = JsonUtils.parseJson(jsonString) match {
-        case Left(failure) => fail(s"Parsing error: $failure")
-        case Right(json)   =>
-          json
-          val cursor = json.hcursor
-          val nino   = cursor.get[String]("nationalInsuranceNumber")
-          println(nino)
-      }
 
       val response =
         niccService.makeRequest(
@@ -142,13 +145,21 @@ class PositiveScenarios extends BaseSpec with BaseHelper {
     Scenario("NICC_TC_P006: Retrieve only Class 2 data for given NINO and date of birth is 1956-10-03") {
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
+      val payload = PayloadMapping.getOrElse("NICC_TC_P006", fail("NICC_TC_P006 not found"))
+
       val response =
         niccService.makeRequest(
-          Request("JA000017B", "1956-10-03", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2020")
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
         )
 
       println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      val responseBody: Response = Json.parse(response.body).as[Response]
 
       Then("Class 2 details are returned")
       response.status                    shouldBe 200

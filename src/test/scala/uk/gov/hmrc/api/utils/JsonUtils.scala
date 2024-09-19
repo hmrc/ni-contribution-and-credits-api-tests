@@ -3,9 +3,10 @@ package uk.gov.hmrc.api.utils
 import scala.io.Source
 import io.circe._
 import io.circe.parser._
-import play.api.libs.json.{JsValue, Json}
+import io.circe.generic.auto._
+import uk.gov.hmrc.api.models.Request
 
-import java.io.FileInputStream
+import scala.util
 
 object JsonUtils {
   def readJsonFile(filePath: String): String = {
@@ -14,6 +15,6 @@ object JsonUtils {
     finally source.close()
   }
 
-  def parseJson(jsonString: String): Either[ParsingFailure, Json] =
-    parse(jsonString)
+  def parseJsonToMap(jsonString: String): Either[Error, Map[String, Request]] =
+    parse(jsonString).flatMap(_.as[Map[String, Request]])
 }
