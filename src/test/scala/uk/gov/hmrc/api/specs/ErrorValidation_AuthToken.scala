@@ -24,20 +24,26 @@ class ErrorValidation_AuthToken extends BaseSpec {
 
     Scenario("Request with invalid bearer token receives error response 500 from MDTP") {
       val response =
-        niccService.makeRequestWithBearerToken(Request("BB000200", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"), "invalidToken")
+        niccService.makeRequestWithBearerToken(
+          Request("BB000200", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"),
+          "invalidToken"
+        )
       response.status shouldBe 500
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe ""
+      response.body   shouldBe ""
       println("Response Body is: " + response.body)
     }
 
     Scenario("Request with empty bearer token receives error response 500 from MDTP") {
       val response =
-        niccService.makeRequestWithBearerToken(Request("BB000200", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"), "")
+        niccService.makeRequestWithBearerToken(
+          Request("BB000200", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"),
+          ""
+        )
       response.status shouldBe 500
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe ""
-        println("Response Body is: " + response.body)
+      response.body   shouldBe ""
+      println("Response Body is: " + response.body)
     }
 
     // Expired token to be tested manually

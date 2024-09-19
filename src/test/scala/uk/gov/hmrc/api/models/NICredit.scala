@@ -18,13 +18,15 @@ package uk.gov.hmrc.api.models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class NICredit(taxYear: Int,
-                    numberOfWeeks: Int,
-                    niContributionType: String,
-                    totalEarningsFactor: BigDecimal,
-                    totalPrimaryContribution: BigDecimal,
-                    contributionStatus: String)
+case class NICredit(
+  taxYear: Int,
+  numberOfWeeks: Int,
+  niContributionType: String,
+  totalEarningsFactor: BigDecimal,
+  totalPrimaryContribution: BigDecimal,
+  contributionStatus: String
+)
 
 object NICredit {
-  implicit val format: OFormat[NICredit] = Json.format[NICredit] //case class to JSON
+  implicit val format: OFormat[NICredit] = Json.format[NICredit] // case class to JSON
 }

@@ -14,7 +14,6 @@ object JsonUtils {
     finally source.close()
   }
 
-  def parseJson(jsonString: String): Either[ParsingFailure, Json] = {
+  def parseJson(jsonString: String): Either[ParsingFailure, Json] =
     parse(jsonString)
-  }
 }

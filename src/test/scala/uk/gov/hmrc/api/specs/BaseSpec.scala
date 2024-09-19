@@ -25,9 +25,7 @@ import uk.gov.hmrc.api.service.NiccService
 
 trait BaseSpec extends AnyFeatureSpec with GivenWhenThen with Matchers with HttpClient {
 
-  val authHelper                = new AuthHelper
+  val authHelper  = new AuthHelper
   val niccService = new NiccService
-
-
 
 }
