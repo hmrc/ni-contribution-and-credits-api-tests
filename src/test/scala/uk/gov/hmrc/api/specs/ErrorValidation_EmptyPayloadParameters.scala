@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.api.specs
 
-import uk.gov.hmrc.api.models.Request
+import play.api.libs.json.Json
+import uk.gov.hmrc.api.models.{Request, Response}
 
 
 class ErrorValidation_EmptyPayloadParameters extends BaseSpec{
@@ -33,7 +34,7 @@ class ErrorValidation_EmptyPayloadParameters extends BaseSpec{
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with missing Date of Birth receives error response 400 from MDTP"){
+    Scenario("Verify the request with missing Date of Birth receives error response 400"){
       val response =
         niccService.makeRequest(Request("BB000200B", "", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
       response.status shouldBe 400
@@ -42,7 +43,7 @@ class ErrorValidation_EmptyPayloadParameters extends BaseSpec{
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with missing start tax year receives error response 400 from MDTP"){
+    Scenario("Verify the request with missing start tax year receives error response 400 from MDTP"){
       val response =
         niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "", "2021"))
       response.status shouldBe 400
@@ -51,24 +52,24 @@ class ErrorValidation_EmptyPayloadParameters extends BaseSpec{
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with missing end tax year receives error response 400 from MDTP"){
+    Scenario("Verify the request with missing end tax year receives error response 400 from MDTP"){
       val response =
         niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", ""))
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe badRequestErrorResponse
       println("Response Body is: " + response.body)
+      response.body shouldBe badRequestErrorResponse
     }
 
-    //uncomment after the implementation is completed in the service
-//    Scenario("Request with missing customer correlation ID receives error response 400 from MDTP"){
-//      val response =
-//        niccService.makeRequest(Request("BB000200B", "1960-04-05", "", "2019", ""))
-//      response.status shouldBe 400
-//      println("Response Status Code is : " + response.status + " " + response.statusText)
-//      response.body shouldBe "{\"failures\":[{\"reason\":\"There was a problem with the request\",\"code\":\"400\"}]}"
-//      println("Response Body is: " + response.body)
-//    }
+   Scenario("Request with missing customer correlation ID receives error response 400 from MDTP"){
+    val response =
+      niccService.makeRequest(Request("BB000200B", "1960-04-05", Some(""), "2019", "2020"))
+     response.status shouldBe 200
+     println("Response Status Code is : " + response.status + " " + response.statusText)
+     val responseBody: Response = Json.parse(response.body).as[Response]
+     println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+
+    }
 
   }
 

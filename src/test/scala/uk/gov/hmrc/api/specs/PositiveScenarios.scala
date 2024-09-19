@@ -148,8 +148,9 @@ class PositiveScenarios extends BaseSpec with BaseHelper {
       When("A request for NICC is sent")
       val response = niccService.makeRequest(Request("NY634367C", d0b, Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), startTaxYear, "2020"))
 
-      println(Json.parse(response.body))
+      //println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] //json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
       Then("No Response Body returned")
       response.status shouldBe 200

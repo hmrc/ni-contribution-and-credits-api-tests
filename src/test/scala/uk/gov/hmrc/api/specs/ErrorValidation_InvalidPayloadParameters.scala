@@ -35,7 +35,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper{
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with Date of Birth with invalid format receives error response 400 from MDTP") {
+    Scenario("Verify the request with Date of Birth with invalid format receives error response 400") {
       val response =
         niccService.makeRequest(Request("BB000200B", "1960/04/05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"))
       response.status shouldBe 400
@@ -44,7 +44,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper{
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with start tax year with invalid format receives error response 400 from MDTP") {
+    Scenario("Verify the request with start tax year with invalid format receives error response 400") {
       val response =
         niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), ":2019", "2021"))
       response.status shouldBe 400
@@ -53,7 +53,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper{
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with end tax year with invalid format receives error response 400 from MDTP") {
+    Scenario("Verify the request with end tax year with invalid format receives error response 400") {
       val response =
         niccService.makeRequest(Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", ":2021"))
       response.status shouldBe 400
@@ -62,7 +62,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper{
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with Start tax year after CY-1, receives error response 422 from MDTP") {
+    Scenario("Verify the request with Start tax year after CY-1, receives error response 422") {
       val response =
         niccService.makeRequest(Request("AA271213C", "1969-12-09", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2024", "2023"))
       response.status shouldBe 422
@@ -71,7 +71,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper{
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with Tax year range greater than six years, receives error response 422 from MDTP") {
+    Scenario("Verify the request with Tax year range greater than six years, receives error response 422") {
       val response =
         niccService.makeRequest(Request("AA271213C", "1969-12-09", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2016", "2023"))
       response.status shouldBe 422
@@ -80,7 +80,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper{
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with endTaxYear is 2024 as startTaxYear and endTaxYear cannot be this year 2024, receives error response 422 from MDTP") {
+    Scenario("Verify the request with endTaxYear is 2024 as startTaxYear and endTaxYear cannot be this year 2024, receives error response 422") {
       val response =
         niccService.makeRequest(Request("AA271213C", "1969-12-09", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2017", "2024"))
       response.status shouldBe 422
@@ -89,7 +89,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper{
       println("Response Body is: " + response.body)
     }
 
-    Scenario("Request with Date of Birth Year >= 16 receives error response 400 from MDTP") {
+    Scenario("Verify the request with Date of Birth Year >= 16 receives error response 400") {
       val response =
         niccService.makeRequest(Request("AA271213C", "2008-10-13", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2023", "2023"))
       response.status shouldBe 400
