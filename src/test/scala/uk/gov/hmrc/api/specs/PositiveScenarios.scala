@@ -16,13 +16,12 @@
 
 package uk.gov.hmrc.api.specs
 
+import org.scalatest.BeforeAndAfterAll
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.{Request, Response}
 import uk.gov.hmrc.api.utils.JsonUtils
-import org.scalatest.BeforeAndAfterAll
-import org.scalatest.ConfigMap
 
 class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
@@ -42,11 +41,18 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
 
+      val payload = PayloadMapping.getOrElse("NICC_TC_P001", fail("NICC_TC_P001 not found"))
+
       val response =
         niccService.makeRequest(
-          Request("BB000200B", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
         )
-      // val response = jsonUtils.readJsonFile(s"src/test/scala/uk.gov.hmrc.api/helpers/NY634367.json")
 
       println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
@@ -64,9 +70,18 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
     Scenario("NICC_TC_P002: Retrieve Class 1 and Class 2 data for given NINO without suffix") {
       Given("The NICC API is up and running")
       When("A request for NINC is sent")
+
+      val payload = PayloadMapping.getOrElse("NICC_TC_P002", fail("NICC_TC_P002 not found"))
+
       val response =
         niccService.makeRequest(
-          Request("BB000200", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
         )
 
       println(Json.parse(response.body))
@@ -86,14 +101,21 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
     Scenario("NICC_TC_P003: Retrieve Only Class 1 data for given NINO") {
       Given("The NICC API is up and running")
       When("A request for NINC is sent")
+      val payload = PayloadMapping.getOrElse("NICC_TC_P003", fail("NICC_TC_P003 not found"))
+
       val response =
         niccService.makeRequest(
-          Request("BB000200A", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
         )
 
-      println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-
+      //println(Json.parse(response.body))
+      val responseBody = Json.parse(response.body)
       Then("Only Class 1 details are returned")
       response.status                    shouldBe 200
       response.body.contains("niClass1") shouldBe true
@@ -105,8 +127,18 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
     Scenario("NICC_TC_P004: Retrieve Class 1 and Class 2 data for given NINO without customer correlationID") {
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
+      val payload = PayloadMapping.getOrElse("NICC_TC_P004", fail("NICC_TC_P004 not found"))
+
       val response =
-        niccService.makeRequest(Request("BB000200B", "1960-04-05", None, "2019", "2021"))
+        niccService.makeRequest(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
+        )
 
       println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
@@ -125,10 +157,23 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
     Scenario("NICC_TC_P005: Retrieve only Class 2 data for given NINO") {
       Given("The NICC API is up and running")
       When("A request for NICC is sent")
+
+      val payload = PayloadMapping.getOrElse("NICC_TC_P005", fail("NICC_TC_P005 not found"))
+
       val response =
         niccService.makeRequest(
-          Request("WP103133", "1970-03-12", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2023")
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
         )
+      /*val response =
+        niccService.makeRequest(
+          Request("WP103133", "1970-03-12", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2023")
+        )*/
 
       println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
@@ -173,15 +218,21 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
     Scenario("NICC_TC_P007: Retrieve null for given NINO") {
       Given("The NICC API is up and running")
       And("Validate the given NINO is greater than 16 years old")
-      val d0b          = "1999-01-27"
-      ValidateDOB(d0b)
-      val startTaxYear = "2019"
-      val year         = ValidateStartTaxYear(startTaxYear)
-      println("valid year", year)
+      val payload = PayloadMapping.getOrElse("NICC_TC_P007", fail("NICC_TC_P007 not found"))
+      ValidateDOB(payload.dateOfBirth)
+      ValidateStartTaxYear(payload.startTaxYear)
+
       When("A request for NICC is sent")
-      val response     = niccService.makeRequest(
-        Request("NY634367C", d0b, Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), startTaxYear, "2020")
-      )
+      val response =
+        niccService.makeRequest(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
+        )
 
       // println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class

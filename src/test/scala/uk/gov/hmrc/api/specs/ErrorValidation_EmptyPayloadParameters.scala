@@ -31,7 +31,8 @@ class ErrorValidation_EmptyPayloadParameters extends BaseSpec {
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body   shouldBe badRequestErrorResponse
-      println("Response Body is: " + response.body)
+     val responseBody = Json.parse(response.body)
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
 
     Scenario("Verify the request with missing Date of Birth receives error response 400") {
