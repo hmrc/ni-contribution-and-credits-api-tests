@@ -16,26 +16,54 @@
 
 package uk.gov.hmrc.api.specs
 
-import uk.gov.hmrc.api.models.Request
+import org.scalatest.BeforeAndAfterAll
+import play.api.libs.json.Json
 import uk.gov.hmrc.api.helpers.BaseHelper
+import uk.gov.hmrc.api.models.{Request, Response}
+import uk.gov.hmrc.api.utils.JsonUtils
 
-class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper {
+class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   val badRequestErrorResponse =
     "{\"failures\":[{\"reason\":\"There was a problem with the request\",\"code\":\"400\"}]}"
+
+  var PayloadMapping: Map[String, Request] = _
+
+  override def beforeAll(): Unit = {
+    super.beforeAll()
+    val jsonString = JsonUtils.readJsonFile("uk/gov/hmrc/api/testData/TestData_N001_to_N007.json")
+    PayloadMapping = JsonUtils.parseJsonToMap(jsonString) match {
+      case Left(failure) => fail(s"Parsing failed: $failure")
+      case Right(map)    => map
+    }
+  }
 
   Feature("VALIDATION OF ERROR CODES FOR INVALID INPUT") {
 
 
     Scenario("Request with Invalid NINO receives error response 400 from MDTP") {
-      val response =
+      val payload = PayloadMapping.getOrElse("NICC_TC_N001", fail("NICC_TC_N001 not found"))
+      val response=
+        niccService.makeRequest(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+
+        )
+        )
+     /* val response =
         niccService.makeRequest(
           Request("xx", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021")
-        )
+        )*/
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body   shouldBe badRequestErrorResponse
       println("Response Body is: " + response.body)
+      val responseBody = Json.parse(response.body)
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
 
     Scenario("Verify the request with Date of Birth with invalid format receives error response 400") {

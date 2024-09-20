@@ -1,7 +1,7 @@
 {
   "NICC_TC_N001": {
     "nationalInsuranceNumber": "A123456B",
-    "dateOfBirth": "1981-08-24",
+    "dateOfBirth": "1960-04-05",
     "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
     "startTaxYear": "2019",
     "endTaxYear": "2021"
