@@ -29,7 +29,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val jsonString = JsonUtils.readJsonFile("uk/gov/hmrc/api/testData/testData.json")
+    val jsonString = JsonUtils.readJsonFile("uk/gov/hmrc/api/testData/TestData_P001_to_P007.json")
     PayloadMapping = JsonUtils.parseJsonToMap(jsonString) match {
       case Left(failure) => fail(s"Parsing failed: $failure")
       case Right(map)    => map

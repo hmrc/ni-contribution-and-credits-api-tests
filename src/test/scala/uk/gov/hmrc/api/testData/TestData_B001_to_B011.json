@@ -1,0 +1,79 @@
+{
+  "NICC_TC_B001": {
+    "nationalInsuranceNumber": "BB000400",
+    "dateOfBirth": "1960-04-05",
+    "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
+    "startTaxYear": "2019",
+    "endTaxYear": "2021"
+  },
+  "NICC_TC_B002": {
+    "nationalInsuranceNumber": "BB000400B",
+    "dateOfBirth": "1960-04-05",
+    "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
+    "startTaxYear": "2019",
+    "endTaxYear": "2021"
+  },
+  "NICC_TC_B003": {
+    "nationalInsuranceNumber": "BB000404",
+    "dateOfBirth": "1981-08-24",
+    "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
+    "startTaxYear": "2019",
+    "endTaxYear": "2021"
+  },
+  "NICC_TC_B004": {
+    "nationalInsuranceNumber": "BB000422B",
+    "dateOfBirth": "1960-04-05",
+    "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
+    "startTaxYear": "2022",
+    "endTaxYear": "2021"
+  },
+  "NICC_TC_B005": {
+    "nationalInsuranceNumber": "BB000403B",
+    "dateOfBirth": "1960-04-05",
+    "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
+    "startTaxYear": "2018",
+    "endTaxYear": "2019"
+  },
+  "NICC_TC_B006": {
+      "nationalInsuranceNumber": "BB000408A",
+      "dateOfBirth": "1960-04-05",
+      "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
+      "startTaxYear": "2018",
+      "endTaxYear": "2019"
+  },
+  "NICC_TC_B007": {
+    "nationalInsuranceNumber": "JA000017B",
+    "dateOfBirth": "1956-11-03",
+    "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
+    "startTaxYear": "2019",
+    "endTaxYear": "2021"
+  },
+  "NICC_TC_B008": {
+    "nationalInsuranceNumber": "NY634367C",
+    "dateOfBirth": "1989-01-27",
+    "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
+    "startTaxYear": "2019",
+    "endTaxYear": "2021"
+  },
+  "NICC_TC_B009": {
+    "nationalInsuranceNumber": "WP103133",
+    "dateOfBirth": "1970-04-12",
+    "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
+    "startTaxYear": "2019",
+    "endTaxYear": "2021"
+  },
+  "NICC_TC_B010": {
+    "startTaxYear": "2023",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "AA271213",
+    "dateOfBirth": "1969-12-10",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_B011": {
+    "startTaxYear": "2023",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "AA271213",
+    "dateOfBirth": "1969-12-09",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  }
+}

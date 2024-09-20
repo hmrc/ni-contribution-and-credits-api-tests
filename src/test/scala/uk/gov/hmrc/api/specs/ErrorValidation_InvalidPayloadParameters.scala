@@ -26,6 +26,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
 
   Feature("VALIDATION OF ERROR CODES FOR INVALID INPUT") {
 
+
     Scenario("Request with Invalid NINO receives error response 400 from MDTP") {
       val response =
         niccService.makeRequest(

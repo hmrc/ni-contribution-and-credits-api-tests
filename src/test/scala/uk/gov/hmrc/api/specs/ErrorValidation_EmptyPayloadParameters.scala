@@ -23,6 +23,7 @@ class ErrorValidation_EmptyPayloadParameters extends BaseSpec {
 
   val badRequestErrorResponse =
     "{\"failures\":[{\"reason\":\"There was a problem with the request\",\"code\":\"400\"}]}"
+
   Feature("VALIDATION OF ERROR CODES FOR MISSING INPUT") {
 
     Scenario("Request with missing NINO receives error response 400 from MDTP") {
