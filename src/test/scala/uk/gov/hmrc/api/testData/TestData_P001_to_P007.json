@@ -46,5 +46,68 @@
     "customerCorrelationID": "e470d658-99f7-4292-a4a1-ed12c72f1337",
     "startTaxYear": "2019",
     "endTaxYear": "2021"
+  },
+  "NICC_TC_P008": {
+    "startTaxYear": "1976",
+    "endTaxYear": "1975",
+    "nationalInsuranceNumber": "RN001856",
+    "dateOfBirth": "1958-01-19",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P009": {
+    "startTaxYear": "2023",
+    "endTaxYear": "2022",
+    "nationalInsuranceNumber": "RN001857",
+    "dateOfBirth": "1980-04-18",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P010": {
+    "startTaxYear": "2018",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "RN001859D",
+    "dateOfBirth": "1967-07-22",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P011": {
+    "startTaxYear": "2018",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "RN001965B",
+    "dateOfBirth": "1958-12-25",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P012": {
+    "startTaxYear": "2023",
+    "endTaxYear": "2022",
+    "nationalInsuranceNumber": "RN001966C",
+    "dateOfBirth": "1970-02-16",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P013": {
+    "startTaxYear": "2021",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "RN001967D",
+    "dateOfBirth": "1985-10-19",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P014": {
+    "startTaxYear": "2012",
+    "endTaxYear": "2017",
+    "nationalInsuranceNumber": "RN001969",
+    "dateOfBirth": "1951-07-07",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P015": {
+    "startTaxYear": "2018",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "RN001970",
+    "dateOfBirth": "1989-07-08",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P016": {
+    "startTaxYear": "1975",
+    "endTaxYear": "1974",
+    "nationalInsuranceNumber": "RN001973",
+    "dateOfBirth": "1951-07-07",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
   }
 }
