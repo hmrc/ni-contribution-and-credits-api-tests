@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.specs
+package uk.gov.hmrc.api.utils
 
-import org.scalatest.GivenWhenThen
-import org.scalatest.featurespec.AnyFeatureSpec
-import org.scalatest.matchers.should.Matchers
-import uk.gov.hmrc.api.client.HttpClient
-import uk.gov.hmrc.api.helpers.AuthHelper
-import uk.gov.hmrc.api.service.NiccService
+import io.circe._
+import io.circe.generic.auto._
+import io.circe.parser._
+import uk.gov.hmrc.api.models.Request
 
-trait BaseSpec extends AnyFeatureSpec with GivenWhenThen with Matchers with HttpClient {
+import scala.io.Source
 
-  val authHelper  = new AuthHelper
-  val niccService = new NiccService
+object JsonUtils {
+  def readJsonFile(filePath: String): String = {
+     //val source = Source.fromResource(filePath)
+    val source = Source.fromFile(filePath)
+    try source.getLines().mkString
+    finally source.close()
+  }
 
+  def parseJsonToMap(jsonString: String): Either[Error, Map[String, Request]] =
+    parse(jsonString).flatMap(_.as[Map[String, Request]])
 }

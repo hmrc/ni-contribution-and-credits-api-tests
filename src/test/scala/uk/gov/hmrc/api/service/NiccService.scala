@@ -28,10 +28,8 @@ import scala.concurrent.duration._
 
 class NiccService extends HttpClient {
 
-  val host: String                   = TestConfiguration.url("nicc")
-  val token: String = new AuthService()
-    .postLogin
-    .headers
+  val host: String  = TestConfiguration.url("nicc")
+  val token: String = new AuthService().postLogin.headers
     .get("Authorization")
     .flatMap(_.headOption)
     .getOrElse(fail("Couldn't retrieve Auth Token"))

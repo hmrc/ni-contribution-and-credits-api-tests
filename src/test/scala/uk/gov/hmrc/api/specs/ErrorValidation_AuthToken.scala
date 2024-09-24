@@ -16,28 +16,65 @@
 
 package uk.gov.hmrc.api.specs
 
+import org.scalatest.BeforeAndAfterAll
 import uk.gov.hmrc.api.models.Request
+import uk.gov.hmrc.api.utils.JsonUtils
 
-class ErrorValidation_AuthToken extends BaseSpec {
+class ErrorValidation_AuthToken extends BaseSpec with BeforeAndAfterAll {
+
+  var PayloadMapping: Map[String, Request] = _
+
+  override def beforeAll(): Unit = {
+    super.beforeAll()
+    val jsonString = JsonUtils.readJsonFile("src/test/scala/uk/gov/hmrc/api/testData/TestData_P001_to_P016.json")
+    PayloadMapping = JsonUtils.parseJsonToMap(jsonString) match {
+      case Left(failure) => fail(s"Parsing failed: $failure")
+      case Right(map)    => map
+    }
+  }
 
   Feature("VALIDATION OF ERROR CODES FOR AUTH TOKEN") {
 
     Scenario("Request with invalid bearer token receives error response 500 from MDTP") {
+
+      val payload = PayloadMapping.getOrElse("NICC_TC_P002", fail("NICC_TC_P002 not found"))
+
       val response =
-        niccService.makeRequestWithBearerToken(Request("BB000200", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"), "invalidToken")
+        niccService.makeRequestWithBearerToken(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          ),
+          "invalidToken"
+        )
+
       response.status shouldBe 500
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe ""
-      println("Response Body is: " + response.body)
+      response.body   shouldBe ""
     }
 
     Scenario("Request with empty bearer token receives error response 500 from MDTP") {
+
+      val payload = PayloadMapping.getOrElse("NICC_TC_P002", fail("NICC_TC_P002 not found"))
+
       val response =
-        niccService.makeRequestWithBearerToken(Request("BB000200", "1960-04-05", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2021"), "")
+        niccService.makeRequestWithBearerToken(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          ),
+          "invalidToken"
+        )
+
       response.status shouldBe 500
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe ""
-        println("Response Body is: " + response.body)
+      response.body   shouldBe ""
     }
 
     // Expired token to be tested manually
