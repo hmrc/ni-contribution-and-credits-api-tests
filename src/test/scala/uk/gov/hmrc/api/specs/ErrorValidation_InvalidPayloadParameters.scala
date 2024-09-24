@@ -246,5 +246,35 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
 
+    Scenario(
+      "NICC_TC_N011: Verify 404 Not Found response when calling nino AA123456C with invalid tax year range"
+    ) {
+      And("Validate the given NINO is greater than 16 years old")
+      val payload = PayloadMapping.getOrElse("NICC_TC_N011", fail("NICC_TC_N011 not found"))
+      ValidateDOB(payload.dateOfBirth)
+      val dob     = ValidateStartTaxYear(payload.startTaxYear)
+      println("valid year", dob)
+      ValidateStartTaxYear(payload.startTaxYear)
+      val year    = ValidateStartTaxYear(payload.startTaxYear)
+      println("valid year", year)
+
+      When("A request for NICC is sent")
+      val response =
+        niccService.makeRequest(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
+        )
+      response.status shouldBe 404
+      println("Response Status Code is : " + response.status + " " + response.statusText)
+      response.body   shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
+      val responseBody = Json.parse(response.body)
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+    }
+
   }
 }

@@ -68,5 +68,68 @@
     "nationalInsuranceNumber": "AA123456C",
     "dateOfBirth": "1969-12-09",
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_N011": {
+    "startTaxYear": "2018",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "RN001965B",
+    "dateOfBirth": "1958-12-26",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_N012": {
+    "startTaxYear": "2016",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "AA123456C",
+    "dateOfBirth": "1969-12-09",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_N013": {
+    "startTaxYear": "2016",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "AA123456C",
+    "dateOfBirth": "1969-12-09",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_N014": {
+    "startTaxYear": "2016",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "AA123456C",
+    "dateOfBirth": "1969-12-09",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_N015": {
+    "startTaxYear": "2016",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "AA123456C",
+    "dateOfBirth": "1969-12-09",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_N016": {
+    "startTaxYear": "2016",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "AA123456C",
+    "dateOfBirth": "1969-12-09",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_N017": {
+    "startTaxYear": "2016",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "AA123456C",
+    "dateOfBirth": "1969-12-09",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_N018": {
+    "startTaxYear": "2016",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "AA123456C",
+    "dateOfBirth": "1969-12-09",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_N019": {
+    "startTaxYear": "2016",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "AA123456C",
+    "dateOfBirth": "1969-12-09",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
   }
 }
