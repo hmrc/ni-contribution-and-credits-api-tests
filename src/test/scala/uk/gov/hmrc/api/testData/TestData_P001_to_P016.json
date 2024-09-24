@@ -48,8 +48,8 @@
     "endTaxYear": "2021"
   },
   "NICC_TC_P008": {
-    "startTaxYear": "1976",
-    "endTaxYear": "1975",
+    "startTaxYear": "1975",
+    "endTaxYear": "1980",
     "nationalInsuranceNumber": "RN001856",
     "dateOfBirth": "1958-01-19",
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"

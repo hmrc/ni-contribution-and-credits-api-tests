@@ -28,7 +28,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val jsonString = JsonUtils.readJsonFile("uk/gov/hmrc/api/testData/TestData_B001_to_B011.json")
+    val jsonString = JsonUtils.readJsonFile("src/test/scala/uk/gov/hmrc/api/testData/TestData_B001_to_B011.json")
     PayloadMapping = JsonUtils.parseJsonToMap(jsonString) match {
       case Left(failure) => fail(s"Parsing failed: $failure")
       case Right(map)    => map
@@ -37,20 +37,20 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
   Feature("VALIDATION OF ERROR CODES FOR BACKEND RESPONSES") {
     Scenario("NICC_TC_B001: Retrieve 400 Bad Request from Backend") {
 
-    val payload = PayloadMapping.getOrElse("NICC_TC_B001", fail("NICC_TC_B001 not found"))
+      val payload = PayloadMapping.getOrElse("NICC_TC_B001", fail("NICC_TC_B001 not found"))
 
-    val response =
-      niccService.makeRequest(
-        Request(
-          payload.nationalInsuranceNumber,
-          payload.dateOfBirth,
-          payload.customerCorrelationID,
-          payload.startTaxYear,
-          payload.endTaxYear
+      val response =
+        niccService.makeRequest(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
         )
-      )
 
-    response.status shouldBe 400
+      response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body   shouldBe "{\"failures\":[{\"reason\":\"HTTP message not readable\",\"code\":\"\"},{\"reason\":\"Constraint Violation - Invalid/Missing input parameter\",\"code\":\"BAD_REQUEST\"}]}"
       val responseBody = Json.parse(response.body)
@@ -160,7 +160,9 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
       response.body   shouldBe ""
     }
 
-    Scenario("NICC_TC_B007: Request receives 404 error response from backend for the incorrect dob to the given NINO ") {
+    Scenario(
+      "NICC_TC_B007: Request receives 404 error response from backend for the incorrect dob to the given NINO "
+    ) {
 
       val payload = PayloadMapping.getOrElse("NICC_TC_B007", fail("NICC_TC_B007 not found"))
 
@@ -181,7 +183,9 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
       println("The Response Body is : \n" + Json.prettyPrint(responsebody))
     }
 
-    Scenario("NICC_TC_B008: Request receives 404 error response from backend for given NINO is NY634367C and incorrect dob ") {
+    Scenario(
+      "NICC_TC_B008: Request receives 404 error response from backend for given NINO is NY634367C and incorrect dob "
+    ) {
 
       val payload = PayloadMapping.getOrElse("NICC_TC_B008", fail("NICC_TC_B008 not found"))
 
@@ -202,7 +206,9 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
       println("The Response Body is : \n" + Json.prettyPrint(responsebody))
     }
 
-    Scenario("NICC_TC_B009: Request receives 404 error response from backend for given NINO is WP103133 and incorrect dob ") {
+    Scenario(
+      "NICC_TC_B009: Request receives 404 error response from backend for given NINO is WP103133 and incorrect dob "
+    ) {
 
       val payload = PayloadMapping.getOrElse("NICC_TC_B009", fail("NICC_TC_B009 not found"))
 
@@ -223,7 +229,9 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
       println("The Response Body is : \n" + Json.prettyPrint(responsebody))
     }
 
-    Scenario("NICC_TC_B010: Request receives 404 error response from backend for given NINO is AA271213 and incorrect dob ") {
+    Scenario(
+      "NICC_TC_B010: Request receives 404 error response from backend for given NINO is AA271213 and incorrect dob "
+    ) {
 
       val payload = PayloadMapping.getOrElse("NICC_TC_B010", fail("NICC_TC_B010 not found"))
 
