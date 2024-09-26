@@ -171,7 +171,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 422
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Start tax year after CY-1\",\"code\":\"63498\"}]}"
+      response.body   shouldBe "{\"failures\":[{\"reason\":\"End tax year after CY-1\",\"code\":\"63499\"}]}"
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
