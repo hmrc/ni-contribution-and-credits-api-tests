@@ -55,8 +55,8 @@
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
   },
   "NICC_TC_P009": {
-    "startTaxYear": "2023",
-    "endTaxYear": "2022",
+    "startTaxYear": "2018",
+    "endTaxYear": "2023",
     "nationalInsuranceNumber": "RN001857",
     "dateOfBirth": "1980-04-18",
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
@@ -76,8 +76,8 @@
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
   },
   "NICC_TC_P012": {
-    "startTaxYear": "2023",
-    "endTaxYear": "2022",
+    "startTaxYear": "2018",
+    "endTaxYear": "2023",
     "nationalInsuranceNumber": "RN001966C",
     "dateOfBirth": "1970-02-16",
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
@@ -104,10 +104,11 @@
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
   },
   "NICC_TC_P016": {
-    "startTaxYear": "1975",
-    "endTaxYear": "1974",
-    "nationalInsuranceNumber": "RN001973",
-    "dateOfBirth": "1951-07-07",
+    "startTaxYear": "2017",
+    "endTaxYear": "2019",
+    "nationalInsuranceNumber": "RN001967",
+    "dateOfBirth": "1985-10-19",
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
   }
+
 }

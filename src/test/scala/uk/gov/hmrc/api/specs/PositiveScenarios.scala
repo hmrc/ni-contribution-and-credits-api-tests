@@ -22,6 +22,9 @@ import play.api.libs.json._
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.{Request, Response}
 import uk.gov.hmrc.api.utils.JsonUtils
+//import play.api.http.Status.{BAD_REQUEST, NOT_FOUND, OK, UNPROCESSABLE_ENTITY}
+
+
 
 class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
@@ -58,7 +61,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("Class 1 and Class 2 details are returned")
-      response.status                    shouldBe 200
+      response.status shouldBe 200
       response.body.contains("niClass1") shouldBe true
       response.body.contains("niClass2") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
@@ -88,7 +91,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("Class 1 and Class 2 details are returned")
-      response.status                    shouldBe 200
+      response.status shouldBe 200
       response.body.contains("niClass1") shouldBe true
       response.body.contains("niClass2") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
@@ -117,7 +120,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       // println(Json.parse(response.body))
       val responseBody = Json.parse(response.body)
       Then("Only Class 1 details are returned")
-      response.status                    shouldBe 200
+      response.status shouldBe 200
       response.body.contains("niClass1") shouldBe true
       response.body.contains("niClass2") shouldBe false
       println("The Response Status Code is : " + response.status + " " + response.statusText)
@@ -144,7 +147,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
 
       Then("Class 1 and Class 2 details are returned")
-      response.status                    shouldBe 200
+      response.status shouldBe 200
       response.body.contains("niClass1") shouldBe true
       response.body.contains("niClass2") shouldBe true
       println("The Response Status Code is : " + response.status + " " + response.statusText)
@@ -170,20 +173,15 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
             payload.endTaxYear
           )
         )
-      /*val response =
-        niccService.makeRequest(
-          Request("WP103133", "1970-03-12", Some("e470d658-99f7-4292-a4a1-ed12c72f1337"), "2019", "2023")
-        )*/
 
-      println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-
-      Then("Class 2 details are returned")
-      response.status                    shouldBe 200
-      response.body.contains("niClass2") shouldBe true
+      Then("the response should be 200")
+      response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
+      And("niClass2 details returned")
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+      response.body.contains("niClass2") shouldBe true
       responseBody.niClass2.get.head.contributionStatus shouldBe "VALID"
     }
 
@@ -203,15 +201,15 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
           )
         )
 
-      println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response]
 
-      Then("Class 2 details are returned")
-      response.status                    shouldBe 200
-      response.body.contains("niClass2") shouldBe true
+      Then("the response should be 200")
+      response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
+      And("niClass2 details returned")
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+      response.body.contains("niClass2") shouldBe true
       responseBody.niClass2.get.head.contributionStatus shouldBe "VALID"
     }
 
@@ -233,14 +231,14 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
             payload.endTaxYear
           )
         )
+      Then("the response should be 200")
+      response.status shouldBe 200
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
 
-      // println(Json.parse(response.body))
+      And("niClass1 details returned")
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
-      Then("No Response Body returned")
-      response.status shouldBe 200
-      println("The Response Status Code is : " + response.status + " " + response.statusText)
 
     }
 
@@ -263,13 +261,13 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
           )
         )
 
-      // println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
-
-      Then("No Response Body returned")
+      Then("the response should be 200")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
     }
 
@@ -292,13 +290,13 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
           )
         )
 
-      // println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
-
-      Then("No Response Body returned")
+      Then("the response should be 200")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
     }
 
@@ -321,13 +319,13 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
           )
         )
 
-      // println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
-
-      Then("No Response Body returned")
+      Then("the response should be 200")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
     }
 
@@ -350,13 +348,13 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
           )
         )
 
-      // println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
-
-      Then("No Response Body returned")
+      Then("the response should be 200")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
     }
 
@@ -379,13 +377,13 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
           )
         )
 
-      // println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
-
-      Then("No Response Body returned")
+      Then("the response should be 200")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
     }
 
@@ -397,7 +395,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       ValidateStartTaxYear(payload.startTaxYear)
 
       When("A request for NICC is sent")
-      val response =
+      val response = {
         niccService.makeRequest(
           Request(
             payload.nationalInsuranceNumber,
@@ -407,14 +405,17 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
             payload.endTaxYear
           )
         )
+      }
 
-      // println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+      println(response.status)
 
-      Then("No Response Body returned")
+      Then("the response should be 200")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
     }
 
@@ -437,13 +438,14 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
           )
         )
 
-      // println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
-      Then("No Response Body returned")
+      Then("the response should be 200")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
     }
 
@@ -466,13 +468,13 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
           )
         )
 
-      // println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
-
-      Then("No Response Body returned")
+      Then("the response should be 200")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
     }
 
@@ -495,13 +497,18 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
           )
         )
 
+      Then("the response should be 200")
+      response.status shouldBe 200
+      checkResponseStatus(response.status, 200)
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
       // println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
-      Then("No Response Body returned")
-      response.status shouldBe 200
-      println("The Response Status Code is : " + response.status + " " + response.statusText)
+      responseBody.niClass1.get.head.niContributionCategory shouldBe "B"
+
 
     }
 

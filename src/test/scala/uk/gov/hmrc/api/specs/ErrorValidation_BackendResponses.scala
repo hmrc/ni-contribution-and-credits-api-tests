@@ -99,9 +99,14 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
 
-    Scenario("NICC_TC_B004: Retrieve 422 error response from backend if statTaxYear < endTaxYear") {
-
+    Scenario("NICC_TC_B004: Retrieve 422 error response from backend if statTaxYear after endTaxYear") {
+      Given("the NICC API is up and running")
+      And("validate the given dob is greater than 16 years old")
       val payload = PayloadMapping.getOrElse("NICC_TC_B004", fail("NICC_TC_B004 not found"))
+      ValidateDOB(payload.dateOfBirth)
+      ValidateStartTaxYear(payload.startTaxYear)
+
+      When("user sends a POST request to retrieve niClass details for a start tax year after end tax year")
 
       val response =
         niccService.makeRequest(
@@ -113,7 +118,11 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
             payload.endTaxYear
           )
         )
+
+      Then("the error response should be 422")
       response.status shouldBe 422
+      checkResponseStatus(response.status, 422)
+
       println("Response Status Code is : " + response.status + " " + response.statusText)
       response.body   shouldBe "{\"failures\":[{\"reason\":\"Start tax year after end tax year\",\"code\":\"63496\"}]}"
       val responseBody = Json.parse(response.body)
@@ -266,8 +275,17 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
             payload.endTaxYear
           )
         )
+
+      Then("the error response should be 500")
       response.status shouldBe 500
       println("Response Status Code is : " + response.status + " " + response.statusText)
+
+      response.statusText shouldBe "Internal Server Error"
+
+      And("response header should consist of correlation ID")
+      //val correlationID = response.headers.get("correlationid")
+      response.headers.get("correlationid") should not be empty
+
 
     }
   }
