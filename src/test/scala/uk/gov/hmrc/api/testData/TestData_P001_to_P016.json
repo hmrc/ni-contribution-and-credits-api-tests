@@ -109,6 +109,14 @@
     "nationalInsuranceNumber": "RN001967",
     "dateOfBirth": "1985-10-19",
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P017": {
+    "startTaxYear": "2020",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "RN001973",
+    "dateOfBirth": "1951-07-07",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
   }
+
 
 }
