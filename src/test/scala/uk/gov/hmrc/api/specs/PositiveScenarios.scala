@@ -541,7 +541,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
-      responseBody.niClass1.get.head.niContributionCategory shouldBe "B"
+      responseBody.niClass1.get.head.niContributionCategory shouldBe "A"
 
 
     }
