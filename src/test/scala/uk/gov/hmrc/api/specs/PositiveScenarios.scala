@@ -32,7 +32,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val jsonString = JsonUtils.readJsonFile("src/test/scala/uk/gov/hmrc/api/testData/TestData_P001_to_P016.json")
+    val jsonString = JsonUtils.readJsonFile("src/test/scala/uk/gov/hmrc/api/testData/TestData_P001_to_P021.json")
     PayloadMapping = JsonUtils.parseJsonToMap(jsonString) match {
       case Left(failure) => fail(s"Parsing failed: $failure")
       case Right(map)    => map
@@ -352,7 +352,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
 
-      And("niClass1 details returned")
+      And("niClass2 details returned")
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
@@ -512,6 +512,161 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
 
     }
 
+
+    Scenario("NICC_TC_P017: Verify the Optional fields in response for given NINO") {
+      Given("The NICC API is up and running")
+      And("Validate the given dob is greater than 16 years old")
+      val payload = PayloadMapping.getOrElse("NICC_TC_P017", fail("NICC_TC_P017 not found"))
+      ValidateDOB(payload.dateOfBirth)
+      ValidateStartTaxYear(payload.startTaxYear)
+
+      When("A request for NICC is sent")
+      val response =
+        niccService.makeRequest(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
+        )
+
+      Then("the response should be 200")
+      response.status shouldBe 200
+      checkResponseStatus(response.status, 200)
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      // println(Json.parse(response.body))
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+
+    }
+
+    Scenario("NICC_TC_P018: Verify the Optional fields in response for given NINO") {
+      Given("The NICC API is up and running")
+      And("Validate the given dob is greater than 16 years old")
+      val payload = PayloadMapping.getOrElse("NICC_TC_P018", fail("NICC_TC_P018 not found"))
+      ValidateDOB(payload.dateOfBirth)
+      ValidateStartTaxYear(payload.startTaxYear)
+
+      When("A request for NICC is sent")
+      val response =
+        niccService.makeRequest(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
+        )
+
+      Then("the response should be 200")
+      response.status shouldBe 200
+      checkResponseStatus(response.status, 200)
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      // println(Json.parse(response.body))
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+
+    }
+
+    Scenario("NICC_TC_P019: Verify the Optional fields in response for given NINO") {
+      Given("The NICC API is up and running")
+      And("Validate the given dob is greater than 16 years old")
+      val payload = PayloadMapping.getOrElse("NICC_TC_P019", fail("NICC_TC_P019 not found"))
+      ValidateDOB(payload.dateOfBirth)
+      ValidateStartTaxYear(payload.startTaxYear)
+
+      When("A request for NICC is sent")
+      val response =
+        niccService.makeRequest(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
+        )
+
+      Then("the response should be 200")
+      response.status shouldBe 200
+      checkResponseStatus(response.status, 200)
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      // println(Json.parse(response.body))
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+
+    }
+
+    Scenario("NICC_TC_P020: Verify the Optional fields in response for given NINO") {
+      Given("The NICC API is up and running")
+      And("Validate the given dob is greater than 16 years old")
+      val payload = PayloadMapping.getOrElse("NICC_TC_P020", fail("NICC_TC_P020 not found"))
+      ValidateDOB(payload.dateOfBirth)
+      ValidateStartTaxYear(payload.startTaxYear)
+
+      When("A request for NICC is sent")
+      val response =
+        niccService.makeRequest(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
+        )
+
+      Then("the response should be 200")
+      response.status shouldBe 200
+      checkResponseStatus(response.status, 200)
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      // println(Json.parse(response.body))
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+
+    }
+
+    Scenario("NICC_TC_P021: Verify the Optional fields in response for given NINO") {
+      Given("The NICC API is up and running")
+      And("Validate the given dob is greater than 16 years old")
+      val payload = PayloadMapping.getOrElse("NICC_TC_P021", fail("NICC_TC_P021 not found"))
+      ValidateDOB(payload.dateOfBirth)
+      ValidateStartTaxYear(payload.startTaxYear)
+
+      When("A request for NICC is sent")
+      val response =
+        niccService.makeRequest(
+          Request(
+            payload.nationalInsuranceNumber,
+            payload.dateOfBirth,
+            payload.customerCorrelationID,
+            payload.startTaxYear,
+            payload.endTaxYear
+          )
+        )
+
+      Then("the response should be 200")
+      response.status shouldBe 200
+      checkResponseStatus(response.status, 200)
+      println("The Response Status Code is : " + response.status + " " + response.statusText)
+
+      And("niClass1 details returned")
+      // println(Json.parse(response.body))
+      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
+      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+
+    }
   }
 
 }
