@@ -20,11 +20,11 @@ import play.api.libs.json.{Json, OFormat}
 
 case class NIContribution(
   taxYear: Option[Int],
-  niContributionCategory: Option[String],
+  niContributionCategory: String,
   niContributionCategoryName: Option[String],
   niContributionType: Option[String],
   totalPrimaryContribution: Option[BigDecimal],
-  contributionStatus: Option[String],
+  contributionStatus: String,
   totalEarningsFactor: Option[BigDecimal]
 )
 

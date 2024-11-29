@@ -24,7 +24,7 @@ case class NICredit(
   niContributionType: Option[String],
   totalEarningsFactor: Option[BigDecimal],
   totalPrimaryContribution: Option[BigDecimal],
-  contributionStatus: Option[String]
+  contributionStatus: String
 )
 
 object NICredit {

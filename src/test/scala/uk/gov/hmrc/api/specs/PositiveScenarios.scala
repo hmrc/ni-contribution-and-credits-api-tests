@@ -538,9 +538,8 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       println("The Response Status Code is : " + response.status + " " + response.statusText)
 
       And("niClass1 details returned")
-      // println(Json.parse(response.body))
-      val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
-      println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
+       //println(Json.parse(response.body))
+      println("The Response Body is : \n" + Json.prettyPrint(Json.parse(response.body)))
 
     }
 
@@ -662,7 +661,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       println("The Response Status Code is : " + response.status + " " + response.statusText)
 
       And("niClass1 details returned")
-      // println(Json.parse(response.body))
+      //println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
