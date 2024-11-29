@@ -67,8 +67,8 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
-      responseBody.niClass1.get.head.contributionStatus shouldBe "COMPLIANCE & YIELD INCOMPLETE"
-      responseBody.niClass2.get.head.contributionStatus shouldBe "NOT KNOWN/NOT APPLICABLE"
+      responseBody.niClass1.get.head.contributionStatus shouldBe Some("COMPLIANCE & YIELD INCOMPLETE")
+      responseBody.niClass2.get.head.contributionStatus shouldBe Some("NOT KNOWN/NOT APPLICABLE")
     }
     Scenario("NICC_TC_P002: Retrieve Class 1 and Class 2 data for given NINO without suffix") {
       Given("The NICC API is up and running")
@@ -97,8 +97,8 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
-      responseBody.niClass1.get.head.contributionStatus shouldBe "COMPLIANCE & YIELD INCOMPLETE"
-      responseBody.niClass2.get.head.contributionStatus shouldBe "NOT KNOWN/NOT APPLICABLE"
+      responseBody.niClass1.get.head.contributionStatus shouldBe Some("COMPLIANCE & YIELD INCOMPLETE")
+      responseBody.niClass2.get.head.contributionStatus shouldBe Some("NOT KNOWN/NOT APPLICABLE")
     }
 
     Scenario("NICC_TC_P003: Retrieve Only Class 1 data for given NINO") {
@@ -153,8 +153,8 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       println("The Response Status Code is : " + response.status + " " + response.statusText)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
-      responseBody.niClass1.get.head.contributionStatus shouldBe "COMPLIANCE & YIELD INCOMPLETE"
-      responseBody.niClass2.get.head.contributionStatus shouldBe "NOT KNOWN/NOT APPLICABLE"
+      responseBody.niClass1.get.head.contributionStatus shouldBe Some("COMPLIANCE & YIELD INCOMPLETE")
+      responseBody.niClass2.get.head.contributionStatus shouldBe Some("NOT KNOWN/NOT APPLICABLE")
     }
 
     Scenario("NICC_TC_P005: Retrieve only Class 2 data for given NINO") {
@@ -182,7 +182,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
       response.body.contains("niClass2") shouldBe true
-      responseBody.niClass2.get.head.contributionStatus shouldBe "VALID"
+      responseBody.niClass2.get.head.contributionStatus shouldBe Some("VALID")
     }
 
     Scenario("NICC_TC_P006: Retrieve only Class 2 data for given NINO and date of birth is 1956-10-03") {
@@ -210,7 +210,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
       response.body.contains("niClass2") shouldBe true
-      responseBody.niClass2.get.head.contributionStatus shouldBe "VALID"
+      responseBody.niClass2.get.head.contributionStatus shouldBe Some("VALID")
     }
 
     Scenario("NICC_TC_P007: Retrieve null for given NINO") {
@@ -507,7 +507,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
-      responseBody.niClass1.get.head.niContributionCategory shouldBe "B"
+      responseBody.niClass1.get.head.niContributionCategory shouldBe Some("B")
 
 
     }
