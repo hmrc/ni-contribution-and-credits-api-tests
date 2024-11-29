@@ -109,6 +109,42 @@
     "nationalInsuranceNumber": "RN001967",
     "dateOfBirth": "1985-10-19",
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
-  }
+  },
+  "NICC_TC_P017": {
+    "startTaxYear": "2017",
+    "endTaxYear": "2019",
+    "nationalInsuranceNumber": "TX000200A",
+    "dateOfBirth": "1999-01-27",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P018": {
+    "startTaxYear": "2018",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "TX000200B",
+    "dateOfBirth": "1999-01-27",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+  "NICC_TC_P019": {
+    "startTaxYear": "2018",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "TX000200C",
+    "dateOfBirth": "1999-01-27",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
 
+  "NICC_TC_P020": {
+    "startTaxYear": "2018",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "TX000200D",
+    "dateOfBirth": "1999-01-27",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  },
+
+  "NICC_TC_P021": {
+    "startTaxYear": "2018",
+    "endTaxYear": "2023",
+    "nationalInsuranceNumber": "TR000200A",
+    "dateOfBirth": "1999-01-27",
+    "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
+  }
 }

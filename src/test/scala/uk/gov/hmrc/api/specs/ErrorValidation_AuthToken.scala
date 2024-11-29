@@ -26,7 +26,7 @@ class ErrorValidation_AuthToken extends BaseSpec with BeforeAndAfterAll {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val jsonString = JsonUtils.readJsonFile("src/test/scala/uk/gov/hmrc/api/testData/TestData_P001_to_P016.json")
+    val jsonString = JsonUtils.readJsonFile("src/test/scala/uk/gov/hmrc/api/testData/TestData_P001_to_P021.json")
     PayloadMapping = JsonUtils.parseJsonToMap(jsonString) match {
       case Left(failure) => fail(s"Parsing failed: $failure")
       case Right(map)    => map
