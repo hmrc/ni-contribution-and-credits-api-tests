@@ -25,7 +25,6 @@ import scala.io.Source
 
 object JsonUtils {
   def readJsonFile(filePath: String): String = {
-     //val source = Source.fromResource(filePath)
     val source = Source.fromFile(filePath)
     try source.getLines().mkString
     finally source.close()

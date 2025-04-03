@@ -22,6 +22,8 @@ import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.Request
 import uk.gov.hmrc.api.utils.JsonUtils
 
+import java.time.LocalDate
+
 class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   val badRequestErrorResponse =
@@ -37,6 +39,8 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
       case Right(map)    => map
     }
   }
+
+  val currentYear: Int = LocalDate.now().getYear
 
   Feature("VALIDATION OF ERROR CODES FOR INVALID INPUT") {
 
@@ -124,8 +128,8 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
             payload.nationalInsuranceNumber,
             payload.dateOfBirth,
             payload.customerCorrelationID,
-            payload.startTaxYear,
-            payload.endTaxYear
+            currentYear.toString,
+            (currentYear - 1).toString
           )
         )
       response.status shouldBe 422
@@ -156,7 +160,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
     }
 
     Scenario(
-      "NICC_TC_N007: Verify the request with endTaxYear is 2024 as startTaxYear and endTaxYear cannot be this year 2024, receives error response 422"
+      s"NICC_TC_N007: Verify the request with endTaxYear is $currentYear as startTaxYear and endTaxYear cannot be this year $currentYear, receives error response 422"
     ) {
       val payload  = PayloadMapping.getOrElse("NICC_TC_N007", fail("NICC_TC_N007 not found"))
       val response =
@@ -165,8 +169,8 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
             payload.nationalInsuranceNumber,
             payload.dateOfBirth,
             payload.customerCorrelationID,
-            payload.startTaxYear,
-            payload.endTaxYear
+            (currentYear - 1).toString,
+            currentYear.toString
           )
         )
       response.status shouldBe 422
@@ -178,11 +182,12 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
 
     Scenario("NICC_TC_N008: Verify the request with Date of Birth Year >= 16 receives error response 400") {
       val payload  = PayloadMapping.getOrElse("NICC_TC_N008", fail("NICC_TC_N008 not found"))
+      val dateOfBirthUnder16 = LocalDate.now().minusDays(1).minusYears(16).toString
       val response =
         niccService.makeRequest(
           Request(
             payload.nationalInsuranceNumber,
-            payload.dateOfBirth,
+            dateOfBirthUnder16,
             payload.customerCorrelationID,
             payload.startTaxYear,
             payload.endTaxYear
@@ -223,10 +228,10 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
       val payload = PayloadMapping.getOrElse("NICC_TC_N010", fail("NICC_TC_N010 not found"))
       ValidateDOB(payload.dateOfBirth)
       val dob     = ValidateStartTaxYear(payload.startTaxYear)
-      println("valid year", dob)
+      println(s"valid year: $dob")
       ValidateStartTaxYear(payload.startTaxYear)
       val year    = ValidateStartTaxYear(payload.startTaxYear)
-      println("valid year", year)
+      println(s"valid year: $year")
 
       When("A request for NICC is sent")
       val response =
@@ -253,10 +258,10 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
       val payload = PayloadMapping.getOrElse("NICC_TC_N011", fail("NICC_TC_N011 not found"))
       ValidateDOB(payload.dateOfBirth)
       val dob     = ValidateStartTaxYear(payload.startTaxYear)
-      println("valid year", dob)
+      println(s"valid year: $dob")
       ValidateStartTaxYear(payload.startTaxYear)
       val year    = ValidateStartTaxYear(payload.startTaxYear)
-      println("valid year", year)
+      println(s"valid year: $year")
 
       When("A request for NICC is sent")
       val response =

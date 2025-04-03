@@ -28,8 +28,8 @@
     "endTaxYear": ":2021"
   },
   "NICC_TC_N005": {
-    "startTaxYear": "2024",
-    "endTaxYear": "2023",
+    "startTaxYear": "2025",
+    "endTaxYear": "2024",
     "nationalInsuranceNumber": "AA271213",
     "dateOfBirth": "1969-12-09",
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
@@ -42,8 +42,8 @@
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
   },
   "NICC_TC_N007": {
-    "startTaxYear": "2023",
-    "endTaxYear": "2024",
+    "startTaxYear": "2024",
+    "endTaxYear": "2025",
     "nationalInsuranceNumber": "AA271213",
     "dateOfBirth": "1969-12-09",
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
@@ -52,7 +52,7 @@
     "startTaxYear": "2023",
     "endTaxYear": "2023",
     "nationalInsuranceNumber": "AA271213C",
-    "dateOfBirth": "2008-10-13",
+    "dateOfBirth": "2009-10-13",
     "customerCorrelationId": "fbb53666-469c-4d36-8e6d-151ef3c424e1"
   },
   "NICC_TC_N009": {
