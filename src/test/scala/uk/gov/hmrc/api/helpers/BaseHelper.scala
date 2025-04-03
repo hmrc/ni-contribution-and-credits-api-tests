@@ -75,7 +75,7 @@ trait BaseHelper {
       difference.getYears > 16
     } catch {
       case e: DateTimeParseException =>
-        println("error parsing date", e.getMessage)
+        println(s"error parsing date: ${e.getMessage}")
         false
     }
   }
