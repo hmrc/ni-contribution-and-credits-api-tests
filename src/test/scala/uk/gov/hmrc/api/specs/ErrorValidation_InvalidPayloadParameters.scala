@@ -40,7 +40,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
     }
   }
 
-  val cy: Int = LocalDate.now().getYear
+  val currentYear: Int = LocalDate.now().getYear
 
   Feature("VALIDATION OF ERROR CODES FOR INVALID INPUT") {
 
@@ -128,8 +128,8 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
             payload.nationalInsuranceNumber,
             payload.dateOfBirth,
             payload.customerCorrelationID,
-            cy.toString,
-            (cy - 1).toString
+            currentYear.toString,
+            (currentYear - 1).toString
           )
         )
       response.status shouldBe 422
@@ -160,7 +160,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
     }
 
     Scenario(
-      s"NICC_TC_N007: Verify the request with endTaxYear is $cy as startTaxYear and endTaxYear cannot be this year $cy, receives error response 422"
+      s"NICC_TC_N007: Verify the request with endTaxYear is $currentYear as startTaxYear and endTaxYear cannot be this year $currentYear, receives error response 422"
     ) {
       val payload  = PayloadMapping.getOrElse("NICC_TC_N007", fail("NICC_TC_N007 not found"))
       val response =
@@ -169,8 +169,8 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
             payload.nationalInsuranceNumber,
             payload.dateOfBirth,
             payload.customerCorrelationID,
-            (cy - 1).toString,
-            cy.toString
+            (currentYear - 1).toString,
+            currentYear.toString
           )
         )
       response.status shouldBe 422
@@ -182,12 +182,12 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
 
     Scenario("NICC_TC_N008: Verify the request with Date of Birth Year >= 16 receives error response 400") {
       val payload  = PayloadMapping.getOrElse("NICC_TC_N008", fail("NICC_TC_N008 not found"))
-      val dobUnder16 = LocalDate.now().minusDays(1).minusYears(16).toString
+      val dateOfBirthUnder16 = LocalDate.now().minusDays(1).minusYears(16).toString
       val response =
         niccService.makeRequest(
           Request(
             payload.nationalInsuranceNumber,
-            dobUnder16,
+            dateOfBirthUnder16,
             payload.customerCorrelationID,
             payload.startTaxYear,
             payload.endTaxYear
