@@ -45,7 +45,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
   Feature("VALIDATION OF ERROR CODES FOR INVALID INPUT") {
 
     Scenario("NICC_TC_N001 : Request with Invalid NINO receives error response 400 from MDTP") {
-      val payload  = PayloadMapping.getOrElse("NICC_TC_N001", fail("NICC_TC_N001 not found"))
+      val payload = PayloadMapping.getOrElse("NICC_TC_N001", fail("NICC_TC_N001 not found"))
       val response =
         niccService.makeRequest(
           Request(
@@ -58,13 +58,13 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe badRequestErrorResponse
+      response.body shouldBe badRequestErrorResponse
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
 
     Scenario("NICC_TC_N002: Verify the request with Date of Birth with invalid format receives error response 400") {
-      val payload  = PayloadMapping.getOrElse("NICC_TC_N002", fail("NICC_TC_N002 not found"))
+      val payload = PayloadMapping.getOrElse("NICC_TC_N002", fail("NICC_TC_N002 not found"))
       val response =
         niccService.makeRequest(
           Request(
@@ -77,13 +77,13 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe badRequestErrorResponse
+      response.body shouldBe badRequestErrorResponse
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
 
     Scenario("NICC_TC_N003: Verify the request with start tax year with invalid format receives error response 400") {
-      val payload  = PayloadMapping.getOrElse("NICC_TC_N003", fail("NICC_TC_N003 not found"))
+      val payload = PayloadMapping.getOrElse("NICC_TC_N003", fail("NICC_TC_N003 not found"))
       val response =
         niccService.makeRequest(
           Request(
@@ -96,13 +96,13 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe badRequestErrorResponse
+      response.body shouldBe badRequestErrorResponse
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
 
     Scenario("NICC_TC_N004: Verify the request with end tax year with invalid format receives error response 400") {
-      val payload  = PayloadMapping.getOrElse("NICC_TC_N004", fail("NICC_TC_N004 not found"))
+      val payload = PayloadMapping.getOrElse("NICC_TC_N004", fail("NICC_TC_N004 not found"))
       val response =
         niccService.makeRequest(
           Request(
@@ -115,13 +115,13 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe badRequestErrorResponse
+      response.body shouldBe badRequestErrorResponse
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
 
     Scenario("NICC_TC_N005: Verify the request with Start tax year after CY-1, receives error response 422") {
-      val payload  = PayloadMapping.getOrElse("NICC_TC_N005", fail("NICC_TC_N005 not found"))
+      val payload = PayloadMapping.getOrElse("NICC_TC_N005", fail("NICC_TC_N005 not found"))
       val response =
         niccService.makeRequest(
           Request(
@@ -134,14 +134,14 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 422
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Start tax year after CY-1\",\"code\":\"63498\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Start tax year after CY-1\",\"code\":\"63498\"}]}"
       println("Response Body is: " + response.body)
     }
 
     Scenario(
       "NICC_TC_N006: Verify the request with Tax year range greater than six years, receives error response 422"
     ) {
-      val payload  = PayloadMapping.getOrElse("NICC_TC_N006", fail("NICC_TC_N006 not found"))
+      val payload = PayloadMapping.getOrElse("NICC_TC_N006", fail("NICC_TC_N006 not found"))
       val response =
         niccService.makeRequest(
           Request(
@@ -154,7 +154,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 422
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Tax year range greater than six years\",\"code\":\"63500\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Tax year range greater than six years\",\"code\":\"63500\"}]}"
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
@@ -162,7 +162,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
     Scenario(
       s"NICC_TC_N007: Verify the request with endTaxYear is $currentYear as startTaxYear and endTaxYear cannot be this year $currentYear, receives error response 422"
     ) {
-      val payload  = PayloadMapping.getOrElse("NICC_TC_N007", fail("NICC_TC_N007 not found"))
+      val payload = PayloadMapping.getOrElse("NICC_TC_N007", fail("NICC_TC_N007 not found"))
       val response =
         niccService.makeRequest(
           Request(
@@ -175,13 +175,13 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 422
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"End tax year after CY-1\",\"code\":\"63499\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"End tax year after CY-1\",\"code\":\"63499\"}]}"
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
 
     Scenario("NICC_TC_N008: Verify the request with Date of Birth Year >= 16 receives error response 400") {
-      val payload  = PayloadMapping.getOrElse("NICC_TC_N008", fail("NICC_TC_N008 not found"))
+      val payload            = PayloadMapping.getOrElse("NICC_TC_N008", fail("NICC_TC_N008 not found"))
       val dateOfBirthUnder16 = LocalDate.now().minusDays(1).minusYears(16).toString
       val response =
         niccService.makeRequest(
@@ -195,7 +195,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Constraint Violation - Invalid/Missing input parameter\",\"code\":\"400.1\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Constraint Violation - Invalid/Missing input parameter\",\"code\":\"400.1\"}]}"
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
@@ -203,7 +203,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
     Scenario(
       "NICC_TC_N009: Verify 422 Unprocessable Entity response when calling nino BE699233A with incorrect start tax year "
     ) {
-      val payload  = PayloadMapping.getOrElse("NICC_TC_N009", fail("NICC_TC_N009 not found"))
+      val payload = PayloadMapping.getOrElse("NICC_TC_N009", fail("NICC_TC_N009 not found"))
       val response =
         niccService.makeRequest(
           Request(
@@ -216,7 +216,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 422
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Start tax year before 1975\",\"code\":\"63497\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Start tax year before 1975\",\"code\":\"63497\"}]}"
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
@@ -227,10 +227,10 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
       And("Validate the given NINO is greater than 16 years old")
       val payload = PayloadMapping.getOrElse("NICC_TC_N010", fail("NICC_TC_N010 not found"))
       ValidateDOB(payload.dateOfBirth)
-      val dob     = ValidateStartTaxYear(payload.startTaxYear)
+      val dob = ValidateStartTaxYear(payload.startTaxYear)
       println(s"valid year: $dob")
       ValidateStartTaxYear(payload.startTaxYear)
-      val year    = ValidateStartTaxYear(payload.startTaxYear)
+      val year = ValidateStartTaxYear(payload.startTaxYear)
       println(s"valid year: $year")
 
       When("A request for NICC is sent")
@@ -246,7 +246,7 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 422
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Tax year range greater than six years\",\"code\":\"63500\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Tax year range greater than six years\",\"code\":\"63500\"}]}"
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
@@ -257,10 +257,10 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
       And("Validate the given NINO is greater than 16 years old")
       val payload = PayloadMapping.getOrElse("NICC_TC_N011", fail("NICC_TC_N011 not found"))
       ValidateDOB(payload.dateOfBirth)
-      val dob     = ValidateStartTaxYear(payload.startTaxYear)
+      val dob = ValidateStartTaxYear(payload.startTaxYear)
       println(s"valid year: $dob")
       ValidateStartTaxYear(payload.startTaxYear)
-      val year    = ValidateStartTaxYear(payload.startTaxYear)
+      val year = ValidateStartTaxYear(payload.startTaxYear)
       println(s"valid year: $year")
 
       When("A request for NICC is sent")
@@ -276,10 +276,11 @@ class ErrorValidation_InvalidPayloadParameters extends BaseSpec with BaseHelper 
         )
       response.status shouldBe 404
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
 
   }
+
 }

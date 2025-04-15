@@ -65,4 +65,5 @@ trait HttpClient {
     standAloneWsRequestWithProxyIfConfigSet(wsClient.url(url))
       .withHttpHeaders(headers: _*)
       .delete()
+
 }

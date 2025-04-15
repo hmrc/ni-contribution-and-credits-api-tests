@@ -24,8 +24,6 @@ import uk.gov.hmrc.api.models.{Request, Response}
 import uk.gov.hmrc.api.utils.JsonUtils
 //import play.api.http.Status.{BAD_REQUEST, NOT_FOUND, OK, UNPROCESSABLE_ENTITY}
 
-
-
 class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   var PayloadMapping: Map[String, Request] = _
@@ -38,6 +36,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       case Right(map)    => map
     }
   }
+
   Feature("POSITIVE SCENARIOS") {
 
     Scenario("NICC_TC_P001: Retrieve Class 1 and Class 2 data for given NINO with suffix") {
@@ -201,7 +200,6 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
           )
         )
 
-
       Then("the response should be 200")
       response.status shouldBe 200
       println("The Response Status Code is : " + response.status + " " + response.statusText)
@@ -238,7 +236,6 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       And("niClass1 details returned")
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
-
 
     }
 
@@ -395,7 +392,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       ValidateStartTaxYear(payload.startTaxYear)
 
       When("A request for NICC is sent")
-      val response = {
+      val response =
         niccService.makeRequest(
           Request(
             payload.nationalInsuranceNumber,
@@ -405,7 +402,6 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
             payload.endTaxYear
           )
         )
-      }
 
       println(response.status)
 
@@ -437,7 +433,6 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
             payload.endTaxYear
           )
         )
-
 
       Then("the response should be 200")
       response.status shouldBe 200
@@ -509,9 +504,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
 
       responseBody.niClass1.get.head.niContributionCategory shouldBe Some("B")
 
-
     }
-
 
     Scenario("NICC_TC_P017: Verify the Optional fields in response for given NINO") {
       Given("The NICC API is up and running")
@@ -538,7 +531,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       println("The Response Status Code is : " + response.status + " " + response.statusText)
 
       And("niClass1 details returned")
-       //println(Json.parse(response.body))
+      // println(Json.parse(response.body))
       println("The Response Body is : \n" + Json.prettyPrint(Json.parse(response.body)))
 
     }
@@ -661,7 +654,7 @@ class PositiveScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll 
       println("The Response Status Code is : " + response.status + " " + response.statusText)
 
       And("niClass1 details returned")
-      //println(Json.parse(response.body))
+      // println(Json.parse(response.body))
       val responseBody: Response = Json.parse(response.body).as[Response] // json to case class
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
