@@ -15,6 +15,7 @@
  */
 
 package uk.gov.hmrc.api.helpers
+
 import play.api.libs.json._
 
 import java.time.format.{DateTimeFormatter, DateTimeParseException}
@@ -37,7 +38,7 @@ trait BaseHelper {
     val balances: List[JsObject] = (responseBody \ "niClass1").as[List[JsObject]] // Update to balanceDetails
     balances.foreach { niClass1 =>
       expectedTypes.foreach { case (key, expectedType) =>
-        val value      = (niClass1 \ key).get
+        val value = (niClass1 \ key).get
         val actualType = value match {
           case _: JsString => "string"
           case _: JsNumber => "number"
@@ -47,7 +48,7 @@ trait BaseHelper {
       }
     }
   }
-/*def checkErrorResponsePayload(response: String, expectedTypes: Map[String, Any]): Unit = {
+  /*def checkErrorResponsePayload(response: String, expectedTypes: Map[String, Any]): Unit = {
   /*val badRequestErrorResponse =
     "{\"failures\":[{\"reason\":\"There was a problem with the request\",\"code\":\"400\"}]}"*/
   val responseBody: JsValue    = Json.parse(response)
@@ -64,7 +65,6 @@ trait BaseHelper {
     }
   }
 }*/
-
 
   def ValidateDOB(dateString: String): Boolean = {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -89,4 +89,5 @@ trait BaseHelper {
       year >= minYear && year <= currentYear
     }
   }
+
 }

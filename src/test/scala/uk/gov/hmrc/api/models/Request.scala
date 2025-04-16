@@ -19,11 +19,11 @@ package uk.gov.hmrc.api.models
 import play.api.libs.json.{Json, OFormat}
 
 case class Request(
-  nationalInsuranceNumber: String,
-  dateOfBirth: String,
-  customerCorrelationID: Option[String],
-  startTaxYear: String,
-  endTaxYear: String
+    nationalInsuranceNumber: String,
+    dateOfBirth: String,
+    customerCorrelationID: Option[String],
+    startTaxYear: String,
+    endTaxYear: String
 )
 
 object Request {

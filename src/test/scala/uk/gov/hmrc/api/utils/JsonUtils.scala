@@ -24,6 +24,7 @@ import uk.gov.hmrc.api.models.Request
 import scala.io.Source
 
 object JsonUtils {
+
   def readJsonFile(filePath: String): String = {
     val source = Source.fromFile(filePath)
     try source.getLines().mkString
@@ -32,4 +33,5 @@ object JsonUtils {
 
   def parseJsonToMap(jsonString: String): Either[Error, Map[String, Request]] =
     parse(jsonString).flatMap(_.as[Map[String, Request]])
+
 }

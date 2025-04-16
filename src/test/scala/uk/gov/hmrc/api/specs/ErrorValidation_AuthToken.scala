@@ -53,7 +53,7 @@ class ErrorValidation_AuthToken extends BaseSpec with BeforeAndAfterAll {
 
       response.status shouldBe 500
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe ""
+      response.body shouldBe ""
     }
 
     Scenario("Request with empty bearer token receives error response 500 from MDTP") {
@@ -74,9 +74,10 @@ class ErrorValidation_AuthToken extends BaseSpec with BeforeAndAfterAll {
 
       response.status shouldBe 500
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe ""
+      response.body shouldBe ""
     }
 
     // Expired token to be tested manually
   }
+
 }

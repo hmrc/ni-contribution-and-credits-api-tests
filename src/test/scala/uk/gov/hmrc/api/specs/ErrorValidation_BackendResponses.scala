@@ -34,6 +34,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
       case Right(map)    => map
     }
   }
+
   Feature("VALIDATION OF ERROR CODES FOR BACKEND RESPONSES") {
     Scenario("NICC_TC_B001: Retrieve 400 Bad Request from Backend") {
 
@@ -52,7 +53,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
 
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"HTTP message not readable\",\"code\":\"\"},{\"reason\":\"Constraint Violation - Invalid/Missing input parameter\",\"code\":\"BAD_REQUEST\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"HTTP message not readable\",\"code\":\"\"},{\"reason\":\"Constraint Violation - Invalid/Missing input parameter\",\"code\":\"BAD_REQUEST\"}]}"
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
@@ -73,7 +74,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
         )
       response.status shouldBe 400
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"HTTP message not readable\",\"code\":\"\"},{\"reason\":\"Constraint Violation - Invalid/Missing input parameter\",\"code\":\"BAD_REQUEST\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"HTTP message not readable\",\"code\":\"\"},{\"reason\":\"Constraint Violation - Invalid/Missing input parameter\",\"code\":\"BAD_REQUEST\"}]}"
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
@@ -94,7 +95,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
         )
       response.status shouldBe 404
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
       val responseBody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
     }
@@ -124,7 +125,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
       checkResponseStatus(response.status, 422)
 
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Start tax year after end tax year\",\"code\":\"63496\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Start tax year after end tax year\",\"code\":\"63496\"}]}"
       val responseBody = Json.parse(response.body)
       println("the Response Body is : \n" + Json.prettyPrint(Json.toJson(responseBody)))
 
@@ -146,7 +147,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
         )
       response.status shouldBe 500
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe ""
+      response.body shouldBe ""
     }
 
     Scenario("NICC_TC_B006: Request receives 500 error response from API when backend times out") {
@@ -166,7 +167,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
         )
       response.status shouldBe 500
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe ""
+      response.body shouldBe ""
     }
 
     Scenario(
@@ -187,7 +188,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
         )
       response.status shouldBe 404
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
       val responsebody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(responsebody))
     }
@@ -210,7 +211,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
         )
       response.status shouldBe 404
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
       val responsebody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(responsebody))
     }
@@ -233,7 +234,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
         )
       response.status shouldBe 404
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
       val responsebody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(responsebody))
     }
@@ -256,7 +257,7 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
         )
       response.status shouldBe 404
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body   shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
+      response.body shouldBe "{\"failures\":[{\"reason\":\"Not Found\",\"code\":\"404\"}]}"
       val responsebody = Json.parse(response.body)
       println("The Response Body is : \n" + Json.prettyPrint(responsebody))
     }
@@ -283,10 +284,10 @@ class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with Bef
       response.statusText shouldBe "Internal Server Error"
 
       And("response header should consist of correlation ID")
-      //val correlationID = response.headers.get("correlationid")
+      // val correlationID = response.headers.get("correlationid")
       response.headers.get("correlationid") should not be empty
-
 
     }
   }
+
 }

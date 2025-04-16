@@ -19,12 +19,12 @@ package uk.gov.hmrc.api.models
 import play.api.libs.json.{Json, OFormat}
 
 case class NICredit(
-  taxYear: Option[Int],
-  numberOfWeeks: Option[Int],
-  niContributionType: Option[String],
-  totalEarningsFactor: Option[BigDecimal],
-  totalPrimaryContribution: Option[BigDecimal],
-  contributionStatus: Option[String]
+    taxYear: Option[Int],
+    numberOfWeeks: Option[Int],
+    niContributionType: Option[String],
+    totalEarningsFactor: Option[BigDecimal],
+    totalPrimaryContribution: Option[BigDecimal],
+    contributionStatus: Option[String]
 )
 
 object NICredit {
