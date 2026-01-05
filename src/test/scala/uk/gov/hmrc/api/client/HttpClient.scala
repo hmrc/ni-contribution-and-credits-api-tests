@@ -41,27 +41,27 @@ trait HttpClient {
       standAloneWsRequest
     }
 
-  def get(url: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def get(url: String, headers: (String, String)*): Future[StandaloneWSRequest#Response] =
     standAloneWsRequestWithProxyIfConfigSet(wsClient.url(url))
       .withHttpHeaders()
       .get()
 
-  def post(url: String, bodyAsJson: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def post(url: String, bodyAsJson: String, headers: (String, String)*): Future[StandaloneWSRequest#Response] =
     standAloneWsRequestWithProxyIfConfigSet(wsClient.url(url))
       .withHttpHeaders(headers: _*)
       .post(bodyAsJson)
 
-  def postWithJson(url: String, body: JsValue, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def postWithJson(url: String, body: JsValue, headers: (String, String)*): Future[StandaloneWSRequest#Response] =
     standAloneWsRequestWithProxyIfConfigSet(wsClient.url(url))
       .withHttpHeaders(headers: _*)
       .post(body)
 
-  def putWithJson(url: String, body: JsValue, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def putWithJson(url: String, body: JsValue, headers: (String, String)*): Future[StandaloneWSRequest#Response] =
     standAloneWsRequestWithProxyIfConfigSet(wsClient.url(url))
       .withHttpHeaders(headers: _*)
       .put(body)
 
-  def delete(url: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def delete(url: String, headers: (String, String)*): Future[StandaloneWSRequest#Response] =
     standAloneWsRequestWithProxyIfConfigSet(wsClient.url(url))
       .withHttpHeaders(headers: _*)
       .delete()

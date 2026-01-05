@@ -18,6 +18,7 @@ package uk.gov.hmrc.api.specs
 
 import org.scalatest.BeforeAndAfterAll
 import play.api.libs.json.Json
+import play.api.libs.ws.DefaultBodyReadables.readableAsString
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.Request
 import uk.gov.hmrc.api.utils.JsonUtils
