@@ -19,6 +19,7 @@ package uk.gov.hmrc.api.specs
 import play.api.libs.json.Json
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.Request
+import play.api.libs.ws.DefaultBodyReadables.readableAsString
 
 class ErrorValidation_EmptyPayloadParameters extends BaseSpec with BaseHelper {
 

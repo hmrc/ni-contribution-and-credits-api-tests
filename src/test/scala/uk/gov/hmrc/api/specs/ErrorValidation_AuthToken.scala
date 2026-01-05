@@ -17,6 +17,7 @@
 package uk.gov.hmrc.api.specs
 
 import org.scalatest.BeforeAndAfterAll
+import play.api.libs.ws.DefaultBodyReadables.readableAsString
 import uk.gov.hmrc.api.models.Request
 import uk.gov.hmrc.api.utils.JsonUtils
 
@@ -53,7 +54,7 @@ class ErrorValidation_AuthToken extends BaseSpec with BeforeAndAfterAll {
 
       response.status shouldBe 500
       println("Response Status Code is : " + response.status + " " + response.statusText)
-      response.body shouldBe ""
+      response.body[String] shouldBe ""
     }
 
     Scenario("Request with empty bearer token receives error response 500 from MDTP") {

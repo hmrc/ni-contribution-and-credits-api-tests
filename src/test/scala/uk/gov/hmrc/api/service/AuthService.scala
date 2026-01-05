@@ -60,7 +60,7 @@ class AuthService extends HttpClient {
        |}
      """.stripMargin
 
-  def postLogin: StandaloneWSRequest#Self#Response = {
+  def postLogin: StandaloneWSRequest#Response = {
     val url = s"$host/application/session/login"
     Await.result(
       post(url, authPayload, ("Content-Type", "application/json")),
