@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.utils
+package uk.gov.hmrc.api.models.nicc.v1
 
-import io.circe._
-import io.circe.generic.auto._
-import io.circe.parser._
-import uk.gov.hmrc.api.models.nicc.v1.Request
+import play.api.libs.json.{Json, OFormat}
 
-import scala.io.Source
+case class NIContribution(
+    taxYear: Option[Int],
+    niContributionCategory: Option[String],
+    niContributionCategoryName: Option[String],
+    niContributionType: Option[String],
+    totalPrimaryContribution: Option[BigDecimal],
+    contributionStatus: Option[String],
+    totalEarningsFactor: Option[BigDecimal]
+)
 
-object JsonUtils {
-
-  def readJsonFile(filePath: String): String = {
-    val source = Source.fromFile(filePath)
-    try source.getLines().mkString
-    finally source.close()
-  }
-
-  def parseJsonToMap(jsonString: String): Either[Error, Map[String, Request]] =
-    parse(jsonString).flatMap(_.as[Map[String, Request]])
-
+object NIContribution {
+  implicit val format: OFormat[NIContribution] = Json.format[NIContribution] // case class to json
 }

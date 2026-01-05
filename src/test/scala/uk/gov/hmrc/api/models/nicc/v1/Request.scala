@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models
+package uk.gov.hmrc.api.models.nicc.v1
 
 import play.api.libs.json.{Json, OFormat}
 
-case class NICredit(
-    taxYear: Option[Int],
-    numberOfWeeks: Option[Int],
-    niContributionType: Option[String],
-    totalEarningsFactor: Option[BigDecimal],
-    totalPrimaryContribution: Option[BigDecimal],
-    contributionStatus: Option[String]
+case class Request(
+    nationalInsuranceNumber: String,
+    dateOfBirth: String,
+    customerCorrelationID: Option[String],
+    startTaxYear: String,
+    endTaxYear: String
 )
 
-object NICredit {
-  implicit val format: OFormat[NICredit] = Json.format[NICredit] // case class to JSON
+object Request {
+
+  implicit val requestJsonFormat: OFormat[Request] = Json.format[Request]
+
 }

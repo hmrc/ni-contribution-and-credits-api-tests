@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models
+package uk.gov.hmrc.api.models.c2mar.errors
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json._
 
-case class NIContribution(
-    taxYear: Option[Int],
-    niContributionCategory: Option[String],
-    niContributionCategoryName: Option[String],
-    niContributionType: Option[String],
-    totalPrimaryContribution: Option[BigDecimal],
-    contributionStatus: Option[String],
-    totalEarningsFactor: Option[BigDecimal]
+final case class ErrorResourceObj422(
+  reason: String,
+  code: String
 )
 
-object NIContribution {
-  implicit val format: OFormat[NIContribution] = Json.format[NIContribution] // case class to json
+final case class ErrorResponse422(
+  failures: List[ErrorResourceObj422]
+)
+
+object ErrorResponse422 {
+  implicit val resourceFormat: OFormat[ErrorResourceObj422] =
+    Json.format[ErrorResourceObj422]
+
+  implicit val format: OFormat[ErrorResponse422] =
+    Json.format[ErrorResponse422]
 }

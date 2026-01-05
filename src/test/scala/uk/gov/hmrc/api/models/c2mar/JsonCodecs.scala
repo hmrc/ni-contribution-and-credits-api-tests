@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.utils
+package uk.gov.hmrc.api.models.c2mar
 
-import io.circe._
-import io.circe.generic.auto._
-import io.circe.parser._
-import uk.gov.hmrc.api.models.nicc.v1.Request
+import java.time.LocalDate
+import play.api.libs.json._
 
-import scala.io.Source
+object JsonCodecs {
 
-object JsonUtils {
+  implicit val localDateReads: Reads[LocalDate] =
+    Reads.localDateReads("yyyy-MM-dd")
 
-  def readJsonFile(filePath: String): String = {
-    val source = Source.fromFile(filePath)
-    try source.getLines().mkString
-    finally source.close()
-  }
-
-  def parseJsonToMap(jsonString: String): Either[Error, Map[String, Request]] =
-    parse(jsonString).flatMap(_.as[Map[String, Request]])
-
+  implicit val localDateWrites: Writes[LocalDate] =
+    Writes.temporalWrites(
+      java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+    )
 }

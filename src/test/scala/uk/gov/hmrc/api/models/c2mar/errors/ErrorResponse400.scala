@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models
+package uk.gov.hmrc.api.models.c2mar.errors
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json._
 
-case class Response(niClass1: Option[Seq[NIContribution]], niClass2: Option[Seq[NICredit]])
+final case class ErrorResourceObj400(
+  reason: String,
+  code: ErrorCode400
+)
 
-object Response {
-  implicit val format: OFormat[Response] = Json.format[Response]
+final case class ErrorResponse400(
+  failures: List[ErrorResourceObj400]
+)
+
+object ErrorResponse400 {
+  implicit val resourceFormat: OFormat[ErrorResourceObj400] =
+    Json.format[ErrorResourceObj400]
+
+  implicit val format: OFormat[ErrorResponse400] =
+    Json.format[ErrorResponse400]
 }

@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
 import uk.gov.hmrc.api.conf.TestConfiguration
-import uk.gov.hmrc.api.models.Request
+import uk.gov.hmrc.api.models.nicc.v1.Request
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
