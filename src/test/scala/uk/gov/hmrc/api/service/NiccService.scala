@@ -35,7 +35,7 @@ class NiccService extends HttpClient {
     .flatMap(_.headOption)
     .getOrElse(fail("Couldn't retrieve Auth Token"))
 
-  def makeRequest(request: Request, timeoutDuration: Int = 10): StandaloneWSRequest#Self#Response = {
+  def makeRequest(request: Request, timeoutDuration: Int = 10): StandaloneWSRequest#Response = {
 
     val url: String    = s"$host/contribution-and-credits/"
     val requestPayload = Json.toJsObject(request)
@@ -50,7 +50,7 @@ class NiccService extends HttpClient {
     )
   }
 
-  def makeRequestWithBearerToken(request: Request, bearerToken: String): StandaloneWSRequest#Self#Response = {
+  def makeRequestWithBearerToken(request: Request, bearerToken: String): StandaloneWSRequest#Response = {
 
     val url: String    = s"$host/contribution-and-credits/"
     val requestPayload = Json.toJsObject(request)
