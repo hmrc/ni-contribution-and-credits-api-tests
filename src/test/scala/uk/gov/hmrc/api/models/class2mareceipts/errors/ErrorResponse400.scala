@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.c2mar.errors
+package uk.gov.hmrc.api.models.class2mareceipts.errors
 
 import play.api.libs.json._
 
-final case class ErrorResourceObj422(
-  reason: String,
-  code: String
+final case class ErrorResourceObj400(
+    reason: String,
+    code: ErrorCode400
 )
 
-final case class ErrorResponse422(
-  failures: List[ErrorResourceObj422]
+final case class ErrorResponse400(
+    failures: List[ErrorResourceObj400]
 )
 
-object ErrorResponse422 {
-  implicit val resourceFormat: OFormat[ErrorResourceObj422] =
-    Json.format[ErrorResourceObj422]
+object ErrorResponse400 {
 
-  implicit val format: OFormat[ErrorResponse422] =
-    Json.format[ErrorResponse422]
+  implicit val resourceFormat: OFormat[ErrorResourceObj400] =
+    Json.format[ErrorResourceObj400]
+
+  implicit val format: OFormat[ErrorResponse400] =
+    Json.format[ErrorResponse400]
+
 }

@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.c2mar.errors
+package uk.gov.hmrc.api.models.class2mareceipts.errors
 
 import play.api.libs.json._
 
 sealed trait ErrorCode400
+
 object ErrorCode400 {
 
-  case object ConstraintViolation extends ErrorCode400
+  case object ConstraintViolation    extends ErrorCode400
   case object HttpMessageNotReadable extends ErrorCode400
 
   private val mapping = Map(
@@ -30,10 +31,11 @@ object ErrorCode400 {
   )
 
   implicit val reads: Reads[ErrorCode400] =
-    Reads.StringReads.collect(JsonValidationError("Invalid 400 error code")){
+    Reads.StringReads.collect(JsonValidationError("Invalid 400 error code")) {
       case s if mapping.contains(s) => mapping(s)
     }
 
   implicit val writes: Writes[ErrorCode400] =
     Writes(c => JsString(mapping.collectFirst { case (k, v) if v == c => k }.get))
+
 }

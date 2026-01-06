@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.c2mar
+package uk.gov.hmrc.api.models.class2mareceipts
 
 import java.time.LocalDate
 import play.api.libs.json._
 
-
 final case class Class2MAReceiptDetails(
-  initials: Option[String],
-  surname: Option[String],
-  receivablePeriodStartDate: Option[LocalDate],
-  receivablePeriodEndDate: Option[LocalDate],
-  receivablePayment: Option[BigDecimal],
-  receiptDate: Option[LocalDate],
-  liabilityStartDate: Option[LocalDate],
-  liabilityEndDate: Option[LocalDate],
-  billAmount: Option[BigDecimal],
-  billScheduleNumber: Option[Int],
-  isClosedRecord: Option[Boolean],
-  weeksPaid: Option[Int]
+    initials: Option[String],
+    surname: Option[String],
+    receivablePeriodStartDate: Option[LocalDate],
+    receivablePeriodEndDate: Option[LocalDate],
+    receivablePayment: Option[BigDecimal],
+    receiptDate: Option[LocalDate],
+    liabilityStartDate: Option[LocalDate],
+    liabilityEndDate: Option[LocalDate],
+    billAmount: Option[BigDecimal],
+    billScheduleNumber: Option[Int],
+    isClosedRecord: Option[Boolean],
+    weeksPaid: Option[Int]
 )
 
 object Class2MAReceiptDetails {

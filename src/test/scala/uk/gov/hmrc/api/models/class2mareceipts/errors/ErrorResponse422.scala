@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.c2mar
+package uk.gov.hmrc.api.models.class2mareceipts.errors
 
-import java.time.LocalDate
 import play.api.libs.json._
 
-object JsonCodecs {
+final case class ErrorResourceObj422(
+    reason: String,
+    code: String
+)
 
-  implicit val localDateReads: Reads[LocalDate] =
-    Reads.localDateReads("yyyy-MM-dd")
+final case class ErrorResponse422(
+    failures: List[ErrorResourceObj422]
+)
 
-  implicit val localDateWrites: Writes[LocalDate] =
-    Writes.temporalWrites(
-      java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
-    )
+object ErrorResponse422 {
+
+  implicit val resourceFormat: OFormat[ErrorResourceObj422] =
+    Json.format[ErrorResourceObj422]
+
+  implicit val format: OFormat[ErrorResponse422] =
+    Json.format[ErrorResponse422]
+
 }

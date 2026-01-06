@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.c2mar
+package uk.gov.hmrc.api.models.class2mareceipts
 
 import play.api.libs.json.{Json, OFormat}
 
-
 final case class Class2MAReceiptsResponse(
-  identifier: String,
-  class2MAReceiptDetails: List[Class2MAReceiptDetails]
+    identifier: String,
+    class2MAReceiptDetails: List[Class2MAReceiptDetails]
 )
 
 object Class2MAReceiptsResponse {
+
   implicit val format: OFormat[Class2MAReceiptsResponse] =
     Json.format[Class2MAReceiptsResponse]
+
 }

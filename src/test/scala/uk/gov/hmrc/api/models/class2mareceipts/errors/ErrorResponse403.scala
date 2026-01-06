@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.c2mar.errors
+package uk.gov.hmrc.api.models.class2mareceipts.errors
 
 import play.api.libs.json._
 
@@ -23,13 +23,13 @@ sealed trait ErrorResponse403
 object ErrorResponse403 {
 
   final case class Forbidden(
-    reason: String = "Forbidden",
-    code: String = "403.2"
+      reason: String = "Forbidden",
+      code: String = "403.2"
   ) extends ErrorResponse403
 
   final case class UserNotAuthorised(
-    reason: String = "User Not Authorised",
-    code: String = "403.1"
+      reason: String = "User Not Authorised",
+      code: String = "403.1"
   ) extends ErrorResponse403
 
   implicit val forbiddenFormat: OFormat[Forbidden] =
@@ -50,4 +50,5 @@ object ErrorResponse403 {
     case f: Forbidden         => Json.toJson(f)
     case u: UserNotAuthorised => Json.toJson(u)
   }
+
 }

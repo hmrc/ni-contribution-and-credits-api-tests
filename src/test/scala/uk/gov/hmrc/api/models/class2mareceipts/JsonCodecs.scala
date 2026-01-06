@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.c2mar.errors
+package uk.gov.hmrc.api.models.class2mareceipts
 
+import java.time.LocalDate
 import play.api.libs.json._
 
-final case class ErrorResourceObj400(
-  reason: String,
-  code: ErrorCode400
-)
+object JsonCodecs {
 
-final case class ErrorResponse400(
-  failures: List[ErrorResourceObj400]
-)
+  implicit val localDateReads: Reads[LocalDate] =
+    Reads.localDateReads("yyyy-MM-dd")
 
-object ErrorResponse400 {
-  implicit val resourceFormat: OFormat[ErrorResourceObj400] =
-    Json.format[ErrorResourceObj400]
+  implicit val localDateWrites: Writes[LocalDate] =
+    Writes.temporalWrites(
+      java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+    )
 
-  implicit val format: OFormat[ErrorResponse400] =
-    Json.format[ErrorResponse400]
 }

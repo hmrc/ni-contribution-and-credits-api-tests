@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.c2mar
+package uk.gov.hmrc.api.models.class2mareceipts
 
 import play.api.libs.json._
 
