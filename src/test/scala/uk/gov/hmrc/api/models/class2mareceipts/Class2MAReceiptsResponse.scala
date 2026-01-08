@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models
+package uk.gov.hmrc.api.models.class2mareceipts
 
 import play.api.libs.json.{Json, OFormat}
 
-case class NICredit(
-    taxYear: Option[Int],
-    numberOfWeeks: Option[Int],
-    niContributionType: Option[String],
-    totalEarningsFactor: Option[BigDecimal],
-    totalPrimaryContribution: Option[BigDecimal],
-    contributionStatus: Option[String]
+final case class Class2MAReceiptsResponse(
+    identifier: String,
+    class2MAReceiptDetails: List[Class2MAReceiptDetails]
 )
 
-object NICredit {
-  implicit val format: OFormat[NICredit] = Json.format[NICredit] // case class to JSON
+object Class2MAReceiptsResponse {
+
+  implicit val format: OFormat[Class2MAReceiptsResponse] =
+    Json.format[Class2MAReceiptsResponse]
+
 }

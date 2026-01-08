@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models
+package uk.gov.hmrc.api.models.nicc.v1
 
 import play.api.libs.json.{Json, OFormat}
 

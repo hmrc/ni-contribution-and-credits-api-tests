@@ -18,7 +18,7 @@ package uk.gov.hmrc.api.specs
 
 import org.scalatest.BeforeAndAfterAll
 import play.api.libs.ws.DefaultBodyReadables.readableAsString
-import uk.gov.hmrc.api.models.Request
+import uk.gov.hmrc.api.models.nicc.v1.Request
 import uk.gov.hmrc.api.utils.JsonUtils
 
 class ErrorValidation_AuthToken extends BaseSpec with BeforeAndAfterAll {

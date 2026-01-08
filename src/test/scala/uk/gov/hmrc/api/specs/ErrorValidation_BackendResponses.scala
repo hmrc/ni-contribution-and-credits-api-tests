@@ -20,7 +20,7 @@ import org.scalatest.BeforeAndAfterAll
 import play.api.libs.json.Json
 import play.api.libs.ws.DefaultBodyReadables.readableAsString
 import uk.gov.hmrc.api.helpers.BaseHelper
-import uk.gov.hmrc.api.models.Request
+import uk.gov.hmrc.api.models.nicc.v1.Request
 import uk.gov.hmrc.api.utils.JsonUtils
 
 class ErrorValidation_BackendResponses extends BaseSpec with BaseHelper with BeforeAndAfterAll {

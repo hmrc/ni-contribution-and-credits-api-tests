@@ -20,7 +20,7 @@ import org.scalatest.BeforeAndAfterAll
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import uk.gov.hmrc.api.helpers.BaseHelper
-import uk.gov.hmrc.api.models.{Request, Response}
+import uk.gov.hmrc.api.models.nicc.v1.{Request, Response}
 import uk.gov.hmrc.api.utils.JsonUtils
 //import play.api.http.Status.{BAD_REQUEST, NOT_FOUND, OK, UNPROCESSABLE_ENTITY}
 
