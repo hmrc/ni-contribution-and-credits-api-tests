@@ -23,15 +23,15 @@ import java.time.LocalDate
 final case class MarriageDetailsList(
     sequenceNumber: Int,
     status: String,
-    startDate: Option[LocalDate] = None,
-    startDateStatus: Option[String] = None,
-    endDate: Option[LocalDate] = None,
-    endDateStatus: Option[String] = None,
-    spouseIdentifier: Option[String] = None,
-    spouseForename: Option[String] = None,
-    spouseSurname: Option[String] = None,
-    separationDate: Option[LocalDate] = None,
-    reconciliationDate: Option[LocalDate] = None
+    startDate: Option[LocalDate],
+    startDateStatus: Option[String],
+    endDate: Option[LocalDate],
+    endDateStatus: Option[String],
+    spouseIdentifier: Option[String],
+    spouseForename: Option[String],
+    spouseSurname: Option[String],
+    separationDate: Option[LocalDate],
+    reconciliationDate: Option[LocalDate]
 )
 
 object MarriageDetailsList {

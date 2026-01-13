@@ -20,8 +20,8 @@ import play.api.libs.json.{Json, OFormat}
 
 final case class MarriageDetails(
     activeMarriage: Boolean,
-    marriageDetailsList: Option[List[MarriageDetailsList]] = None,
-    _links: Option[MarriageDetailsLinks] = None
+    marriageDetailsList: Option[List[MarriageDetailsList]],
+    _links: Option[MarriageDetailsLinks]
 )
 
 object MarriageDetails {

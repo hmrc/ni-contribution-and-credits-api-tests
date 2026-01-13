@@ -19,7 +19,7 @@ package uk.gov.hmrc.api.models.individual.marriagedetails
 import play.api.libs.json.{Json, OFormat}
 
 final case class MarriageDetailsLinks(
-    self: Option[SelfLink] = None
+    self: Option[SelfLink]
 )
 
 object MarriageDetailsLinks {
