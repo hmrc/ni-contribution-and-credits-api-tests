@@ -25,5 +25,5 @@ final case class MarriageDetailsResponse(
 )
 
 object MarriageDetailsResponse {
-  implicit val format: OFormat[MarriageDetails] = Json.format[MarriageDetails]
+  implicit val format: OFormat[MarriageDetailsResponse] = Json.format[MarriageDetailsResponse]
 }
