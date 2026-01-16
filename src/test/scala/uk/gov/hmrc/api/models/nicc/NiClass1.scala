@@ -18,7 +18,7 @@ package uk.gov.hmrc.api.models.nicc
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class NIClass1Contribution(
+final case class NiClass1(
     taxYear: Option[Int],
     contributionCategoryLetter: Option[String],
     contributionCategory: Option[String],
@@ -31,6 +31,6 @@ final case class NIClass1Contribution(
     latePaymentPeriod: Option[String]
 )
 
-object NIClass1Contribution {
-  implicit val format: OFormat[NIClass1Contribution] = Json.format[NIClass1Contribution]
+object NiClass1 {
+  implicit val format: OFormat[NiClass1] = Json.format[NiClass1]
 }

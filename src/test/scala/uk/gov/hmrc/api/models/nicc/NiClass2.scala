@@ -18,11 +18,17 @@ package uk.gov.hmrc.api.models.nicc
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class NICCResponse(
-    niClass1: Option[List[NIClass1Contribution]],
-    niClass2: Option[List[NIClass2Credit]]
+final case class NiClass2(
+    taxYear: Option[Int],
+    noOfCreditsAndConts: Option[Int],
+    contributionCreditType: Option[String],
+    class2Or3EarningsFactor: Option[BigDecimal],
+    class2NIContributonAmount: Option[BigDecimal],
+    class2Or3CreditStatus: Option[String],
+    creditSource: Option[String],
+    latePaymentPeriod: Option[String]
 )
 
-object NICCResponse {
-  implicit val format: OFormat[NICCResponse] = Json.format[NICCResponse]
+object NiClass2 {
+  implicit val format: OFormat[NiClass2] = Json.format[NiClass2]
 }
