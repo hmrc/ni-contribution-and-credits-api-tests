@@ -17,6 +17,7 @@
 package uk.gov.hmrc.api.models.liabilitySummary
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.api.models.common.OfficeDetails
 
 final case class LiabilityDetails(
     identifier: String,

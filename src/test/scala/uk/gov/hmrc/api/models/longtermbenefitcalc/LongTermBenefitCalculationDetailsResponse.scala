@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.liabilitySummary
+package uk.gov.hmrc.api.models.longtermbenefitcalc
 
 import play.api.libs.json.{Json, OFormat}
 
-case class OfficeDetails(
-    officeLocationDecode: Option[Int],
-    officeLocationValue: Option[String],
-    officeIdentifier: Option[String]
+final case class LongTermBenefitCalculationDetailsResponse(
+    statePensionAgeBefore2010TaxYear: Option[Boolean],
+    statePensionAgeAfter2016TaxYear: Option[Boolean],
+    benefitCalculationDetailsList: Option[List[BenefitCalculationDetails]]
 )
 
-object OfficeDetails {
-  implicit val format: OFormat[OfficeDetails] = Json.format
+object LongTermBenefitCalculationDetailsResponse {
+
+  implicit val format: OFormat[LongTermBenefitCalculationDetailsResponse] =
+    Json.format[LongTermBenefitCalculationDetailsResponse]
+
 }
