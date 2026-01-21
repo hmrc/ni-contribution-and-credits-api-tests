@@ -20,7 +20,6 @@ import play.api.libs.json.{Json, OFormat}
 
 final case class LiabilitySummaryResponse(
     liabilityDetailsList: Option[Seq[LiabilityDetails]],
-    liabilityEmploymentDetailsList: Option[Seq[LiabilityAndEmploymentDetails]],
     callback: Option[Callback]
 )
 
