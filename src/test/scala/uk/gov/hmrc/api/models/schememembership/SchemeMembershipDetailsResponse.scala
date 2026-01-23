@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.liabilitySummary
+package uk.gov.hmrc.api.models.schememembership
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.api.models.common.Callback
 
-final case class LiabilitySummaryResponse(
-    liabilityDetailsList: Option[Seq[LiabilityDetails]],
+final case class SchemeMembershipDetailsResponse(
+    schemeMembershipDetailsSummaryList: Seq[SchemeMembershipDetailsSummary],
     callback: Option[Callback]
 )
 
-object LiabilitySummaryResponse {
+object SchemeMembershipDetailsResponse {
 
-  implicit val format: OFormat[LiabilitySummaryResponse] = Json.format[LiabilitySummaryResponse]
+  implicit val format: OFormat[SchemeMembershipDetailsResponse] =
+    Json.format[SchemeMembershipDetailsResponse]
 
 }
