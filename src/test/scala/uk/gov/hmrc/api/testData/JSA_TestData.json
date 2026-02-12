@@ -1,0 +1,11 @@
+{
+  "JSA_PTC001": {
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000002A",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1999-01-27",
+      "startTaxYear": "2018",
+      "endTaxYear": "2021"
+    }
+  }
+}

@@ -21,10 +21,11 @@ import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
 import uk.gov.hmrc.api.conf.TestConfiguration
+import uk.gov.hmrc.api.models.jsa.JSARequest
 import uk.gov.hmrc.api.models.nicc.v1.Request
 
 import scala.concurrent.Await
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class NiccService extends HttpClient {
 
@@ -39,6 +40,22 @@ class NiccService extends HttpClient {
 
     val url: String    = s"$host/contribution-and-credits/"
     val requestPayload = Json.toJsObject(request)
+    Await.result(
+      post(
+        url,
+        Json.stringify(requestPayload),
+        ("Authorization", token),
+        ("Content-Type", "application/json")
+      ),
+      timeoutDuration.seconds
+    )
+  }
+
+  def makeJSARequest(request: JSARequest, timeoutDuration: Int = 10): StandaloneWSRequest#Response = {
+    val url: String    = s"$host/benefit-eligibility-info/"
+    val requestPayload = Json.toJsObject(request)
+    println(url)
+    println(requestPayload)
     Await.result(
       post(
         url,
