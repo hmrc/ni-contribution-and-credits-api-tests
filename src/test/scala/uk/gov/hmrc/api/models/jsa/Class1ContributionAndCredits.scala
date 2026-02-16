@@ -1,0 +1,37 @@
+/*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.api.models.jsa
+
+import play.api.libs.json.{Json, OFormat}
+
+case class Class1ContributionAndCredits(
+    taxYear: Int,
+    primaryPaidEarnings: Option[BigDecimal],
+    contributionCategory: Option[String],
+    contributionCategoryLetter: Option[String],
+    primaryContribution: Option[BigDecimal],
+    class1ContributionStatus: Option[String],
+    contributionCreditType: String,
+    creditSource: Option[String],
+    numberOfContributionsAndCredits: Int,
+    employerName: Option[String],
+    latePaymentPeriod: Option[String]
+)
+
+object Class1ContributionAndCredits {
+  implicit val format: OFormat[Class1ContributionAndCredits] = Json.format[Class1ContributionAndCredits]
+}
