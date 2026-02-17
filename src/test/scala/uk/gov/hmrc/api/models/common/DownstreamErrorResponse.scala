@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.jsa
+package uk.gov.hmrc.api.models.common
 
 import play.api.libs.json.{Json, OFormat}
 
-case class NIContributionsAndCreditsResult(
-    totalGraduatedPensionUnits: Option[BigDecimal],
-    class1ContributionAndCredits: Option[List[Class1ContributionAndCredits]],
-    class2ContributionAndCredits: Option[List[Class2ContributionAndCredits]]
+case class DownstreamErrorResponse(
+    overallResultStatus: String,
+    benefitType: String,
+    nationalInsuranceNumber: String,
+    summary: Summary,
+    downStreams: Seq[DownstreamError]
 )
 
-object NIContributionsAndCreditsResult {
-  implicit val format: OFormat[NIContributionsAndCreditsResult] = Json.format[NIContributionsAndCreditsResult]
+object DownstreamErrorResponse {
+
+  implicit val format: OFormat[DownstreamErrorResponse] =
+    Json.format[DownstreamErrorResponse]
+
 }
