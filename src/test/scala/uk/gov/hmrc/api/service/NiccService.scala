@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
 import uk.gov.hmrc.api.conf.TestConfiguration
-import uk.gov.hmrc.api.models.jsa.JSARequest
+import uk.gov.hmrc.api.models.contributionbased.ContributionBasedRequest
 import uk.gov.hmrc.api.models.nicc.v1.Request
 
 import scala.concurrent.Await
@@ -35,6 +35,8 @@ class NiccService extends HttpClient {
     .get("Authorization")
     .flatMap(_.headOption)
     .getOrElse(fail("Couldn't retrieve Auth Token"))
+
+  println(token)
 
   def makeRequest(request: Request, timeoutDuration: Int = 10): StandaloneWSRequest#Response = {
 
@@ -51,11 +53,14 @@ class NiccService extends HttpClient {
     )
   }
 
-  def makeJSARequest(request: JSARequest, timeoutDuration: Int = 10): StandaloneWSRequest#Response = {
+  def makeContibutionBasedRequest(
+      request: ContributionBasedRequest,
+      timeoutDuration: Int = 10
+  ): StandaloneWSRequest#Response = {
     val url: String    = s"$host/benefit-eligibility-info/"
     val requestPayload = Json.toJsObject(request)
-    println(url)
-    println(requestPayload)
+//    println(url)
+//    println(requestPayload)
     Await.result(
       post(
         url,
