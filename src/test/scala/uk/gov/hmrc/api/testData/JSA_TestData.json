@@ -7,5 +7,50 @@
       "startTaxYear": "2018",
       "endTaxYear": "2021"
     }
+  },
+  "JSA_PTC002": {
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000002",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1999-01-27",
+      "startTaxYear": "2021",
+      "endTaxYear": "2023"
+    }
+  },
+  "JSA_PTC003": {
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000003",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1999-01-27",
+      "startTaxYear": "2018",
+      "endTaxYear": "2021"
+    }
+  },
+  "JSA_PTC004": {
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000004",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1999-01-27",
+      "startTaxYear": "2018",
+      "endTaxYear": "2021"
+    }
+  },
+  "JSA_PTC005": {
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000005",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "2000-01-27",
+      "startTaxYear": "2010",
+      "endTaxYear": "2012"
+    }
+  },
+  "JSA_PTC006": {
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000006",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1999-01-27",
+      "startTaxYear": "2018",
+      "endTaxYear": "2021"
+    }
   }
 }
