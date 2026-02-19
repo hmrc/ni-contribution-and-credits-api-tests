@@ -24,27 +24,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package uk.gov.hmrc.api.specs.contributionbased_specs
+package uk.gov.hmrc.api.specs.EsaJsa_specs
 
 import org.scalatest.BeforeAndAfterAll
 import play.api.libs.json.*
 import uk.gov.hmrc.api.helpers.BaseHelper
+import uk.gov.hmrc.api.models.EsaJsa.{EsaJsaRequest, EsaJsaResponse}
 import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
-import uk.gov.hmrc.api.models.contributionbased.{ContributionBasedRequest, ContributionBasedResponse}
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
-class ContributionBasedScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
+class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
-  val benefitTypes                                          = Seq("JSA", "ESA") // Run tests for both benefit types
-  var PayloadMapping: Map[String, ContributionBasedRequest] = _
+  val benefitTypes                               = Seq("JSA", "ESA") // Run tests for both benefit types
+  var PayloadMapping: Map[String, EsaJsaRequest] = _
 
   override def beforeAll(): Unit = {
     super.beforeAll()
     val jsonString = JsonUtils.readJsonFile(
-      "src/test/scala/uk/gov/hmrc/api/testData/ContributionBased_TestData.json"
+      "src/test/scala/uk/gov/hmrc/api/testData/EsaJsa_TestData.json"
     )
-    PayloadMapping = JsonUtils.parseJsonToContributionBasedRequestMap(jsonString) match {
+    PayloadMapping = JsonUtils.parseJsonToEsaJsaRequestMap(jsonString) match {
       case Left(failure) => fail(s"Parsing failed: $failure")
       case Right(map)    => map
     }
@@ -60,12 +60,12 @@ class ContributionBasedScenarios extends BaseSpec with BaseHelper with BeforeAnd
         val payloadKey = s"${benefitType}_PTC001"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeContibutionBasedRequest(payload)
+        val response = niccService.makeEsaJsaRequest(payload)
 
         response.status shouldBe 200
         // Parse JSON into case class
-        val result: ContributionBasedResponse = Json.parse(response.body).as[ContributionBasedResponse]
-        val contributions                     = result.niContributionsAndCreditsResult
+        val result: EsaJsaResponse = Json.parse(response.body).as[EsaJsaResponse]
+        val contributions          = result.niContributionsAndCreditsResult
 
         // Basic response checks
         result.benefitType shouldBe payload.benefitType
@@ -100,12 +100,12 @@ class ContributionBasedScenarios extends BaseSpec with BaseHelper with BeforeAnd
         val payloadKey = s"${benefitType}_PTC002"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeContibutionBasedRequest(payload)
+        val response = niccService.makeEsaJsaRequest(payload)
 
         response.status shouldBe 200
         // Parse JSON into case class
-        val result: ContributionBasedResponse = Json.parse(response.body).as[ContributionBasedResponse]
-        val contributions                     = result.niContributionsAndCreditsResult
+        val result: EsaJsaResponse = Json.parse(response.body).as[EsaJsaResponse]
+        val contributions          = result.niContributionsAndCreditsResult
         // Basic response checks
         result.benefitType shouldBe payload.benefitType
         result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
@@ -137,12 +137,12 @@ class ContributionBasedScenarios extends BaseSpec with BaseHelper with BeforeAnd
         val payloadKey = s"${benefitType}_PTC003"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeContibutionBasedRequest(payload)
+        val response = niccService.makeEsaJsaRequest(payload)
 
         response.status shouldBe 200
         // Parse JSON into case class
-        val result: ContributionBasedResponse = Json.parse(response.body).as[ContributionBasedResponse]
-        val contributions                     = result.niContributionsAndCreditsResult
+        val result: EsaJsaResponse = Json.parse(response.body).as[EsaJsaResponse]
+        val contributions          = result.niContributionsAndCreditsResult
         // Basic response checks
         result.benefitType shouldBe payload.benefitType
         result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
@@ -170,12 +170,12 @@ class ContributionBasedScenarios extends BaseSpec with BaseHelper with BeforeAnd
         val payloadKey = s"${benefitType}_PTC004"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeContibutionBasedRequest(payload)
+        val response = niccService.makeEsaJsaRequest(payload)
 
         response.status shouldBe 200
         // Parse JSON into case class
-        val result: ContributionBasedResponse = Json.parse(response.body).as[ContributionBasedResponse]
-        val contributions                     = result.niContributionsAndCreditsResult
+        val result: EsaJsaResponse = Json.parse(response.body).as[EsaJsaResponse]
+        val contributions          = result.niContributionsAndCreditsResult
         // Basic Response checks
         result.benefitType shouldBe payload.benefitType
         result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
@@ -208,12 +208,12 @@ class ContributionBasedScenarios extends BaseSpec with BaseHelper with BeforeAnd
         val payloadKey = s"${benefitType}_PTC005"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeContibutionBasedRequest(payload)
+        val response = niccService.makeEsaJsaRequest(payload)
 
         response.status shouldBe 200
         // Parse JSON into case class
-        val result: ContributionBasedResponse = Json.parse(response.body).as[ContributionBasedResponse]
-        val contributions                     = result.niContributionsAndCreditsResult
+        val result: EsaJsaResponse = Json.parse(response.body).as[EsaJsaResponse]
+        val contributions          = result.niContributionsAndCreditsResult
         // Basic response checks
         result.benefitType shouldBe payload.benefitType
         result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
@@ -244,7 +244,7 @@ class ContributionBasedScenarios extends BaseSpec with BaseHelper with BeforeAnd
         val payloadKey = s"${benefitType}_PTC006"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeContibutionBasedRequest(payload)
+        val response = niccService.makeEsaJsaRequest(payload)
 
         Then("Error response should be 502")
         response.status shouldBe 502

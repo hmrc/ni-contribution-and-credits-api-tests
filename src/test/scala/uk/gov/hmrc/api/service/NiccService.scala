@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
 import uk.gov.hmrc.api.conf.TestConfiguration
-import uk.gov.hmrc.api.models.contributionbased.ContributionBasedRequest
+import uk.gov.hmrc.api.models.EsaJsa.EsaJsaRequest
 import uk.gov.hmrc.api.models.nicc.v1.Request
 
 import scala.concurrent.Await
@@ -53,8 +53,8 @@ class NiccService extends HttpClient {
     )
   }
 
-  def makeContibutionBasedRequest(
-      request: ContributionBasedRequest,
+  def makeEsaJsaRequest(
+      request: EsaJsaRequest,
       timeoutDuration: Int = 10
   ): StandaloneWSRequest#Response = {
     val url: String    = s"$host/benefit-eligibility-info/"
