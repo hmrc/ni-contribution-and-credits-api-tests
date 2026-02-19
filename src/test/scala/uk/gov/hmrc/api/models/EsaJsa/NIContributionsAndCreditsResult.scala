@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.jsa
+package uk.gov.hmrc.api.models.EsaJsa
 
 import play.api.libs.json.{Json, OFormat}
 
-case class JSAResponse(
-    benefitType: String,
-    nationalInsuranceNumber: String,
-    niContributionsAndCreditsResult: NIContributionsAndCreditsResult
+case class NIContributionsAndCreditsResult(
+    totalGraduatedPensionUnits: Option[BigDecimal],
+    class1ContributionAndCredits: Option[List[Class1ContributionAndCredits]],
+    class2ContributionAndCredits: Option[List[Class2ContributionAndCredits]]
 )
 
-object JSAResponse {
-  implicit val format: OFormat[JSAResponse] = Json.format[JSAResponse]
+object NIContributionsAndCreditsResult {
+  implicit val format: OFormat[NIContributionsAndCreditsResult] = Json.format[NIContributionsAndCreditsResult]
 }

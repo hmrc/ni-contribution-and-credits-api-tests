@@ -19,7 +19,7 @@ package uk.gov.hmrc.api.utils
 import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.parser.*
-import uk.gov.hmrc.api.models.jsa.JSARequest
+import uk.gov.hmrc.api.models.EsaJsa.EsaJsaRequest
 import uk.gov.hmrc.api.models.nicc.v1.Request
 
 import scala.io.Source
@@ -35,7 +35,7 @@ object JsonUtils {
   def parseJsonToMap(jsonString: String): Either[Error, Map[String, Request]] =
     parse(jsonString).flatMap(_.as[Map[String, Request]])
 
-  def parseJsonToJSARequestMap(jsonString: String): Either[Error, Map[String, JSARequest]] =
-    parse(jsonString).flatMap(_.as[Map[String, JSARequest]])
+  def parseJsonToEsaJsaRequestMap(jsonString: String): Either[Error, Map[String, EsaJsaRequest]] =
+    parse(jsonString).flatMap(_.as[Map[String, EsaJsaRequest]])
 
 }

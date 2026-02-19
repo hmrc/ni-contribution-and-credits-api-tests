@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.jsa
+package uk.gov.hmrc.api.models.EsaJsa
 
 import play.api.libs.json.{Json, OFormat}
 
-case class NIContributionsAndCreditsResult(
-    totalGraduatedPensionUnits: Option[BigDecimal],
-    class1ContributionAndCredits: Option[List[Class1ContributionAndCredits]],
-    class2ContributionAndCredits: Option[List[Class2ContributionAndCredits]]
+case class Class2ContributionAndCredits(
+    taxYear: Int,
+    class2Or3EarningsFactor: Option[BigDecimal],
+    class2NIContributionAmount: Option[BigDecimal],
+    class2Or3CreditStatus: Option[String],
+    contributionCreditType: String,
+    creditSource: Option[String],
+    numberOfContributionsAndCredits: Int,
+    latePaymentPeriod: Option[String]
 )
 
-object NIContributionsAndCreditsResult {
-  implicit val format: OFormat[NIContributionsAndCreditsResult] = Json.format[NIContributionsAndCreditsResult]
+object Class2ContributionAndCredits {
+  implicit val format: OFormat[Class2ContributionAndCredits] = Json.format[Class2ContributionAndCredits]
 }
