@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.api.models.benefitscheme
 
+import play.api.libs.json.{Json, OFormat}
+
 final case class BenefitSchemeDetails(
     magneticTapeNumber: Option[Int],
     schemeName: Option[String],
@@ -45,3 +47,7 @@ final case class BenefitSchemeDetails(
     reconciliationDate: Option[String],
     schemeContractedOutNumberDetails: String
 )
+
+object BenefitSchemeDetails {
+  implicit val format: OFormat[BenefitSchemeDetails] = Json.format[BenefitSchemeDetails]
+}

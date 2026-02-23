@@ -17,10 +17,11 @@
 package uk.gov.hmrc.api.models.nicc
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.api.models.common.{Class1ContributionAndCredits, Class2ContributionAndCredits}
 
 final case class NiccResponse(
-    niClass1: Option[List[NiClass1]],
-    niClass2: Option[List[NiClass2]]
+    niClass1: Option[List[Class1ContributionAndCredits]],
+    niClass2: Option[List[Class2ContributionAndCredits]]
 )
 
 object NiccResponse {

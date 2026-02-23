@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.api.models.benefitscheme
 
+import play.api.libs.json.{Json, OFormat}
+
 final case class BenefitSchemeAddressDetails(
     schemeAddressLine1: Option[String],
     schemeAddressLine2: Option[String],
@@ -23,3 +25,7 @@ final case class BenefitSchemeAddressDetails(
     schemeAddressPostalTown: Option[String],
     schemePostcode: Option[String]
 )
+
+object BenefitSchemeAddressDetails {
+  implicit val format: OFormat[BenefitSchemeAddressDetails] = Json.format[BenefitSchemeAddressDetails]
+}

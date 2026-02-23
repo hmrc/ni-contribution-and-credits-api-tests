@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.nicc
+package uk.gov.hmrc.api.models.common
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class NiClass2(
-    taxYear: Option[Int],
-    noOfCreditsAndConts: Option[Int],
-    contributionCreditType: Option[String],
-    class2Or3EarningsFactor: Option[BigDecimal],
-    class2NIContributonAmount: Option[BigDecimal],
-    class2Or3CreditStatus: Option[String],
+case class Class1ContributionAndCredits(
+    taxYear: Int,
+    primaryPaidEarnings: Option[BigDecimal],
+    contributionCategory: Option[String],
+    contributionCategoryLetter: Option[String],
+    primaryContribution: Option[BigDecimal],
+    class1ContributionStatus: Option[String],
+    contributionCreditType: String,
     creditSource: Option[String],
+    numberOfContributionsAndCredits: Int,
+    employerName: Option[String],
     latePaymentPeriod: Option[String]
 )
 
-object NiClass2 {
-  implicit val format: OFormat[NiClass2] = Json.format[NiClass2]
+object Class1ContributionAndCredits {
+  implicit val format: OFormat[Class1ContributionAndCredits] = Json.format[Class1ContributionAndCredits]
 }

@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.benefitscheme
+package uk.gov.hmrc.api.models.esajsa
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.api.models.common.{Class1ContributionAndCredits, Class2ContributionAndCredits}
 
-final case class SchemeAddressDetails(
-    schemeAddressType: Option[String],
-    schemeAddressSequenceNumber: Int,
-    schemeAddressStartDate: Option[String],
-    schemeAddressEndDate: Option[String],
-    country: Option[String],
-    areaDiallingCode: Option[String],
-    schemeTelephoneNumber: Option[String],
-    schemeContractedOutNumberDetails: String,
-    benefitSchemeAddressDetails: Option[BenefitSchemeAddressDetails]
+case class NIContributionsAndCreditsResult(
+    totalGraduatedPensionUnits: Option[BigDecimal],
+    class1ContributionAndCredits: Option[List[Class1ContributionAndCredits]],
+    class2ContributionAndCredits: Option[List[Class2ContributionAndCredits]]
 )
 
-object SchemeAddressDetails {
-  implicit val format: OFormat[SchemeAddressDetails] = Json.format[SchemeAddressDetails]
+object NIContributionsAndCreditsResult {
+  implicit val format: OFormat[NIContributionsAndCreditsResult] = Json.format[NIContributionsAndCreditsResult]
 }

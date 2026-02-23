@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.nicc
+package uk.gov.hmrc.api.models.gysp
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class NiClass1(
-    taxYear: Option[Int],
-    contributionCategoryLetter: Option[String],
-    contributionCategory: Option[String],
-    contributionCreditType: Option[String],
-    primaryContribution: Option[BigDecimal],
-    class1ContributionStatus: Option[String],
-    primaryPaidEarnings: Option[BigDecimal],
-    creditSource: Option[String],
-    employerName: Option[String],
-    latePaymentPeriod: Option[String]
+case class MarriageDetailsRequest(
+    searchStartYear: Int,
+    latest: Option[Boolean] = Option(false)
 )
 
-object NiClass1 {
-  implicit val format: OFormat[NiClass1] = Json.format[NiClass1]
+object MarriageDetailsRequest {
+  implicit val format: OFormat[MarriageDetailsRequest] = Json.format[MarriageDetailsRequest]
 }
