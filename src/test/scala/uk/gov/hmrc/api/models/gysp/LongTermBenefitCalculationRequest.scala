@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.EsaJsa
+package uk.gov.hmrc.api.models.gysp
 
 import play.api.libs.json.{Json, OFormat}
 
-case class NIContributionsAndCredits(
-    dateOfBirth: String,
-    startTaxYear: Int,
-    endTaxYear: Int
+case class LongTermBenefitCalculationRequest(
+    benefitType: String,
+    pensionProcessingArea: Option[String]
 )
 
-object NIContributionsAndCredits {
-  implicit val format: OFormat[NIContributionsAndCredits] = Json.format[NIContributionsAndCredits]
+object LongTermBenefitCalculationRequest {
+  implicit val format: OFormat[LongTermBenefitCalculationRequest] = Json.format[LongTermBenefitCalculationRequest]
 }

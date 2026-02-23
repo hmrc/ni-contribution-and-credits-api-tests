@@ -24,12 +24,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package uk.gov.hmrc.api.specs.EsaJsa_specs
+package uk.gov.hmrc.api.specs.esajsa_specs
 
 import org.scalatest.BeforeAndAfterAll
 import play.api.libs.json.*
 import uk.gov.hmrc.api.helpers.BaseHelper
-import uk.gov.hmrc.api.models.EsaJsa.{EsaJsaRequest, EsaJsaResponse}
+import uk.gov.hmrc.api.models.esajsa.{EsaJsaRequest, EsaJsaResponse}
 import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils

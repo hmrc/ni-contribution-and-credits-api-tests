@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.EsaJsa
+package uk.gov.hmrc.api.models.esajsa
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.api.models.common.NIContributionsAndCredits
 
 case class EsaJsaRequest(
     benefitType: String,

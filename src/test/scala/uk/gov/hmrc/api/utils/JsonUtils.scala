@@ -19,7 +19,7 @@ package uk.gov.hmrc.api.utils
 import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.parser.*
-import uk.gov.hmrc.api.models.EsaJsa.EsaJsaRequest
+import uk.gov.hmrc.api.models.esajsa.EsaJsaRequest
 import uk.gov.hmrc.api.models.nicc.v1.Request
 
 import scala.io.Source

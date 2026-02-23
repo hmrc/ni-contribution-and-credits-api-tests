@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models.EsaJsa
+package uk.gov.hmrc.api.models.gysp
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.api.models.common.NIContributionsAndCredits
 
-case class NIContributionsAndCreditsResult(
-    totalGraduatedPensionUnits: Option[BigDecimal],
-    class1ContributionAndCredits: Option[List[Class1ContributionAndCredits]],
-    class2ContributionAndCredits: Option[List[Class2ContributionAndCredits]]
+case class GYSPRequest(
+    benefitType: String,
+    nationalInsuranceNumber: String,
+    niContributionsAndCredits: NIContributionsAndCredits,
+    longTermBenefitCalculation: LongTermBenefitCalculationRequest,
+    marriageDetails: Option[MarriageDetailsRequest],
+    searchStartYear: Int,
+    latest: Option[Boolean] = Option(false)
 )
 
-object NIContributionsAndCreditsResult {
-  implicit val format: OFormat[NIContributionsAndCreditsResult] = Json.format[NIContributionsAndCreditsResult]
+object GYSPRequest {
+  implicit val format: OFormat[GYSPRequest] = Json.format[GYSPRequest]
 }
