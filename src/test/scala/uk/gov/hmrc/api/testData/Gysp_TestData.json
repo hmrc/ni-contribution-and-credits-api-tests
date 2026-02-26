@@ -1,0 +1,80 @@
+{
+  "GYSP_PTC001": {
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000002A",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1956-06-20",
+      "startTaxYear": 2018,
+      "endTaxYear": 2025
+    },
+    "longTermBenefitCalculation": {
+      "benefitType": "ALL",
+      "pensionProcessingArea": "Job Centre+ Electronic Enabled Pension Processing"
+    }
+  },
+  "GYSP_PTC002": {
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000002",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1956-06-20",
+      "startTaxYear": 2018,
+      "endTaxYear": 2025
+    },
+    "longTermBenefitCalculation": {
+      "benefitType": "ALL",
+      "pensionProcessingArea": "Job Centre+ Electronic Enabled Pension Processing"
+    }
+  },
+  "GYSP_PTC003": {
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000003",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1956-06-20",
+      "startTaxYear": 2018,
+      "endTaxYear": 2025
+    },
+    "longTermBenefitCalculation": {
+      "benefitType": "ALL",
+      "pensionProcessingArea": "Job Centre+ Electronic Enabled Pension Processing"
+    }
+  },
+  "GYSP_PTC004": {
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000004",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1956-06-20",
+      "startTaxYear": 2018,
+      "endTaxYear": 2025
+    },
+    "longTermBenefitCalculation": {
+      "benefitType": "ALL",
+      "pensionProcessingArea": "Job Centre+ Electronic Enabled Pension Processing"
+    }
+  },
+  "GYSP_PTC005": {
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000005",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1956-06-20",
+      "startTaxYear": 2018,
+      "endTaxYear": 2025
+    },
+    "longTermBenefitCalculation": {
+      "benefitType": "ALL",
+      "pensionProcessingArea": "Job Centre+ Electronic Enabled Pension Processing"
+    }
+  },
+  "GYSP_PTC006": {
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000006",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1956-06-20",
+      "startTaxYear": 2018,
+      "endTaxYear": 2025
+    },
+    "longTermBenefitCalculation": {
+      "benefitType": "ALL",
+      "pensionProcessingArea": "Job Centre+ Electronic Enabled Pension Processing"
+    }
+  }
+}

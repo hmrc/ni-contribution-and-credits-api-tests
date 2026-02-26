@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,28 @@
 
 package uk.gov.hmrc.api.service
 
+import org.scalatest.Assertions.fail
 import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
-import uk.gov.hmrc.api.client.HttpClient
+import uk.gov.hmrc.api.conf.TestConfiguration
 import uk.gov.hmrc.api.models.nicc.v1.Request
 
 import scala.concurrent.Await
-import scala.concurrent.duration.*
+import scala.concurrent.duration.DurationInt
 
-class NiccService extends HttpClient with MakesHttpRequestWithToken {
+trait MakesHttpRequestWithToken {
+  this: uk.gov.hmrc.api.client.HttpClient =>
 
-  def makeRequest(request: Request, timeoutDuration: Int = 10): StandaloneWSRequest#Response = {
+  val host: String = TestConfiguration.url("nicc")
+
+  val token: String = new AuthService().postLogin.headers
+    .get("Authorization")
+    .flatMap(_.headOption)
+    .getOrElse(fail("Couldn't retrieve Auth Token"))
+
+  println(token)
+
+  def makeRequestWithBearerToken(request: Request, bearerToken: String): StandaloneWSRequest#Response = {
 
     val url: String    = s"$host/contribution-and-credits/"
     val requestPayload = Json.toJsObject(request)
@@ -34,10 +45,10 @@ class NiccService extends HttpClient with MakesHttpRequestWithToken {
       post(
         url,
         Json.stringify(requestPayload),
-        ("Authorization", token),
+        ("Authorization", bearerToken),
         ("Content-Type", "application/json")
       ),
-      timeoutDuration.seconds
+      10.seconds
     )
   }
 

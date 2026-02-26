@@ -27,16 +27,19 @@
 package uk.gov.hmrc.api.specs.esajsa_specs
 
 import org.scalatest.BeforeAndAfterAll
+import play.api.libs.json
 import play.api.libs.json.*
 import uk.gov.hmrc.api.helpers.BaseHelper
-import uk.gov.hmrc.api.models.esajsa.{EsaJsaRequest, EsaJsaResponse}
 import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
+import uk.gov.hmrc.api.models.esajsa.{EsaJsaRequest, EsaJsaResponse}
+import uk.gov.hmrc.api.service.EsaJsaService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
 class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   val benefitTypes                               = Seq("JSA", "ESA") // Run tests for both benefit types
+  val esaJsaService                              = new EsaJsaService
   var PayloadMapping: Map[String, EsaJsaRequest] = _
 
   override def beforeAll(): Unit = {
@@ -60,7 +63,7 @@ class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
         val payloadKey = s"${benefitType}_PTC001"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeEsaJsaRequest(payload)
+        val response = esaJsaService.makeRequest(payload, payloadKey)
 
         response.status shouldBe 200
         // Parse JSON into case class
@@ -100,7 +103,7 @@ class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
         val payloadKey = s"${benefitType}_PTC002"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeEsaJsaRequest(payload)
+        val response = esaJsaService.makeRequest(payload, payloadKey)
 
         response.status shouldBe 200
         // Parse JSON into case class
@@ -137,7 +140,7 @@ class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
         val payloadKey = s"${benefitType}_PTC003"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeEsaJsaRequest(payload)
+        val response = esaJsaService.makeRequest(payload, payloadKey)
 
         response.status shouldBe 200
         // Parse JSON into case class
@@ -150,49 +153,11 @@ class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
         Then("Only Class 2 contributions should be returned")
         // Class 1 should be empty
         contributions.class1ContributionAndCredits shouldBe empty
-        // Class 2: exists, not empty, contains "2B"
+        // Class 2: exists, not empty, contains "C2"
         contributions.class2ContributionAndCredits match {
           case Some(list) =>
             list should not be empty
             list.exists(_.contributionCreditType == "C2") shouldBe true
-          case None => fail("Class 2 contributions are missing in the response")
-        }
-        // Print the response details
-        println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-        println(s"""The Response Body is :
-                  ${Json.prettyPrint(Json.toJson(result))}""")
-      }
-
-      Scenario(s"${benefitType}_PTC004: Retrieve Class 1 and Class 2 contributions with missing correlation ID") {
-        Given(s"The Benefit eligibility Info API is up and running for $benefitType")
-        When(s"A request for $benefitType is sent without correlation ID")
-        // Get test payload
-        val payloadKey = s"${benefitType}_PTC004"
-        val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-        // Make API call and build the request
-        val response = niccService.makeEsaJsaRequest(payload)
-
-        response.status shouldBe 200
-        // Parse JSON into case class
-        val result: EsaJsaResponse = Json.parse(response.body).as[EsaJsaResponse]
-        val contributions          = result.niContributionsAndCreditsResult
-        // Basic Response checks
-        result.benefitType shouldBe payload.benefitType
-        result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-
-        Then("Class 1 and Class 2 contributions should be returned")
-        // Class 1: exists, not empty, contains "STANDARD RATE"
-        contributions.class1ContributionAndCredits match {
-          case Some(list) =>
-            list should not be empty
-            list.exists(_.contributionCategory.contains("STANDARD RATE")) shouldBe true
-          case None => fail("Class 1 contributions are missing in the response")
-        }
-        // Class 2: exists, not empty, contains "2B"
-        contributions.class2ContributionAndCredits match {
-          case Some(list) =>
-            list should not be empty
-            list.exists(_.contributionCreditType == "2B") shouldBe true
           case None => fail("Class 2 contributions are missing in the response")
         }
         // Print the response details
@@ -208,7 +173,7 @@ class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
         val payloadKey = s"${benefitType}_PTC005"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeEsaJsaRequest(payload)
+        val response = esaJsaService.makeRequest(payload, payloadKey)
 
         response.status shouldBe 200
         // Parse JSON into case class
@@ -237,14 +202,33 @@ class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
                   ${Json.prettyPrint(Json.toJson(result))}""")
       }
 
-      Scenario(s"${benefitType}_PTC006: Request receives 502 error response from backend in response to 403") {
+      Scenario(s"${benefitType}_NTC001: Retrieve Class 1 and Class 2 contributions with missing correlation ID") {
+        Given(s"The Benefit eligibility Info API is up and running for $benefitType")
+        When(s"A request for $benefitType is sent without correlation ID")
+        // Get test payload
+        val payloadKey = s"${benefitType}_NTC001"
+        val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+        // Make API call and build the request
+        val response = esaJsaService.makeRequestWithoutCorrelationId(payload)
+        val json     = Json.parse(response.body)
+
+        response.status shouldBe 400
+        (json \ "code").as[String] shouldBe "BAD_REQUEST"
+        (json \ "reason").as[String] shouldBe "Missing Header CorrelationId"
+
+        println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+        println(s"""The Response Body is :
+                  ${Json.prettyPrint(Json.toJson(response.body))}""")
+      }
+
+      Scenario(s"${benefitType}_NTC002: Request receives 502 error response from backend in response to 403") {
         Given(s"The Benefit eligibility Info API is up and running for $benefitType")
         When(s"A request for $benefitType is sent")
         // Get test payload
-        val payloadKey = s"${benefitType}_PTC006"
+        val payloadKey = s"${benefitType}_NTC002"
         val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
         // Make API call and build the request
-        val response = niccService.makeEsaJsaRequest(payload)
+        val response = esaJsaService.makeRequest(payload, payloadKey)
 
         Then("Error response should be 502")
         response.status shouldBe 502

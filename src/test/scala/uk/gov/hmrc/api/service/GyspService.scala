@@ -19,23 +19,30 @@ package uk.gov.hmrc.api.service
 import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
-import uk.gov.hmrc.api.models.nicc.v1.Request
+import uk.gov.hmrc.api.models.gysp.GYSPRequest
 
+import java.util.UUID
 import scala.concurrent.Await
 import scala.concurrent.duration.*
 
-class NiccService extends HttpClient with MakesHttpRequestWithToken {
+class GyspService extends HttpClient with MakesHttpRequestWithToken {
 
-  def makeRequest(request: Request, timeoutDuration: Int = 10): StandaloneWSRequest#Response = {
-
-    val url: String    = s"$host/contribution-and-credits/"
+  def makeRequest(
+      request: GYSPRequest,
+      testDataKey: String,
+      timeoutDuration: Int = 10
+  ): StandaloneWSRequest#Response = {
+    val url: String    = s"$host/benefit-eligibility-info/"
     val requestPayload = Json.toJsObject(request)
+    val correlationId  = s"$testDataKey-${UUID.randomUUID()}"
+
     Await.result(
       post(
         url,
         Json.stringify(requestPayload),
         ("Authorization", token),
-        ("Content-Type", "application/json")
+        ("Content-Type", "application/json"),
+        ("CorrelationID", correlationId)
       ),
       timeoutDuration.seconds
     )

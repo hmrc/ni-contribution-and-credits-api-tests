@@ -24,9 +24,7 @@ case class GYSPRequest(
     nationalInsuranceNumber: String,
     niContributionsAndCredits: NIContributionsAndCredits,
     longTermBenefitCalculation: LongTermBenefitCalculationRequest,
-    marriageDetails: Option[MarriageDetailsRequest],
-    searchStartYear: Int,
-    latest: Option[Boolean] = Option(false)
+    marriageDetails: Option[MarriageDetailsRequest]
 )
 
 object GYSPRequest {
