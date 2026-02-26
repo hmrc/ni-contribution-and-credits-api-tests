@@ -18,10 +18,12 @@ package uk.gov.hmrc.api.models.individual.marriagedetails
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class MarriageDetailsResponse(
-    marriageDetails: MarriageDetails
+case class MarriageDetails(
+    activeMarriage: Boolean,
+    marriageDetailsList: Option[List[MarriageDetailsList]],
+    _links: Option[MarriageDetailsLinks]
 )
 
-object MarriageDetailsResponse {
-  implicit val format: OFormat[MarriageDetailsResponse] = Json.format[MarriageDetailsResponse]
+object MarriageDetails {
+  implicit val format: OFormat[MarriageDetails] = Json.format[MarriageDetails]
 }

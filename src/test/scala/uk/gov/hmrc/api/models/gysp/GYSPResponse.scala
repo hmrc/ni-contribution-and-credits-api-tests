@@ -18,6 +18,7 @@ package uk.gov.hmrc.api.models.gysp
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.api.models.benefitscheme.BenefitSchemeDetailsResponse
+import uk.gov.hmrc.api.models.esajsa.NIContributionsAndCreditsResult
 import uk.gov.hmrc.api.models.indivdual.statepensioninfo.IndStatePensionInfoResponse
 import uk.gov.hmrc.api.models.individual.marriagedetails.MarriageDetailsResponse
 import uk.gov.hmrc.api.models.longtermbenefitcalc.LongTermBenefitCalculationDetailsResponse
@@ -33,7 +34,7 @@ case class GYSPResponse(
     longTermBenefitNotesResult: LongTermBenefitNotesResponse,
     schemeMembershipDetailsResult: SchemeMembershipDetailsResponse,
     individualStatePensionInfoResult: IndStatePensionInfoResponse,
-    niContributionsAndCreditsResult: Seq[String]
+    niContributionsAndCreditsResult: Seq[NIContributionsAndCreditsResult]
 )
 
 object GYSPResponse {

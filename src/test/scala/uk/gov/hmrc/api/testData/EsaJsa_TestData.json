@@ -26,7 +26,7 @@
       "endTaxYear": "2021"
     }
   },
-  "JSA_PTC004": {
+  "JSA_NTC001": {
     "benefitType": "JSA",
     "nationalInsuranceNumber": "AA000004",
     "niContributionsAndCredits": {
@@ -44,7 +44,7 @@
       "endTaxYear": "2012"
     }
   },
-  "JSA_PTC006": {
+  "JSA_NTC002": {
     "benefitType": "JSA",
     "nationalInsuranceNumber": "AA000006",
     "niContributionsAndCredits": {
@@ -80,7 +80,7 @@
       "endTaxYear": "2021"
     }
   },
-  "ESA_PTC004": {
+  "ESA_NTC001": {
     "benefitType": "ESA",
     "nationalInsuranceNumber": "AA000004",
     "niContributionsAndCredits": {
@@ -98,7 +98,7 @@
       "endTaxYear": "2012"
     }
   },
-  "ESA_PTC006": {
+  "ESA_NTC002": {
     "benefitType": "ESA",
     "nationalInsuranceNumber": "AA000006",
     "niContributionsAndCredits": {
