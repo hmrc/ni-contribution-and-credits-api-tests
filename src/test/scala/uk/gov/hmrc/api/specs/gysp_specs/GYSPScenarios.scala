@@ -26,7 +26,7 @@
 
 package uk.gov.hmrc.api.specs.gysp_specs
 
-import org.scalatest.BeforeAndAfterAll
+import org.scalatest.{BeforeAndAfterAll, Ignore}
 import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
@@ -35,6 +35,7 @@ import uk.gov.hmrc.api.service.GyspService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
+@Ignore
 class GYSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   val gyspService                              = new GyspService

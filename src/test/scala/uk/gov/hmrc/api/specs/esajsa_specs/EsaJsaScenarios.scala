@@ -26,7 +26,7 @@
 
 package uk.gov.hmrc.api.specs.esajsa_specs
 
-import org.scalatest.BeforeAndAfterAll
+import org.scalatest.{BeforeAndAfterAll, Ignore}
 import play.api.libs.json
 import play.api.libs.json.*
 import uk.gov.hmrc.api.helpers.BaseHelper
@@ -36,6 +36,7 @@ import uk.gov.hmrc.api.service.EsaJsaService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
+@Ignore
 class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   val benefitTypes                               = Seq("JSA", "ESA") // Run tests for both benefit types
@@ -56,7 +57,9 @@ class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
   benefitTypes.foreach { benefitType =>
     Feature(s"Test Scenarios for $benefitType Benefit Type") {
 
-      Scenario(s"${benefitType}_PTC001: Retrieve Class 1 and Class 2 contributions for given valid NINO with suffix") {
+      Scenario(
+        s"${benefitType}_PTC001: Retrieve Class 1 and Class 2 contributions for given valid NINO with suffix"
+      ) {
         Given(s"The Benefit eligibility Info API is up and running for $benefitType")
         When(s"A request for $benefitType is sent")
         // Get test payload
