@@ -18,12 +18,18 @@ package uk.gov.hmrc.api.models.common
 
 import play.api.libs.json.{Json, OFormat}
 
-case class DownstreamError(
+case class NpsNormalizedError(code: String, message: String, downstreamStatus: Int)
+
+object NpsNormalizedError {
+  implicit val npsNormalizedErrorFormat: OFormat[NpsNormalizedError] = Json.format[NpsNormalizedError]
+}
+
+case class DownstreamStatus(
     apiName: String,
     status: String,
-    error: String
+    error: Option[NpsNormalizedError]
 )
 
-object DownstreamError {
-  implicit val format: OFormat[DownstreamError] = Json.format[DownstreamError]
+object DownstreamStatus {
+  implicit val format: OFormat[DownstreamStatus] = Json.format[DownstreamStatus]
 }

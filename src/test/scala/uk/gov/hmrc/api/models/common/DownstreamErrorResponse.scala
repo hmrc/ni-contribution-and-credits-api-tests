@@ -19,11 +19,11 @@ package uk.gov.hmrc.api.models.common
 import play.api.libs.json.{Json, OFormat}
 
 case class DownstreamErrorResponse(
-    overallResultStatus: String,
+    status: String,
     benefitType: String,
     nationalInsuranceNumber: String,
     summary: Summary,
-    downStreams: Seq[DownstreamError]
+    downStreams: Seq[DownstreamStatus]
 )
 
 object DownstreamErrorResponse {
