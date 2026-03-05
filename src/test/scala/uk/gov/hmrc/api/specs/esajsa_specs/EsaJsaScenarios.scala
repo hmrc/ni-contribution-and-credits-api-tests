@@ -30,7 +30,7 @@ import org.scalatest.{BeforeAndAfterAll, Ignore}
 import play.api.libs.json
 import play.api.libs.json.*
 import uk.gov.hmrc.api.helpers.BaseHelper
-import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
+import uk.gov.hmrc.api.models.common.{DownstreamErrorResponse, NpsNormalizedError}
 import uk.gov.hmrc.api.models.esajsa.{EsaJsaRequest, EsaJsaResponse}
 import uk.gov.hmrc.api.service.EsaJsaService
 import uk.gov.hmrc.api.specs.BaseSpec
@@ -239,13 +239,13 @@ class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
         val errorResponse = Json.parse(response.body).as[DownstreamErrorResponse]
 
         // Basic response checks
-        errorResponse.overallResultStatus shouldBe "FAILURE"
+        errorResponse.status shouldBe "FAILURE"
         errorResponse.benefitType shouldBe payload.benefitType
         errorResponse.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
 
         Then("The response body should include the backend error details")
         errorResponse.downStreams.head.status shouldBe "FAILURE"
-        errorResponse.downStreams.head.error shouldBe "ACCESS_FORBIDDEN"
+        errorResponse.downStreams.head.error shouldBe NpsNormalizedError("ACCESS_FORBIDDEN", "", 400)
         // Print response details
         println(s"Response Status: ${response.status}")
         println(s"Response Body: ${Json.prettyPrint(Json.parse(response.body))}")

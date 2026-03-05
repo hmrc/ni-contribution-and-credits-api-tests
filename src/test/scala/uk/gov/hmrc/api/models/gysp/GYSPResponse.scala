@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.api.models.gysp
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, Json, OFormat, Writes}
 import uk.gov.hmrc.api.models.benefitscheme.BenefitSchemeDetailsResponse
 import uk.gov.hmrc.api.models.esajsa.NIContributionsAndCreditsResult
 import uk.gov.hmrc.api.models.indivdual.statepensioninfo.IndStatePensionInfoResponse
@@ -25,16 +25,124 @@ import uk.gov.hmrc.api.models.longtermbenefitcalc.LongTermBenefitCalculationDeta
 import uk.gov.hmrc.api.models.ltb.LongTermBenefitNotesResponse
 import uk.gov.hmrc.api.models.schememembership.SchemeMembershipDetailsResponse
 
+import java.time.LocalDate
+
+case class FilteredMarriageDetailsItem(
+    status: String,
+    startDate: Option[LocalDate],
+    startDateStatus: Option[String],
+    endDate: Option[LocalDate],
+    endDateStatus: Option[String],
+    spouseIdentifier: Option[String],
+    spouseForename: Option[String],
+    spouseSurname: Option[String]
+)
+
+object FilteredMarriageDetailsItem {
+
+  implicit val filteredMarriageDetailsItemWrites: Format[FilteredMarriageDetailsItem] =
+    Json.format[FilteredMarriageDetailsItem]
+
+}
+
+case class FilteredMarriageDetails(
+    marriageDetails: List[FilteredMarriageDetailsItem]
+)
+
+object FilteredMarriageDetails {
+
+  implicit val filteredMarriageDetailsWrites: Format[FilteredMarriageDetails] =
+    Json.format[FilteredMarriageDetails]
+
+}
+
+case class FilteredLongTermBenefitCalculationDetailsItem(
+    guaranteedMinimumPensionContractedOutDeductionsPre1988: Option[
+      BigDecimal
+    ],
+    guaranteedMinimumPensionContractedOutDeductionsPost1988: Option[
+      BigDecimal
+    ],
+    contractedOutDeductionsPre1988: Option[BigDecimal],
+    contractedOutDeductionsPost1988: Option[BigDecimal],
+    longTermBenefitNotes: List[String]
+)
+
+object FilteredLongTermBenefitCalculationDetailsItem {
+
+  implicit val filteredLongTermBenefitCalculationDetailsItemWrites
+      : Format[FilteredLongTermBenefitCalculationDetailsItem] =
+    Json.format[FilteredLongTermBenefitCalculationDetailsItem]
+
+}
+
+case class FilteredLongTermBenefitCalculationDetails(
+    benefitCalculationDetails: List[FilteredLongTermBenefitCalculationDetailsItem]
+)
+
+object FilteredLongTermBenefitCalculationDetails {
+
+  implicit val filteredLongTermBenefitCalculationDetailsWrites: Format[FilteredLongTermBenefitCalculationDetails] =
+    Json.format[FilteredLongTermBenefitCalculationDetails]
+
+}
+
+case class FilteredSchemeMembershipDetailsItem(
+    schemeName: Option[String],
+    schemeMembershipStartDate: Option[LocalDate],
+    schemeMembershipEndDate: Option[LocalDate],
+    employersContractedOutNumberDetails: Option[String]
+)
+
+object FilteredSchemeMembershipDetailsItem {
+
+  implicit val filteredSchemeMembershipDetailsItemWrites: Format[FilteredSchemeMembershipDetailsItem] =
+    Json.format[FilteredSchemeMembershipDetailsItem]
+
+}
+
+case class FilteredSchemeMembershipDetails(schemeMembershipDetails: List[FilteredSchemeMembershipDetailsItem])
+
+object FilteredSchemeMembershipDetails {
+
+  implicit val filteredSchemeMembershipDetailsWrites: Format[FilteredSchemeMembershipDetails] =
+    Json.format[FilteredSchemeMembershipDetails]
+
+}
+
+case class FilteredIndividualStatePensionContributionsByTaxYear(
+    totalPrimaryPaidEarnings: Option[BigDecimal],
+    qualifyingTaxYear: Option[Boolean]
+)
+
+object FilteredIndividualStatePensionContributionsByTaxYear {
+
+  implicit val FilteredIndividualStatePensionContributionsByTaxYearWrites
+      : Format[FilteredIndividualStatePensionContributionsByTaxYear] =
+    Json.format[FilteredIndividualStatePensionContributionsByTaxYear]
+
+}
+
+case class FilteredIndividualStatePensionInfo(
+    numberOfQualifyingYears: Option[Int],
+    contributionsByTaxYear: List[FilteredIndividualStatePensionContributionsByTaxYear]
+)
+
+object FilteredIndividualStatePensionInfo {
+
+  implicit val filteredIndividualStatePensionInfoWrites: Format[FilteredIndividualStatePensionInfo] =
+    Json.format[FilteredIndividualStatePensionInfo]
+
+}
+
 case class GYSPResponse(
     benefitType: String,
     nationalInsuranceNumber: String,
-    benefitSchemeDetailsResult: Seq[BenefitSchemeDetailsResponse],
-    marriageDetailsResult: MarriageDetailsResponse,
-    longTermBenefitCalculationDetailsResult: LongTermBenefitCalculationDetailsResponse,
-    longTermBenefitNotesResult: LongTermBenefitNotesResponse,
-    schemeMembershipDetailsResult: SchemeMembershipDetailsResponse,
-    individualStatePensionInfoResult: IndStatePensionInfoResponse,
-    niContributionsAndCreditsResult: Seq[NIContributionsAndCreditsResult]
+    marriageDetailsResult: FilteredMarriageDetails,
+    longTermBenefitCalculationDetailsResult: FilteredLongTermBenefitCalculationDetails,
+    schemeMembershipDetailsResult: FilteredSchemeMembershipDetails,
+    individualStatePensionInfoResult: FilteredIndividualStatePensionInfo,
+    niContributionsAndCreditsResult: NIContributionsAndCreditsResult
 )
 
 object GYSPResponse {

@@ -30,10 +30,32 @@ import org.scalatest.{BeforeAndAfterAll, Ignore}
 import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
-import uk.gov.hmrc.api.models.gysp.{GYSPRequest, GYSPResponse}
+import uk.gov.hmrc.api.models.common.{
+  Class1ContributionAndCredits,
+  Class2ContributionAndCredits,
+  DownstreamErrorResponse,
+  DownstreamStatus,
+  NpsNormalizedError,
+  Summary
+}
+import uk.gov.hmrc.api.models.esajsa.NIContributionsAndCreditsResult
+import uk.gov.hmrc.api.models.gysp.{
+  FilteredIndividualStatePensionContributionsByTaxYear,
+  FilteredIndividualStatePensionInfo,
+  FilteredLongTermBenefitCalculationDetails,
+  FilteredLongTermBenefitCalculationDetailsItem,
+  FilteredMarriageDetails,
+  FilteredMarriageDetailsItem,
+  FilteredSchemeMembershipDetails,
+  FilteredSchemeMembershipDetailsItem,
+  GYSPRequest,
+  GYSPResponse
+}
 import uk.gov.hmrc.api.service.GyspService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
+
+import java.time.LocalDate
 
 @Ignore
 class GYSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
@@ -46,7 +68,9 @@ class GYSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     val jsonString = JsonUtils.readJsonFile(
       "src/test/scala/uk/gov/hmrc/api/testData/Gysp_TestData.json"
     )
+
     println(jsonString)
+
     PayloadMapping = JsonUtils.parseJsonToGyspRequestMap(jsonString) match {
       case Left(failure) => fail(s"Parsing failed: $failure")
       case Right(map)    => map
@@ -54,6 +78,269 @@ class GYSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
   }
 
   Feature(s"Test Scenarios for GYSP Benefit Type") {
+
+    Scenario("A GYSP request is processed successfully") {
+      Given(s"The Benefit eligibility Info API is up and running")
+      When(s"A request for GYSP is sent and all the requested down stream NPS service respond successfully")
+      // Get test payload
+      val payloadKey = s"GYSP_PTC004"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+      // Make API call and build the request
+      val response = gyspService.makeRequest(payload, payloadKey)
+      println(response.body)
+
+      Then("A 200 is returned with the filtered benefit eligibility data")
+      val result: GYSPResponse = Json.parse(response.body).as[GYSPResponse]
+      val expectedResponse = GYSPResponse(
+        "GYSP",
+        "AA000004",
+        FilteredMarriageDetails(
+          List(
+            FilteredMarriageDetailsItem(
+              "CIVIL PARTNER",
+              Some(LocalDate.parse("2020-04-06")),
+              Some("VERIFIED"),
+              Some(LocalDate.parse("2025-04-06")),
+              Some("VERIFIED"),
+              Some("AA000002"),
+              None,
+              None
+            )
+          )
+        ),
+        FilteredLongTermBenefitCalculationDetails(
+          List(
+            FilteredLongTermBenefitCalculationDetailsItem(
+              None,
+              None,
+              None,
+              None,
+              List(
+                "Invalid Note Type Encountered.",
+                "Married Woman's/Widow's Reduced Rate Authority recorded on this account between 07/04/2020 and 07/04/2025.",
+                "Married Woman's/Widow's Reduced Rate Authority recorded on this account from 07/04/2025"
+              )
+            )
+          )
+        ),
+        FilteredSchemeMembershipDetails(
+          List(
+            FilteredSchemeMembershipDetailsItem(
+              Some("EXAMPLE PENSION SCHEME"),
+              Some(LocalDate.parse("2022-06-27")),
+              Some(LocalDate.parse("2022-06-27")),
+              Some("S3123456B")
+            ),
+            FilteredSchemeMembershipDetailsItem(
+              Some("EXAMPLE PENSION SCHEME"),
+              Some(LocalDate.parse("2022-06-27")),
+              Some(LocalDate.parse("2022-06-27")),
+              Some("S3123456B")
+            )
+          )
+        ),
+        FilteredIndividualStatePensionInfo(
+          Some(50),
+          List(
+            FilteredIndividualStatePensionContributionsByTaxYear(
+              Some(350.91),
+              Some(true)
+            ),
+            FilteredIndividualStatePensionContributionsByTaxYear(
+              Some(1377.39),
+              Some(true)
+            ),
+            FilteredIndividualStatePensionContributionsByTaxYear(
+              Some(2666.09),
+              Some(true)
+            )
+          )
+        ),
+        NIContributionsAndCreditsResult(
+          Some(1.2),
+          Some(
+            List(
+              Class1ContributionAndCredits(
+                2019,
+                Some(10000),
+                Some("STANDARD RATE"),
+                Some("A"),
+                Some(1200),
+                Some("VALID"),
+                "2B",
+                Some("JSA TAPE INPUT"),
+                15,
+                Some("Temp"),
+                Some("L")
+              ),
+              Class1ContributionAndCredits(
+                2021,
+                Some(12000),
+                Some("STANDARD RATE"),
+                Some("A"),
+                Some(1440),
+                Some("VALID"),
+                "2B",
+                Some("JSA TAPE INPUT"),
+                20,
+                Some("Temp"),
+                Some("L")
+              )
+            )
+          ),
+          Some(
+            List(
+              Class2ContributionAndCredits(
+                2022,
+                Some(1.1),
+                None,
+                Some("VALID"),
+                "2B",
+                Some("JSA TAPE INPUT"),
+                30,
+                Some("ZZ")
+              ),
+              Class2ContributionAndCredits(
+                2023,
+                Some(0.9),
+                None,
+                Some("VALID"),
+                "2B",
+                Some("JSA PAPER INPUT"),
+                25,
+                Some("L")
+              )
+            )
+          )
+        )
+      )
+
+      response.status shouldBe 200
+      result shouldBe expectedResponse
+
+      // Print response details
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"""The Response Body is : ${Json.prettyPrint(Json.toJson(result))}""")
+    }
+
+    Scenario(s"GYSP_PTC006: A GYSP request is processed, however some down streams fail") {
+      Given(s"The Benefit eligibility Info API is up and running")
+      When(s"A request for GYSP is sent and NICC and LTB Calc return error")
+
+      val payloadKey = s"GYSP_PTC006"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+
+      // Make API call and build the request
+      val response = gyspService.makeRequest(payload, payloadKey)
+
+      Then("A 502 should be returned with partial failure content")
+
+      println(response.body)
+
+      val result: DownstreamErrorResponse = Json.parse(response.body).as[DownstreamErrorResponse]
+
+      val expectedResponse =
+        DownstreamErrorResponse(
+          "PARTIAL FAILURE",
+          payload.benefitType,
+          payload.nationalInsuranceNumber,
+          Summary(totalCalls = 7, successful = 5, failed = 2),
+          List(
+            DownstreamStatus("Benefit Scheme Details", "SUCCESS", None),
+            DownstreamStatus("Benefit Scheme Details", "SUCCESS", None),
+            DownstreamStatus(
+              "NI Contributions and credits",
+              "FAILURE",
+              Some(
+                NpsNormalizedError(
+                  "ACCESS_FORBIDDEN",
+                  "downstream resource cannot be accessed by the calling client",
+                  403
+                )
+              )
+            ),
+            DownstreamStatus("Marriage Details", "SUCCESS", None),
+            DownstreamStatus("Scheme Membership Details", "SUCCESS", None),
+            DownstreamStatus(
+              "Long Term Benefit Calculation Details",
+              "FAILURE",
+              Some(NpsNormalizedError("BAD_REQUEST", "downstream received a malformed request", 400))
+            ),
+            DownstreamStatus("Individual State Pension Information", "SUCCESS", None)
+          )
+        )
+
+      // Assertions
+      response.status shouldBe 502
+      result shouldBe expectedResponse
+
+      // Print response details
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"""The Response Body is : ${Json.prettyPrint(Json.toJson(result))}""")
+    }
+
+    Scenario(s"GYSP_NPS_ERROR_ALL_DOWNSTREAMS: A GYSP request is processed, however all down streams fail") {
+      Given(s"The Benefit eligibility Info API is up and running")
+      When(s"A request for GYSP is sent and NICC and LTB Calc return error")
+
+      val payloadKey = s"GYSP_NPS_ERROR_ALL_DOWNSTREAMS"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+
+      // Make API call and build the request
+      val response = gyspService.makeRequest(payload, payloadKey)
+
+      Then("A 502 should be returned with only failure content")
+
+      println(response.body)
+
+      val result: DownstreamErrorResponse = Json.parse(response.body).as[DownstreamErrorResponse]
+
+      val expectedResponse =
+        DownstreamErrorResponse(
+          status = "FAILURE",
+          benefitType = payload.benefitType,
+          nationalInsuranceNumber = payload.nationalInsuranceNumber,
+          summary = Summary(totalCalls = 5, successful = 0, failed = 5),
+          downStreams = List(
+            DownstreamStatus(
+              "NI Contributions and credits",
+              "FAILURE",
+              Some(NpsNormalizedError("BAD_REQUEST", "downstream received a malformed request", 400))
+            ),
+            DownstreamStatus(
+              "Marriage Details",
+              "FAILURE",
+              Some(NpsNormalizedError("BAD_REQUEST", "downstream received a malformed request", 400))
+            ),
+            DownstreamStatus(
+              "Scheme Membership Details",
+              "FAILURE",
+              Some(NpsNormalizedError("BAD_REQUEST", "downstream received a malformed request", 400))
+            ),
+            DownstreamStatus(
+              "Long Term Benefit Calculation Details",
+              "FAILURE",
+              Some(NpsNormalizedError("BAD_REQUEST", "downstream received a malformed request", 400))
+            ),
+            DownstreamStatus(
+              "Individual State Pension Information",
+              "FAILURE",
+              Some(NpsNormalizedError("BAD_REQUEST", "downstream received a malformed request", 400))
+            )
+          )
+        )
+
+      // Assertions
+      response.status shouldBe 502
+      result shouldBe expectedResponse
+
+      // Print response details
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"""The Response Body is : ${Json.prettyPrint(Json.toJson(result))}""")
+    }
 
     Scenario(s"GYSP_PTC001: Verify full GYSP response body for a valid NINO with Suffix") {
 
@@ -103,7 +390,7 @@ class GYSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       response.status shouldBe 200
       // Parse JSON into case class
       val result: GYSPResponse = Json.parse(response.body).as[GYSPResponse]
-      val contributions        = result.niContributionsAndCreditsResult.head
+      val contributions        = result.niContributionsAndCreditsResult
 
       // Basic response checks
       result.benefitType shouldBe payload.benefitType
@@ -125,114 +412,182 @@ class GYSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
                           ${Json.prettyPrint(Json.toJson(result))}""")
     }
 
-//    Scenario(s"GYSP_PTC004: Validate full GYSP response structure and content with Nino with Suffix") {
-//      Given(s"The Benefit eligibility Info API is up and running for GYSP")
-//      When(s"A request for GYSP is sent")
-//      // Get test payload
-//      val payloadKey = s"GYSP_PTC003"
-//      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-//      println(payload)
-//      // Make API call and build the request
-//      val response = gyspService.makeRequest(payload, payloadKey)
-//
-//      response.status shouldBe 200
-//      // Parse JSON into case class
-//      println(response.body)
-//      val result: GYSPResponse = Json.parse(response.body).as[GYSPResponse]
-//      val contributions        = result.niContributionsAndCreditsResult.head
-//
-//      // Basic response checks
-//      result.benefitType shouldBe payload.benefitType
-//      result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-//
-//      Then("Only Class 2 contributions should be returned")
-//      // Class 1 should be empty
-//      contributions.class1ContributionAndCredits shouldBe empty
-//      // Class 2: must exist, not empty, and contain "c2"
-//      contributions.class2ContributionAndCredits match {
-//        case Some(list) =>
-//          list should not be empty
-//          list.exists(_.contributionCreditType == "C2") shouldBe true
-//        case None => fail("Class 2 contributions are missing in the response")
-//      }
-//      // Print response details
-//      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-//      println(s"""The Response Body is :
-//                              ${Json.prettyPrint(Json.toJson(result))}""")
-//    }
-//
-//  }
+    Scenario(s"GYSP_PTC004: Validate full GYSP response structure and content with Nino with Suffix") {
+      Given(s"The Benefit eligibility Info API is up and running for GYSP")
+      When(s"A request for GYSP is sent")
+      // Get test payload
+      val payloadKey = s"GYSP_PTC004"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+      // Make API call and build the request
+      val response = gyspService.makeRequest(payload, payloadKey)
 
-//  Scenario(s"GYSP_PTC005: Verify minimal GYSP response body") {
-//    Given(s"The Benefit eligibility Info API is up and running for GYSP")
-//    When(s"A request for GYSP is sent")
-//    // Get test payload
-//    val payloadKey = s"GYSP_PTC005"
-//    val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-//    println(payload)
-//    // Make API call and build the request
-//    val response = gyspService.makeRequest(payload, payloadKey)
-//
-//    response.status shouldBe 200
-//    // Parse JSON into case class
-//    println(response.body)
-//   val result: GYSPResponse = Json.parse(response.body).as[GYSPResponse]
-//    val contributions        = result.niContributionsAndCreditsResult.head
-//
-//    // Basic response checks
-//    result.benefitType shouldBe payload.benefitType
-//    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-//
-//    Then("Only Class 2 contributions should be returned")
-//    // Class 1 should be empty
-//    contributions.class1ContributionAndCredits shouldBe empty
-//    // Class 2: must exist, not empty, and contain "c2"
-//    contributions.class2ContributionAndCredits match {
-//      case Some(list) =>
-//        list should not be empty
-//        list.exists(_.contributionCreditType == "C2") shouldBe true
-//      case None => fail("Class 2 contributions are missing in the response")
-//    }
-//    // Print response details
-//    println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-//    println(s"""The Response Body is :
-//                               ${Json.prettyPrint(Json.toJson(result))}""")
-//  }
-//
-//  Scenario(s"GYSP_PTC006: Verify partial failure GYSP response structure and content") {
-//    Given(s"The Benefit eligibility Info API is up and running for GYSP")
-//    When(s"A request for GYSP is sent and NICC, LTB Calc and LTB Notes return error")
-//    // Get test payload
-//    val payloadKey = s"GYSP_PTC006"
-//    val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-//    println(payload)
-//    // Make API call and build the request
-//    val response = gyspService.makeRequest(payload, payloadKey)
-//
-//    response.status shouldBe 502
-//    // Parse JSON into case class
-//    println(response.body)
-    //    val result: GYSPResponse = Json.parse(response.body).as[GYSPResponse]
-    //    val contributions        = result.niContributionsAndCreditsResult.head
-    //
-    //    // Basic response checks
-    //    result.benefitType shouldBe payload.benefitType
-    //    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-    //
-//    Then("502 should be sent with partial failure content")
-    //    // Class 1 should be empty
-    //    contributions.class1ContributionAndCredits shouldBe empty
-    //    // Class 2: must exist, not empty, and contain "c2"
-    //    contributions.class2ContributionAndCredits match {
-    //      case Some(list) =>
-    //        list should not be empty
-    //        list.exists(_.contributionCreditType == "C2") shouldBe true
-    //      case None => fail("Class 2 contributions are missing in the response")
-    //    }
-    //    // Print response details
-    //    println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-    //    println(s"""The Response Body is :
-    //                               ${Json.prettyPrint(Json.toJson(result))}""")
+      println(response.body)
+      val result: GYSPResponse = Json.parse(response.body).as[GYSPResponse]
+
+      val expectedResponse = GYSPResponse(
+        "GYSP",
+        "AA000004",
+        FilteredMarriageDetails(
+          List(
+            FilteredMarriageDetailsItem(
+              "CIVIL PARTNER",
+              Some(LocalDate.parse("2020-04-06")),
+              Some("VERIFIED"),
+              Some(LocalDate.parse("2025-04-06")),
+              Some("VERIFIED"),
+              Some("AA000002"),
+              None,
+              None
+            )
+          )
+        ),
+        FilteredLongTermBenefitCalculationDetails(
+          List(
+            FilteredLongTermBenefitCalculationDetailsItem(
+              None,
+              None,
+              None,
+              None,
+              List(
+                "Invalid Note Type Encountered.",
+                "Married Woman's/Widow's Reduced Rate Authority recorded on this account between 07/04/2020 and 07/04/2025.",
+                "Married Woman's/Widow's Reduced Rate Authority recorded on this account from 07/04/2025"
+              )
+            )
+          )
+        ),
+        FilteredSchemeMembershipDetails(
+          List(
+            FilteredSchemeMembershipDetailsItem(
+              Some("EXAMPLE PENSION SCHEME"),
+              Some(LocalDate.parse("2022-06-27")),
+              Some(LocalDate.parse("2022-06-27")),
+              Some("S3123456B")
+            ),
+            FilteredSchemeMembershipDetailsItem(
+              Some("EXAMPLE PENSION SCHEME"),
+              Some(LocalDate.parse("2022-06-27")),
+              Some(LocalDate.parse("2022-06-27")),
+              Some("S3123456B")
+            )
+          )
+        ),
+        FilteredIndividualStatePensionInfo(
+          Some(50),
+          List(
+            FilteredIndividualStatePensionContributionsByTaxYear(
+              Some(350.91),
+              Some(true)
+            ),
+            FilteredIndividualStatePensionContributionsByTaxYear(
+              Some(1377.39),
+              Some(true)
+            ),
+            FilteredIndividualStatePensionContributionsByTaxYear(
+              Some(2666.09),
+              Some(true)
+            )
+          )
+        ),
+        NIContributionsAndCreditsResult(
+          Some(1.2),
+          Some(
+            List(
+              Class1ContributionAndCredits(
+                2019,
+                Some(10000),
+                Some("STANDARD RATE"),
+                Some("A"),
+                Some(1200),
+                Some("VALID"),
+                "2B",
+                Some("JSA TAPE INPUT"),
+                15,
+                Some("Temp"),
+                Some("L")
+              ),
+              Class1ContributionAndCredits(
+                2021,
+                Some(12000),
+                Some("STANDARD RATE"),
+                Some("A"),
+                Some(1440),
+                Some("VALID"),
+                "2B",
+                Some("JSA TAPE INPUT"),
+                20,
+                Some("Temp"),
+                Some("L")
+              )
+            )
+          ),
+          Some(
+            List(
+              Class2ContributionAndCredits(
+                2022,
+                Some(1.1),
+                None,
+                Some("VALID"),
+                "2B",
+                Some("JSA TAPE INPUT"),
+                30,
+                Some("ZZ")
+              ),
+              Class2ContributionAndCredits(
+                2023,
+                Some(0.9),
+                None,
+                Some("VALID"),
+                "2B",
+                Some("JSA PAPER INPUT"),
+                25,
+                Some("L")
+              )
+            )
+          )
+        )
+      )
+
+      response.status shouldBe 200
+      result shouldBe expectedResponse
+
+      // Print response details
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"""The Response Body is : ${Json.prettyPrint(Json.toJson(result))}""")
+    }
+
+    Scenario(s"GYSP_PTC005: Verify minimal GYSP response body") {
+      Given(s"The Benefit eligibility Info API is up and running for GYSP")
+      When(s"A request for GYSP is sent")
+      // Get test payload
+      val payloadKey = s"GYSP_PTC005"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+      // Make API call and build the request
+      val response = gyspService.makeRequest(payload, payloadKey)
+
+      response.status shouldBe 200
+      // Parse JSON into case class
+      println(response.body)
+      val result: GYSPResponse = Json.parse(response.body).as[GYSPResponse]
+      val contributions        = result.niContributionsAndCreditsResult
+
+      // Basic response checks
+      result.benefitType shouldBe payload.benefitType
+      result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
+
+      Then("Only an empty response should be returned")
+      // Class 1 should be empty
+      contributions.class1ContributionAndCredits shouldBe empty
+      // Class 2: must exist, not empty, and contain "c2"
+      contributions.class1ContributionAndCredits shouldBe empty
+      // Print response details
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"""The Response Body is :
+                               ${Json.prettyPrint(Json.toJson(result))}""")
+    }
+
   }
 
   private def assertGYSPResponse(payload: GYSPRequest, response: StandaloneWSRequest#Response) = {
@@ -253,38 +608,31 @@ class GYSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     // Benefit Scheme Details
     // --------------------------------------------------
 
-    result.benefitSchemeDetailsResult should not be null
+    result.schemeMembershipDetailsResult should not be null
 
     // --------------------------------------------------
     // Marriage Details
     // --------------------------------------------------
 
-    result.marriageDetailsResult.marriageDetails.activeMarriage shouldBe true
+    result.marriageDetailsResult.marriageDetails should not be null
 
     // --------------------------------------------------
     // Long Term Benefit Calculation Details
     // --------------------------------------------------
 
     val calc = result.longTermBenefitCalculationDetailsResult
-    calc.statePensionAgeBefore2010TaxYear.get shouldBe false
-    calc.statePensionAgeAfter2016TaxYear.get shouldBe true
 
-    calc.benefitCalculationDetailsList match {
-      case Some(list) => list should not be empty
-      case None       => succeed // optional field
-    }
+    calc.benefitCalculationDetails should not be empty
 
     // --------------------------------------------------
     // Long Term Benefit Notes
     // --------------------------------------------------
 
-    result.longTermBenefitNotesResult.longTermBenefitNotes.foreach(notes => notes should not be empty)
-
     // --------------------------------------------------
     // Scheme Membership Details
     // --------------------------------------------------
 
-    result.schemeMembershipDetailsResult.schemeMembershipDetailsSummaryList should not be empty
+    result.schemeMembershipDetailsResult.schemeMembershipDetails should not be empty
 
     // --------------------------------------------------
     // Individual State Pension Info
@@ -292,15 +640,14 @@ class GYSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
     val pensionInfo = result.individualStatePensionInfoResult
 
-    pensionInfo.identifier should not be empty
+    pensionInfo.contributionsByTaxYear should not be empty
+    pensionInfo.numberOfQualifyingYears shouldBe Some(50)
 
     // --------------------------------------------------
     // NI Contributions & Credits
     // --------------------------------------------------
 
-    result.niContributionsAndCreditsResult should not be empty
-
-    val contributions = result.niContributionsAndCreditsResult.head
+    val contributions = result.niContributionsAndCreditsResult
 
     // Class 1
     contributions.class1ContributionAndCredits match {
