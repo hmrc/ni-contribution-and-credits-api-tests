@@ -21,6 +21,7 @@ import io.circe.generic.auto.*
 import io.circe.parser.*
 import uk.gov.hmrc.api.models.esajsa.EsaJsaRequest
 import uk.gov.hmrc.api.models.gysp.GYSPRequest
+import uk.gov.hmrc.api.models.ma.MARequest
 import uk.gov.hmrc.api.models.nicc.v1.Request
 
 import scala.io.Source
@@ -41,5 +42,8 @@ object JsonUtils {
 
   def parseJsonToGyspRequestMap(jsonString: String): Either[Error, Map[String, GYSPRequest]] =
     parse(jsonString).flatMap(_.as[Map[String, GYSPRequest]])
+
+  def parseJsonToMARequestMap(jsonString: String): Either[Error, Map[String, MARequest]] =
+    parse(jsonString).flatMap(_.as[Map[String, MARequest]])
 
 }
