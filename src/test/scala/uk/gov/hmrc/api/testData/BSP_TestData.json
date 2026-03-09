@@ -1,0 +1,11 @@
+{
+  "BSP_PTC001": {
+    "benefitType": "BSP",
+    "nationalInsuranceNumber": "AA000002A",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1958-03-22",
+      "startTaxYear": 2018,
+      "endTaxYear": 2024
+    }
+  }
+}
