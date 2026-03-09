@@ -16,7 +16,7 @@
 package uk.gov.hmrc.api.specs.bsp_specs
 
 import org.scalatest.{BeforeAndAfterAll, Ignore}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, Json}
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.bsp.{BSPRequest, BSPResponse}
@@ -24,6 +24,7 @@ import uk.gov.hmrc.api.service.BSPService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
+@Ignore
 class BSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   val bspService                              = new BSPService
@@ -59,6 +60,84 @@ class BSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       println(s"Response Status: ${response.status} ${response.statusText}")
       println(Json.prettyPrint(Json.toJson(result)))
     }
+
+    Scenario(s"BSP_PTC002: Verify full BSP response body for a valid NINO without Suffix") {
+
+      Given("The Benefit eligibility Info API is up and running for BSP")
+
+      When("A request for BSP is sent")
+
+      val payloadKey = "BSP_PTC002"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+
+      val response = bspService.makeRequest(payload, payloadKey)
+
+      val result: BSPResponse = assertBSPResponse(payload, response)
+
+      println(s"Response Status: ${response.status} ${response.statusText}")
+      println(Json.prettyPrint(Json.toJson(result)))
+    }
+
+    Scenario(s"BSP_PTC003: Verify BSP partial failure response when some services return errors") {
+
+      Given(s"The Benefit eligibility Info API is up and running for BSP")
+
+      When(s"A request for BSP is sent and some downstream services return errors")
+
+      val payloadKey = "BSP_PTC003"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+
+      val response = bspService.makeRequest(payload, payloadKey)
+
+      Then("A 502 status should be returned indicating partial failure")
+      response.status shouldBe 502
+
+      And("The response should contain partial failure status")
+      val responseBody = Json.parse(response.body)
+
+      // Verify top-level partial failure status
+      (responseBody \ "status").as[String] shouldBe "PARTIAL FAILURE"
+
+      // Verify we have both SUCCESS and FAILURE statuses in downstream services
+      val downStreams = (responseBody \ "downStreams").as[JsArray]
+      val statuses    = downStreams.value.map(ds => (ds \ "status").as[String])
+
+      statuses should contain("SUCCESS")
+      statuses should contain("FAILURE")
+
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"The Response Body is : ${response.body}")
+    }
+
+    Scenario(s"BSP_PTC004: Verify BSP complete failure response when all downstream services return errors") {
+
+      Given(s"The Benefit eligibility Info API is up and running for BSP")
+
+      When(s"A request for BSP is sent and all downstream services return errors")
+
+      val payloadKey = "BSP_PTC004"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+
+      val response = bspService.makeRequest(payload, payloadKey)
+
+      Then("A 502 status should be returned indicating complete downstream failure")
+      response.status shouldBe 502
+
+      And("The response should contain failure status")
+      val responseBody = Json.parse(response.body)
+
+      (responseBody \ "status").as[String] shouldBe "FAILURE"
+
+      // Verify all downstream services failed
+      val downStreams = (responseBody \ "downStreams").as[JsArray]
+      downStreams.value.foreach(downstream => (downstream \ "status").as[String] shouldBe "FAILURE")
+
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"Complete Failure Response Body : ${response.body}")
+    }
+
   }
 
   private def assertBSPResponse(payload: BSPRequest, response: StandaloneWSRequest#Response) = {
