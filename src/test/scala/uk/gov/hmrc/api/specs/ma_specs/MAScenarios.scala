@@ -1,7 +1,7 @@
 package uk.gov.hmrc.api.specs.ma_specs
 
 import org.scalatest.{BeforeAndAfterAll, Ignore}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, Json}
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.ma.{MARequest, MAResponse}
@@ -76,9 +76,49 @@ class MAScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       Then("A 502 status should be returned indicating partial failure")
       response.status shouldBe 502
 
+      And("The response should contain partial failure status")
+      val responseBody = Json.parse(response.body)
+
+      // Verify top-level partial failure status
+      (responseBody \ "status").as[String] shouldBe "PARTIAL FAILURE"
+
+      // Verify we have both SUCCESS and FAILURE statuses in downstream services
+      val downStreams = (responseBody \ "downStreams").as[JsArray]
+      val statuses    = downStreams.value.map(ds => (ds \ "status").as[String])
+
+      statuses should contain("SUCCESS")
+      statuses should contain("FAILURE")
+
       println(s"The Response Status Code is : ${response.status} ${response.statusText}")
       println(s"The Response Body is : ${response.body}")
     }
+
+    Scenario(s"MA_PTC004_502: Verify MA complete failure response when all downstream services return errors") {
+      Given(s"The Benefit eligibility Info API is up and running for MA")
+      When(s"A request for MA is sent and all downstream services return errors")
+
+      val payloadKey = s"MA_PTC004"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+
+      val response = maService.makeRequest(payload, payloadKey)
+
+      Then("A 502 status should be returned indicating complete downstream failure")
+      response.status shouldBe 502
+
+      And("The response should contain failure status")
+      val responseBody = Json.parse(response.body)
+
+      (responseBody \ "status").as[String] shouldBe "FAILURE"
+
+      // Verify all downstream services failed
+      val downStreams = (responseBody \ "downStreams").as[JsArray]
+      downStreams.value.foreach(downstream => (downstream \ "status").as[String] shouldBe "FAILURE")
+
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"Complete Failure Response Body : ${response.body}")
+    }
+
   }
 
   private def assertMAResponse(payload: MARequest, response: StandaloneWSRequest#Response) = {
@@ -100,6 +140,21 @@ class MAScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     result.class2MAReceiptsResult should not be null
     result.class2MAReceiptsResult.receiptDates should not be empty
 
+    // Validate receipt dates are valid and not null
+    result.class2MAReceiptsResult.receiptDates.foreach { receiptDate =>
+      receiptDate should not be null
+      receiptDate.toString should not be empty
+    }
+
+    // Check we have at least one receipt date
+    result.class2MAReceiptsResult.receiptDates.size should be >= 1
+
+    // Validate receipt dates are in reasonable date range (not in far future/past)
+    result.class2MAReceiptsResult.receiptDates.foreach { date =>
+      date.getYear should be >= 2000
+      date.getYear should be <= 2030
+    }
+
     // --------------------------------------------------
     // Liability Summary Details Result
     // --------------------------------------------------
@@ -109,6 +164,27 @@ class MAScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     // Get the first item from the list and check its liability details
     val firstLiabilityResult = result.liabilitySummaryDetailsResult.head
     firstLiabilityResult.liabilityDetails should not be empty
+
+    // Validate individual liability details
+    val firstLiabilityDetail = firstLiabilityResult.liabilityDetails.head
+    firstLiabilityDetail.startDate should not be null
+
+    // Validate start date is reasonable
+    firstLiabilityDetail.startDate.getYear should be >= 2000
+    firstLiabilityDetail.startDate.getYear should be <= 2030
+
+    // If end date exists, validate it
+    firstLiabilityDetail.endDate match {
+      case Some(endDate) =>
+        endDate should not be null
+        endDate.getYear should be >= 2000
+        endDate.getYear should be <= 2030
+        endDate.isBefore(firstLiabilityDetail.startDate) shouldBe false
+      case None => succeed
+    }
+
+    // Check we have at least one liability detail per liability result
+    firstLiabilityResult.liabilityDetails.size should be >= 1
 
     // --------------------------------------------------
     // NI Contributions & Credits
