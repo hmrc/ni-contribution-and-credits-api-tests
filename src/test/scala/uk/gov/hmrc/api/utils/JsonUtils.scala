@@ -19,6 +19,7 @@ package uk.gov.hmrc.api.utils
 import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.parser.*
+import uk.gov.hmrc.api.models.bsp.BSPRequest
 import uk.gov.hmrc.api.models.esajsa.EsaJsaRequest
 import uk.gov.hmrc.api.models.gysp.GYSPRequest
 import uk.gov.hmrc.api.models.ma.MARequest
@@ -45,5 +46,8 @@ object JsonUtils {
 
   def parseJsonToMARequestMap(jsonString: String): Either[Error, Map[String, MARequest]] =
     parse(jsonString).flatMap(_.as[Map[String, MARequest]])
+
+  def parseJsonToBSPRequestMap(jsonString: String): Either[Error, Map[String, BSPRequest]] =
+    parse(jsonString).flatMap(_.as[Map[String, BSPRequest]])
 
 }
