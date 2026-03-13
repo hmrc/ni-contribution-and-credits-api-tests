@@ -236,16 +236,20 @@ class EsaJsaScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
         Then("Error response should be 502")
         response.status shouldBe 502
         // Parse JSON into case class
-        val errorResponse = Json.parse(response.body).as[DownstreamErrorResponse]
+        val result = Json.parse(response.body).as[DownstreamErrorResponse]
 
         // Basic response checks
-        errorResponse.status shouldBe "FAILURE"
-        errorResponse.benefitType shouldBe payload.benefitType
-        errorResponse.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
+        result.status shouldBe "FAILURE"
+        result.benefitType shouldBe payload.benefitType
+        result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
 
         Then("The response body should include the backend error details")
-        errorResponse.downStreams.head.status shouldBe "FAILURE"
-        errorResponse.downStreams.head.error shouldBe NpsNormalizedError("ACCESS_FORBIDDEN", "", 400)
+        result.downStreams.head.status shouldBe "FAILURE"
+        result.downStreams.head.error.head shouldBe NpsNormalizedError(
+          "ACCESS_FORBIDDEN",
+          "downstream resource cannot be accessed by the calling client",
+          403
+        )
         // Print response details
         println(s"Response Status: ${response.status}")
         println(s"Response Body: ${Json.prettyPrint(Json.parse(response.body))}")
