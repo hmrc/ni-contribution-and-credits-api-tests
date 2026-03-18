@@ -17,7 +17,7 @@
 package uk.gov.hmrc.api.specs.ma_specs
 
 import org.scalatest.{BeforeAndAfterAll, Ignore}
-import play.api.libs.json.{JsArray, Json}
+import play.api.libs.json.{JsArray, JsValue, Json}
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.ma.{MARequest, MAResponse}
@@ -141,11 +141,12 @@ class MAScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       val payloadKey = s"MA_PTC005"
       val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
       println(payload)
-
       val response = maService.makeRequest(payload, payloadKey)
+      val json     = Json.parse(response.body)
 
       Then("A 400 status should be returned indicating request validation failure")
       response.status shouldBe 400
+      assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
 
       println(s"The Response Status Code is : ${response.status} ${response.statusText}")
       println(s"The Response Body is : ${response.body}")
@@ -158,17 +159,26 @@ class MAScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       val payloadKey = s"MA_PTC006"
       val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
       println(payload)
-
       val response = maService.makeRequest(payload, payloadKey)
+      val json     = Json.parse(response.body)
 
       Then("A 422 status should be returned indicating request validation failure")
       response.status shouldBe 422
-      // assertMAResponse()
+      assertErrorResponse(json, "UNPROCESSABLE_ENTITY", "Missing Header CorrelationId")
 
       println(s"The Response Status Code is : ${response.status} ${response.statusText}")
       println(s"The Response Body is : ${response.body}")
     }
 
+  }
+
+  def assertErrorResponse(
+      json: JsValue,
+      expectedCode: String,
+      expectedReason: String
+  ): Unit = {
+    (json \ "code").as[String] shouldBe expectedCode
+    (json \ "reason").as[String] shouldBe expectedReason
   }
 
   private def assertMAResponse(payload: MARequest, response: StandaloneWSRequest#Response) = {
