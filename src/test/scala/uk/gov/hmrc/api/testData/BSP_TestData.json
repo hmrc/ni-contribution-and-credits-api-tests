@@ -34,5 +34,23 @@
       "startTaxYear": 2018,
       "endTaxYear": 2024
     }
+  },
+  "BSP_PTC005": {
+    "benefitType": "BSP",
+    "nationalInsuranceNumber": "AA000002A",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "",
+      "startTaxYear": 2018,
+      "endTaxYear": 2024
+    }
+  },
+  "BSP_PTC006": {
+    "benefitType": "BSP",
+    "nationalInsuranceNumber": "AA000002A",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "INVALID_DOB",
+      "startTaxYear": 2018,
+      "endTaxYear": 2024
+    }
   }
 }

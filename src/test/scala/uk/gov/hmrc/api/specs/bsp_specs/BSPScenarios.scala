@@ -16,7 +16,7 @@
 package uk.gov.hmrc.api.specs.bsp_specs
 
 import org.scalatest.{BeforeAndAfterAll, Ignore}
-import play.api.libs.json.{JsArray, Json}
+import play.api.libs.json.{JsArray, JsValue, Json}
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.bsp.{BSPRequest, BSPResponse}
@@ -24,7 +24,6 @@ import uk.gov.hmrc.api.service.BSPService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
-@Ignore
 class BSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   val bspService                              = new BSPService
@@ -138,6 +137,51 @@ class BSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       println(s"Complete Failure Response Body : ${response.body}")
     }
 
+    Scenario(s"BSP_PTC005_400: Verify API validation failure when required NICC details field is empty") {
+      Given(s"The Benefit eligibility Info API is up and running for BSP")
+      When(s"A request for BSP is sent with empty dateOfBirth in NICC")
+
+      val payloadKey = s"BSP_PTC005"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+      val response = bspService.makeRequest(payload, payloadKey)
+      val json     = Json.parse(response.body)
+
+      Then("A 400 status should be returned indicating request validation failure")
+      response.status shouldBe 400
+      assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
+
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"The Response Body is : ${response.body}")
+    }
+
+    ignore(s"BSP_PTC006_422: Verify API validation failure when using invalid NICC field") {
+      Given(s"The Benefit eligibility Info API is up and running for BSP")
+      When(s"A request for BSP is sent with invalid searchCategories entry")
+
+      val payloadKey = s"BSP_PTC006"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+      val response = bspService.makeRequest(payload, payloadKey)
+      val json     = Json.parse(response.body)
+
+      Then("A 422 status should be returned indicating request validation failure")
+      response.status shouldBe 422
+      assertErrorResponse(json, "UNPROCESSABLE_ENTITY", "Missing Header CorrelationId")
+
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"The Response Body is : ${response.body}")
+    }
+
+  }
+
+  def assertErrorResponse(
+      json: JsValue,
+      expectedCode: String,
+      expectedReason: String
+  ): Unit = {
+    (json \ "code").as[String] shouldBe expectedCode
+    (json \ "reason").as[String] shouldBe expectedReason
   }
 
   private def assertBSPResponse(payload: BSPRequest, response: StandaloneWSRequest#Response) = {
