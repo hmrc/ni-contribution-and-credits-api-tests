@@ -19,7 +19,7 @@ package uk.gov.hmrc.api.models.gysp
 import play.api.libs.json.{Json, OFormat}
 
 case class LongTermBenefitCalculationRequest(
-    benefitType: String,
+    longTermBenefitType: String,
     pensionProcessingArea: Option[String]
 )
 
