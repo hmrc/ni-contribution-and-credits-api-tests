@@ -17,13 +17,7 @@
 package uk.gov.hmrc.api.models.gysp
 
 import play.api.libs.json.{Format, Json, OFormat, Writes}
-import uk.gov.hmrc.api.models.benefitscheme.BenefitSchemeDetailsResponse
 import uk.gov.hmrc.api.models.esajsa.NIContributionsAndCreditsResult
-import uk.gov.hmrc.api.models.indivdual.statepensioninfo.IndStatePensionInfoResponse
-import uk.gov.hmrc.api.models.individual.marriagedetails.MarriageDetailsResponse
-import uk.gov.hmrc.api.models.longtermbenefitcalc.LongTermBenefitCalculationDetailsResponse
-import uk.gov.hmrc.api.models.ltb.LongTermBenefitNotesResponse
-import uk.gov.hmrc.api.models.schememembership.SchemeMembershipDetailsResponse
 
 import java.time.LocalDate
 

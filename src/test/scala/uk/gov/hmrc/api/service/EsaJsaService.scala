@@ -16,52 +16,115 @@
 
 package uk.gov.hmrc.api.service
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.client.HttpClient
 import uk.gov.hmrc.api.models.esajsa.EsaJsaRequest
+
 import java.util.UUID
 import scala.concurrent.Await
 import scala.concurrent.duration.*
 
 class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
 
+  // ── Private Helpers ────────────────────────────────────────────────────────
+
+  private val url: String = s"$host/benefit-eligibility-info/"
+
+  private def toJsonString(request: EsaJsaRequest): String =
+    Json.stringify(Json.toJsObject(request))
+
+  private def generateCorrelationId(testDataKey: String): String =
+    s"$testDataKey-${UUID.randomUUID()}"
+
+  private def buildHeaders(
+      includeCorrelationId: Boolean = true,
+      includeBearerToken: Boolean = true,
+      testDataKey: String = ""
+  ): Seq[(String, String)] = {
+    val baseHeaders = Seq("Content-Type" -> "application/json")
+
+    val withAuth =
+      if (includeBearerToken)
+        baseHeaders :+ ("Authorization" -> token)
+      else
+        baseHeaders
+
+    val withCorrelation =
+      if (includeCorrelationId)
+        withAuth :+ ("CorrelationID" -> generateCorrelationId(testDataKey))
+      else
+        withAuth
+
+    withCorrelation
+  }
+
+  private def execute(
+      payload: String,
+      headers: Seq[(String, String)],
+      timeoutDuration: Int
+  ): StandaloneWSRequest#Response =
+    Await.result(
+      post(url, payload, headers *),
+      timeoutDuration.seconds
+    )
+
+  // ── Public Methods ─────────────────────────────────────────────────────────
+
   def makeRequest(
       request: EsaJsaRequest,
       testDataKey: String,
       timeoutDuration: Int = 10
-  ): StandaloneWSRequest#Response = {
-    val url: String    = s"$host/benefit-eligibility-info/"
-    val requestPayload = Json.toJsObject(request)
-    val correlationId  = s"$testDataKey-${UUID.randomUUID()}"
-
-    Await.result(
-      post(
-        url,
-        Json.stringify(requestPayload),
-        ("Authorization", token),
-        ("CorrelationID", correlationId),
-        ("Content-Type", "application/json")
-      ),
-      timeoutDuration.seconds
+  ): StandaloneWSRequest#Response =
+    execute(
+      payload = toJsonString(request),
+      headers = buildHeaders(testDataKey = testDataKey),
+      timeoutDuration = timeoutDuration
     )
-  }
+
+  def makeRawRequest(
+      request: JsValue,
+      testDataKey: String,
+      timeoutDuration: Int = 10
+  ): StandaloneWSRequest#Response =
+    execute(
+      payload = Json.stringify(request),
+      headers = buildHeaders(testDataKey = testDataKey),
+      timeoutDuration = timeoutDuration
+    )
 
   def makeRequestWithoutCorrelationId(
       request: EsaJsaRequest,
       timeoutDuration: Int = 10
-  ): StandaloneWSRequest#Response = {
-    val url: String    = s"$host/benefit-eligibility-info/"
-    val requestPayload = Json.toJsObject(request)
+  ): StandaloneWSRequest#Response =
+    execute(
+      payload = toJsonString(request),
+      headers = buildHeaders(includeCorrelationId = false),
+      timeoutDuration = timeoutDuration
+    )
 
-    Await.result(
-      post(
-        url,
-        Json.stringify(requestPayload),
-        ("Authorization", token),
-        ("Content-Type", "application/json")
-      ),
-      timeoutDuration.seconds
+  def makeRequestWithoutBearerToken(
+      request: EsaJsaRequest,
+      testDataKey: String,
+      timeoutDuration: Int = 10
+  ): StandaloneWSRequest#Response =
+    execute(
+      payload = toJsonString(request),
+      headers = buildHeaders(includeBearerToken = false, testDataKey = testDataKey),
+      timeoutDuration = timeoutDuration
+    )
+
+  def makeRequestWithInvalidBearerToken(
+      request: EsaJsaRequest,
+      testDataKey: String,
+      timeoutDuration: Int = 10
+  ): StandaloneWSRequest#Response = {
+    val invalidTokenHeaders = buildHeaders(includeBearerToken = false, testDataKey = testDataKey) :+
+      ("Authorization" -> "Bearer invalid-token")
+    execute(
+      payload = toJsonString(request),
+      headers = invalidTokenHeaders,
+      timeoutDuration = timeoutDuration
     )
   }
 
