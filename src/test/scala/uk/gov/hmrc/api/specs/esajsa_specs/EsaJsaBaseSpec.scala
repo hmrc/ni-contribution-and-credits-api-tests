@@ -14,34 +14,34 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.specs.gysp_specs
+package uk.gov.hmrc.api.specs.esajsa_specs
 
 import org.scalatest.BeforeAndAfterAll
 import play.api.libs.json.*
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
-import uk.gov.hmrc.api.models.common.*
-import uk.gov.hmrc.api.models.esajsa.NIContributionsAndCreditsResult
-import uk.gov.hmrc.api.models.gysp.*
-import uk.gov.hmrc.api.service.GyspService
+import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
+import uk.gov.hmrc.api.models.esajsa.*
+import uk.gov.hmrc.api.service.EsaJsaService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
-class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
+class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   // ── Configuration ──────────────────────────────────────────────────────────
 
-  val gyspService                              = new GyspService
-  var PayloadMapping: Map[String, GYSPRequest] = _
+  val benefitTypes                               = Seq("JSA", "ESA")
+  val esaJsaService                              = new EsaJsaService
+  var PayloadMapping: Map[String, EsaJsaRequest] = _
 
   // ── Setup ──────────────────────────────────────────────────────────────────
 
   override def beforeAll(): Unit = {
     super.beforeAll()
     val jsonString = JsonUtils.readJsonFile(
-      "src/test/scala/uk/gov/hmrc/api/testData/Gysp_TestData.json"
+      "src/test/scala/uk/gov/hmrc/api/testData/EsaJsa_TestData.json"
     )
-    PayloadMapping = JsonUtils.parseJsonToGyspRequestMap(jsonString) match {
+    PayloadMapping = JsonUtils.parseJsonToEsaJsaRequestMap(jsonString) match {
       case Left(failure) => fail(s"Parsing failed: $failure")
       case Right(map)    => map
     }
@@ -49,23 +49,23 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   // ── Payload Helpers ────────────────────────────────────────────────────────
 
-  def getPayload(payloadKey: String): GYSPRequest =
+  def getPayload(payloadKey: String): EsaJsaRequest =
     PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
 
   def makeRequestAndParseResponse(
-      payload: GYSPRequest,
+      payload: EsaJsaRequest,
       payloadKey: String
-  ): (StandaloneWSRequest#Response, GYSPResponse) = {
-    val response = gyspService.makeRequest(payload, payloadKey)
-    val result   = Json.parse(response.body).as[GYSPResponse]
+  ): (StandaloneWSRequest#Response, EsaJsaResponse) = {
+    val response = esaJsaService.makeRequest(payload, payloadKey)
+    val result   = Json.parse(response.body).as[EsaJsaResponse]
     (response, result)
   }
 
   // ── Assertion Helpers ──────────────────────────────────────────────────────
 
   def assertBasicResponseFields(
-      result: GYSPResponse,
-      payload: GYSPRequest,
+      result: EsaJsaResponse,
+      payload: EsaJsaRequest,
       expectedStatus: Int,
       response: StandaloneWSRequest#Response
   ): Unit = {
@@ -74,28 +74,15 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
   }
 
-  def assertGYSPResponseHasSectionsFromAllDownstreamAPIs(
-      payload: GYSPRequest,
-      result: GYSPResponse
-  ): Unit = {
-    result.benefitType shouldBe payload.benefitType
-    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-
-    result.marriageDetailsResult.marriageDetails should not be null
-    result.schemeMembershipDetailsResult.schemeMembershipDetails should not be empty
-    result.longTermBenefitCalculationDetailsResult.benefitCalculationDetails should not be empty
-    result.individualStatePensionInfoResult.contributionsByTaxYear should not be empty
-    result.niContributionsAndCreditsResult should not be null
-  }
-
-  def assertRequiredFieldsInMarriageDetails(
-      marriageDetails: List[FilteredMarriageDetailsItem]
+  def assertClass1Contributions(
+      contributions: NIContributionsAndCreditsResult,
+      expectedCategory: String
   ): Unit =
-    marriageDetails.foreach { item =>
-      require(
-        item.status != null && item.status.trim.nonEmpty,
-        s"Marriage status is required but was missing for item: $item"
-      )
+    contributions.class1ContributionAndCredits match {
+      case Some(list) =>
+        list should not be empty
+        list.exists(_.contributionCategory.contains(expectedCategory)) shouldBe true
+      case None => fail("Class 1 contributions are missing in the response")
     }
 
   def assertClass2Contributions(
@@ -109,16 +96,15 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       case None => fail("Class 2 contributions are missing in the response")
     }
 
-  def assertEmptyResponse(result: GYSPResponse, payload: GYSPRequest): Unit = {
-    result.benefitType shouldBe payload.benefitType
-    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-
-    result.marriageDetailsResult.marriageDetails shouldBe empty
-    result.longTermBenefitCalculationDetailsResult.benefitCalculationDetails shouldBe empty
-    result.schemeMembershipDetailsResult.schemeMembershipDetails shouldBe empty
-    result.individualStatePensionInfoResult.contributionsByTaxYear shouldBe empty
-    result.niContributionsAndCreditsResult.class1ContributionAndCredits shouldBe empty
-    result.niContributionsAndCreditsResult.class2ContributionAndCredits shouldBe empty
+  def assertEmptyContributions(contributions: NIContributionsAndCreditsResult): Unit = {
+    contributions.class1ContributionAndCredits match {
+      case Some(list) if list.nonEmpty => fail("Class 1 contributions are present but should be empty")
+      case _                           =>
+    }
+    contributions.class2ContributionAndCredits match {
+      case Some(list) if list.nonEmpty => fail("Class 2 contributions are present but should be empty")
+      case _                           =>
+    }
   }
 
   def assertErrorResponse(
@@ -132,25 +118,21 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   def assertDownstreamFailure(
       result: DownstreamErrorResponse,
-      payload: GYSPRequest,
-      expectedStatus: String,
-      expectedTotalCalls: Int,
-      expectedSuccessful: Int,
-      expectedFailed: Int
+      payload: EsaJsaRequest,
+      expectedStatus: String
   ): Unit = {
     result.status shouldBe expectedStatus
     result.benefitType shouldBe payload.benefitType
     result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-    result.summary.totalCalls shouldBe expectedTotalCalls
-    result.summary.successful shouldBe expectedSuccessful
-    result.summary.failed shouldBe expectedFailed
+    result.downStreams.head.status shouldBe "FAILURE"
+    result.downStreams.head.error shouldBe defined
   }
 
   // ── Print Helpers ──────────────────────────────────────────────────────────
 
   def printResponse(
       response: StandaloneWSRequest#Response,
-      result: GYSPResponse
+      result: EsaJsaResponse
   ): Unit = {
     println(s"The Response Status Code is : ${response.status} ${response.statusText}")
     println(s"The Response Body is : ${Json.prettyPrint(Json.toJson(result))}")
