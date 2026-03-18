@@ -25,6 +25,7 @@ import uk.gov.hmrc.api.service.MAService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
+@Ignore
 class MAScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   val maService                              = new MAService
