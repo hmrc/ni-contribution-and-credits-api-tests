@@ -25,7 +25,6 @@ import uk.gov.hmrc.api.service.MAService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
-@Ignore
 class MAScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   val maService                              = new MAService
@@ -133,6 +132,40 @@ class MAScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
       println(s"The Response Status Code is : ${response.status} ${response.statusText}")
       println(s"Complete Failure Response Body : ${response.body}")
+    }
+
+    Scenario(s"MA_PTC005_400: Verify API validation failure when required liability fields are empty") {
+      Given(s"The Benefit eligibility Info API is up and running for MA")
+      When(s"A request for MA is sent with empty searchCategories in liabilities")
+
+      val payloadKey = s"MA_PTC005"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+
+      val response = maService.makeRequest(payload, payloadKey)
+
+      Then("A 400 status should be returned indicating request validation failure")
+      response.status shouldBe 400
+
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"The Response Body is : ${response.body}")
+    }
+
+    Scenario(s"MA_PTC006_422: Verify API validation failure when national insurance number is empty") {
+      Given(s"The Benefit eligibility Info API is up and running for MA")
+      When(s"A request for MA is sent with empty national insurance number")
+
+      val payloadKey = s"MA_PTC006"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+
+      val response = maService.makeRequest(payload, payloadKey)
+
+      Then("A 422 status should be returned indicating request validation failure")
+      response.status shouldBe 422
+
+      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
+      println(s"The Response Body is : ${response.body}")
     }
 
   }
