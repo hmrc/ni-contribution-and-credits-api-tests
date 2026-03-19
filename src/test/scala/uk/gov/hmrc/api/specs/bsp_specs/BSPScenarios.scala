@@ -1,5 +1,6 @@
 /*
  * Copyright 2026 HM Revenue & Customs
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,6 +21,8 @@ import play.api.libs.json.{JsArray, JsValue, Json}
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
 import uk.gov.hmrc.api.models.bsp.{BSPRequest, BSPResponse}
+import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
+import uk.gov.hmrc.api.models.gysp.GYSPRequest
 import uk.gov.hmrc.api.service.BSPService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
@@ -84,26 +87,38 @@ class BSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       When(s"A request for BSP is sent and some downstream services return errors")
 
       val payloadKey = "BSP_PTC003"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-      println(payload)
+      val payload    = getPayload(payloadKey)
+      val response   = bspService.makeRequest(payload, payloadKey)
+      val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
-      val response = bspService.makeRequest(payload, payloadKey)
-
-      Then("A 502 status should be returned indicating partial failure")
+      Then("A 502 should be returned with partial failure content")
       response.status shouldBe 502
 
-      And("The response should contain partial failure status")
-      val responseBody = Json.parse(response.body)
+      assertDownstreamFailure(
+        result = result,
+        payload = payload,
+        expectedStatus = "PARTIAL FAILURE",
+        expectedTotalCalls = 2,
+        expectedSuccessful = 1,
+        expectedFailed = 1
+      )
 
-      // Verify top-level partial failure status
-      (responseBody \ "status").as[String] shouldBe "PARTIAL FAILURE"
+      val failedDownStreams = result.downStreams.filter(_.status == "FAILURE")
+      failedDownStreams should have size 1
+      failedDownStreams.map(_.apiName) should contain("Marriage Details")
 
-      // Verify we have both SUCCESS and FAILURE statuses in downstream services
-      val downStreams = (responseBody \ "downStreams").as[JsArray]
-      val statuses    = downStreams.value.map(ds => (ds \ "status").as[String])
+      failedDownStreams.foreach { ds =>
+        ds.apiName match {
+          case "Marriage Details" =>
+            ds.error shouldBe defined
+            ds.error.get.code shouldBe "BAD_REQUEST"
+            ds.error.get.downstreamStatus shouldBe 400
+        }
+      }
 
-      statuses should contain("SUCCESS")
-      statuses should contain("FAILURE")
+      val successfulDownStreams = result.downStreams.filter(_.status == "SUCCESS")
+      successfulDownStreams should have size 1
+      successfulDownStreams.map(_.apiName) should contain("NI Contributions and credits")
 
       println(s"The Response Status Code is : ${response.status} ${response.statusText}")
       println(s"The Response Body is : ${response.body}")
@@ -173,6 +188,25 @@ class BSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       println(s"The Response Body is : ${response.body}")
     }
 
+  }
+
+  def getPayload(payloadKey: String): BSPRequest =
+    PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+
+  def assertDownstreamFailure(
+      result: DownstreamErrorResponse,
+      payload: BSPRequest,
+      expectedStatus: String,
+      expectedTotalCalls: Int,
+      expectedSuccessful: Int,
+      expectedFailed: Int
+  ): Unit = {
+    result.status shouldBe expectedStatus
+    result.benefitType shouldBe payload.benefitType
+    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
+    result.summary.totalCalls shouldBe expectedTotalCalls
+    result.summary.successful shouldBe expectedSuccessful
+    result.summary.failed shouldBe expectedFailed
   }
 
   def assertErrorResponse(

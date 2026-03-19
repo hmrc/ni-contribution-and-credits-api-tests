@@ -19,7 +19,7 @@
   },
   "BSP_PTC003": {
     "benefitType": "BSP",
-    "nationalInsuranceNumber": "AA000003",
+    "nationalInsuranceNumber": "AA000008",
     "niContributionsAndCredits": {
       "dateOfBirth": "1958-03-22",
       "startTaxYear": 2018,
