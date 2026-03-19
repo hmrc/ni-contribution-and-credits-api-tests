@@ -58,5 +58,29 @@
       "liabilityStart": "2021-06-15",
       "liabilityEnd": "2022-06-14"
     }
+  },
+  "MA_PTC005": {
+    "benefitType": "MA",
+    "nationalInsuranceNumber": "AA000002A",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1988-07-25",
+      "startTaxYear": 2021,
+      "endTaxYear": 2023
+    },
+    "liabilities": {
+      "searchCategories": [""]
+    }
+  },
+  "MA_PTC006": {
+    "benefitType": "MA",
+    "nationalInsuranceNumber": "AA000002A",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1988-07-25",
+      "startTaxYear": 2021,
+      "endTaxYear": 2023
+    },
+    "liabilities": {
+      "searchCategories": ["INVALID_NAME"]
+    }
   }
 }
