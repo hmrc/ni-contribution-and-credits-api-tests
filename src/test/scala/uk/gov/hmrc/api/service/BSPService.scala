@@ -34,7 +34,7 @@ class BSPService extends HttpClient with MakesHttpRequestWithToken {
   ): StandaloneWSRequest#Response = {
     val url: String    = s"$host/benefit-eligibility-info/"
     val requestPayload = Json.toJsObject(request)
-    val correlationId  = s"$testDataKey-${UUID.randomUUID()}"
+    val correlationId  = s"${UUID.randomUUID()}"
 
     Await.result(
       post(
