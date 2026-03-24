@@ -35,7 +35,7 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
     Json.stringify(Json.toJsObject(request))
 
   private def generateCorrelationId(testDataKey: String): String =
-    s"$testDataKey-${UUID.randomUUID()}"
+    s"${UUID.randomUUID()}"
 
   private def buildHeaders(
       includeCorrelationId: Boolean = true,
