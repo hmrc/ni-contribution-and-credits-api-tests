@@ -29,13 +29,13 @@ class BSPService extends HttpClient with MakesHttpRequestWithToken {
 
   def makeRequest(
       request: BSPRequest,
-      testDataKey: String,
       timeoutDuration: Int = 10
   ): StandaloneWSRequest#Response = {
     val url: String    = s"$host/benefit-eligibility-info/"
     val requestPayload = Json.toJsObject(request)
     val correlationId  = s"${UUID.randomUUID()}"
 
+    println(requestPayload)
     Await.result(
       post(
         url,

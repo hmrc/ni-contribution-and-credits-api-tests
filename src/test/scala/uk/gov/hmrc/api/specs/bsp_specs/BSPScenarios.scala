@@ -16,79 +16,48 @@
 
 package uk.gov.hmrc.api.specs.bsp_specs
 
-import org.scalatest.{BeforeAndAfterAll, Ignore}
-import play.api.libs.json.{JsArray, JsValue, Json}
-import play.api.libs.ws.StandaloneWSRequest
-import uk.gov.hmrc.api.helpers.BaseHelper
-import uk.gov.hmrc.api.models.bsp.{BSPRequest, BSPResponse}
+import play.api.libs.json.*
 import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
-import uk.gov.hmrc.api.models.gysp.GYSPRequest
-import uk.gov.hmrc.api.service.BSPService
-import uk.gov.hmrc.api.specs.BaseSpec
-import uk.gov.hmrc.api.utils.JsonUtils
 
-class BSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
+class BSPScenarios extends BSPBaseSpec {
 
-  val bspService                              = new BSPService
-  var PayloadMapping: Map[String, BSPRequest] = _
+  Feature("Test Scenarios for BSP Benefit Type") {
 
-  override def beforeAll(): Unit = {
-    super.beforeAll()
-    val jsonString = JsonUtils.readJsonFile(
-      "src/test/scala/uk/gov/hmrc/api/testData/BSP_TestData.json"
-    )
-    println(jsonString)
-    PayloadMapping = JsonUtils.parseJsonToBSPRequestMap(jsonString) match {
-      case Left(failure) => fail(s"Parsing failed: $failure")
-      case Right(map)    => map
-    }
-  }
+    Scenario("BSP_PTC001: Verify full BSP response body for a valid NINO with suffix") {
+      Given("The Benefit Eligibility Info API is up and running for BSP")
+      When("A valid request for BSP is sent with a NINO with suffix")
 
-  Feature(s"Test Scenarios for BSP Benefit Type") {
+      val payloadKey         = "BSP_PTC001"
+      val payload            = getPayload(payloadKey)
+      val (response, result) = makeAndParseRequest(payload)
 
-    Scenario(s"BSP_PTC001: Verify full BSP response body for a valid NINO with Suffix") {
+      Then("All major response sections should contain valid data")
+      assertBSPResponse(payload, response)
 
-      Given("The Benefit eligibility Info API is up and running for BSP")
-
-      When("A request for BSP is sent")
-
-      val payloadKey = "BSP_PTC001"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-
-      val response = bspService.makeRequest(payload, payloadKey)
-
-      val result: BSPResponse = assertBSPResponse(payload, response)
-
-      println(s"Response Status: ${response.status} ${response.statusText}")
-      println(Json.prettyPrint(Json.toJson(result)))
+      printResponse(response, result)
     }
 
-    Scenario(s"BSP_PTC002: Verify full BSP response body for a valid NINO without Suffix") {
+    Scenario("BSP_PTC002: Verify full BSP response body for a valid NINO without suffix") {
+      Given("The Benefit Eligibility Info API is up and running for BSP")
+      When("A valid request for BSP is sent with a NINO without suffix")
 
-      Given("The Benefit eligibility Info API is up and running for BSP")
+      val payloadKey         = "BSP_PTC002"
+      val payload            = getPayload(payloadKey)
+      val (response, result) = makeAndParseRequest(payload)
 
-      When("A request for BSP is sent")
+      Then("All major response sections should contain valid data")
+      assertBSPResponse(payload, response)
 
-      val payloadKey = "BSP_PTC002"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-
-      val response = bspService.makeRequest(payload, payloadKey)
-
-      val result: BSPResponse = assertBSPResponse(payload, response)
-
-      println(s"Response Status: ${response.status} ${response.statusText}")
-      println(Json.prettyPrint(Json.toJson(result)))
+      printResponse(response, result)
     }
 
-    Scenario(s"BSP_PTC003: Verify BSP partial failure response when some services return errors") {
-
-      Given(s"The Benefit eligibility Info API is up and running for BSP")
-
-      When(s"A request for BSP is sent and some downstream services return errors")
+    Scenario("BSP_PTC003: Verify BSP partial failure response when some downstream services return errors") {
+      Given("The Benefit Eligibility Info API is up and running for BSP")
+      When("A request for BSP is sent and some downstream services return errors")
 
       val payloadKey = "BSP_PTC003"
       val payload    = getPayload(payloadKey)
-      val response   = bspService.makeRequest(payload, payloadKey)
+      val response   = bspService.makeRequest(payload)
       val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
       Then("A 502 should be returned with partial failure content")
@@ -120,148 +89,61 @@ class BSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       successfulDownStreams should have size 1
       successfulDownStreams.map(_.apiName) should contain("NI Contributions and credits")
 
-      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-      println(s"The Response Body is : ${response.body}")
+      printRawResponse(response)
     }
 
-    Scenario(s"BSP_PTC004: Verify BSP complete failure response when all downstream services return errors") {
+    Scenario("BSP_PTC004: Verify BSP complete failure response when all downstream services return errors") {
+      Given("The Benefit Eligibility Info API is up and running for BSP")
+      When("A request for BSP is sent and all downstream services return errors")
 
-      Given(s"The Benefit eligibility Info API is up and running for BSP")
-
-      When(s"A request for BSP is sent and all downstream services return errors")
-
-      val payloadKey = "BSP_PTC004"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-      println(payload)
-
-      val response = bspService.makeRequest(payload, payloadKey)
-
-      Then("A 502 status should be returned indicating complete downstream failure")
-      response.status shouldBe 502
-
-      And("The response should contain failure status")
+      val payloadKey   = "BSP_PTC004"
+      val payload      = getPayload(payloadKey)
+      val response     = bspService.makeRequest(payload)
       val responseBody = Json.parse(response.body)
 
+      Then("A 502 should be returned indicating complete downstream failure")
+      response.status shouldBe 502
+
+      And("All downstream services should have failed")
       (responseBody \ "status").as[String] shouldBe "FAILURE"
+      (responseBody \ "downStreams").as[JsArray].value.foreach { downstream =>
+        (downstream \ "status").as[String] shouldBe "FAILURE"
+      }
 
-      // Verify all downstream services failed
-      val downStreams = (responseBody \ "downStreams").as[JsArray]
-      downStreams.value.foreach(downstream => (downstream \ "status").as[String] shouldBe "FAILURE")
-
-      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-      println(s"Complete Failure Response Body : ${response.body}")
+      printRawResponse(response)
     }
 
-    Scenario(s"BSP_PTC005_400: Verify API validation failure when required NICC details field is empty") {
-      Given(s"The Benefit eligibility Info API is up and running for BSP")
-      When(s"A request for BSP is sent with empty dateOfBirth in NICC")
+    Scenario("BSP_PTC005: Verify API validation failure when required NICC details field is empty") {
+      Given("The Benefit Eligibility Info API is up and running for BSP")
+      When("A request for BSP is sent with empty dateOfBirth in NICC")
 
-      val payloadKey = s"BSP_PTC005"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-      println(payload)
-      val response = bspService.makeRequest(payload, payloadKey)
-      val json     = Json.parse(response.body)
+      val payloadKey = "BSP_PTC005"
+      val payload    = getPayload(payloadKey)
+      val response   = bspService.makeRequest(payload)
+      val json       = Json.parse(response.body)
 
-      Then("A 400 status should be returned indicating request validation failure")
+      Then("A 400 should be returned indicating request validation failure")
       response.status shouldBe 400
       assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
 
-      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-      println(s"The Response Body is : ${response.body}")
+      printRawResponse(response)
     }
 
-    ignore(s"BSP_PTC006_422: Verify API validation failure when using invalid NICC field") {
-      Given(s"The Benefit eligibility Info API is up and running for BSP")
-      When(s"A request for BSP is sent with invalid searchCategories entry")
+    ignore("BSP_PTC006: Verify API validation failure when using invalid NICC field") {
+      Given("The Benefit Eligibility Info API is up and running for BSP")
+      When("A request for BSP is sent with invalid searchCategories entry")
 
-      val payloadKey = s"BSP_PTC006"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-      println(payload)
-      val response = bspService.makeRequest(payload, payloadKey)
-      val json     = Json.parse(response.body)
+      val payloadKey = "BSP_PTC006"
+      val payload    = getPayload(payloadKey)
+      val response   = bspService.makeRequest(payload)
+      val json       = Json.parse(response.body)
 
-      Then("A 422 status should be returned indicating request validation failure")
+      Then("A 422 should be returned indicating request validation failure")
       response.status shouldBe 422
       assertErrorResponse(json, "UNPROCESSABLE_ENTITY", "Missing Header CorrelationId")
 
-      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-      println(s"The Response Body is : ${response.body}")
+      printRawResponse(response)
     }
-
-  }
-
-  def getPayload(payloadKey: String): BSPRequest =
-    PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-
-  def assertDownstreamFailure(
-      result: DownstreamErrorResponse,
-      payload: BSPRequest,
-      expectedStatus: String,
-      expectedTotalCalls: Int,
-      expectedSuccessful: Int,
-      expectedFailed: Int
-  ): Unit = {
-    result.status shouldBe expectedStatus
-    result.benefitType shouldBe payload.benefitType
-    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-    result.summary.totalCalls shouldBe expectedTotalCalls
-    result.summary.successful shouldBe expectedSuccessful
-    result.summary.failed shouldBe expectedFailed
-  }
-
-  def assertErrorResponse(
-      json: JsValue,
-      expectedCode: String,
-      expectedReason: String
-  ): Unit = {
-    (json \ "code").as[String] shouldBe expectedCode
-    (json \ "reason").as[String] shouldBe expectedReason
-  }
-
-  private def assertBSPResponse(payload: BSPRequest, response: StandaloneWSRequest#Response) = {
-    response.status shouldBe 200
-
-    val result: BSPResponse = Json.parse(response.body).as[BSPResponse]
-
-    Then("All major response sections should contain valid data")
-
-    // --------------------------------------------------
-    // Basic response checks
-    // --------------------------------------------------
-    result.benefitType shouldBe payload.benefitType
-    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-
-    // --------------------------------------------------
-    // Marriage Details Result
-    // --------------------------------------------------
-    result.marriageDetailsResult should not be null
-    result.marriageDetailsResult.marriageDetails should not be empty
-
-    val firstMarriageDetail = result.marriageDetailsResult.marriageDetails.head
-    firstMarriageDetail.status should not be empty
-
-    // --------------------------------------------------
-    // NI Contributions & Credits
-    // --------------------------------------------------
-    result.niContributionsAndCreditsResult should not be null
-
-    // Class 1 contributions (optional for BSP)
-    result.niContributionsAndCreditsResult.class1ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCategory.contains("STANDARD RATE")) shouldBe true
-      case None => succeed // optional for BSP
-    }
-
-    // Class 2 contributions (optional for BSP)
-    result.niContributionsAndCreditsResult.class2ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCreditType == "2B") shouldBe true
-      case None => succeed // optional for BSP
-    }
-
-    result
   }
 
 }

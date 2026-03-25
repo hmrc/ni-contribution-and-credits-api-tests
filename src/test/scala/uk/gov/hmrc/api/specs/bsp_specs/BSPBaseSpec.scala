@@ -14,34 +14,33 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.specs.gysp_specs
+package uk.gov.hmrc.api.specs.bsp_specs
 
 import org.scalatest.BeforeAndAfterAll
 import play.api.libs.json.*
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
-import uk.gov.hmrc.api.models.common.*
-import uk.gov.hmrc.api.models.esajsa.NIContributionsAndCreditsResult
-import uk.gov.hmrc.api.models.gysp.*
-import uk.gov.hmrc.api.service.GyspService
+import uk.gov.hmrc.api.models.bsp.*
+import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
+import uk.gov.hmrc.api.service.BSPService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
-class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
+class BSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   // ── Configuration ──────────────────────────────────────────────────────────
 
-  val gyspService                              = new GyspService
-  var PayloadMapping: Map[String, GYSPRequest] = _
+  val bspService                              = new BSPService
+  var PayloadMapping: Map[String, BSPRequest] = _
 
   // ── Setup ──────────────────────────────────────────────────────────────────
 
   override def beforeAll(): Unit = {
     super.beforeAll()
     val jsonString = JsonUtils.readJsonFile(
-      "src/test/scala/uk/gov/hmrc/api/testData/Gysp_TestData.json"
+      "src/test/scala/uk/gov/hmrc/api/testData/BSP_TestData.json"
     )
-    PayloadMapping = JsonUtils.parseJsonToGyspRequestMap(jsonString) match {
+    PayloadMapping = JsonUtils.parseJsonToBSPRequestMap(jsonString) match {
       case Left(failure) => fail(s"Parsing failed: $failure")
       case Right(map)    => map
     }
@@ -49,23 +48,36 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   // ── Payload Helpers ────────────────────────────────────────────────────────
 
-  def getPayload(payloadKey: String): GYSPRequest =
+  def getPayload(payloadKey: String): BSPRequest =
     PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
 
-  def makeRequestAndParseResponse(
-      payload: GYSPRequest,
-      payloadKey: String
-  ): (StandaloneWSRequest#Response, GYSPResponse) = {
-    val response = gyspService.makeRequest(payload)
-    val result   = Json.parse(response.body).as[GYSPResponse]
+  def makeAndParseRequest(
+      payload: BSPRequest
+  ): (StandaloneWSRequest#Response, BSPResponse) = {
+    val response = bspService.makeRequest(payload)
+    val result   = Json.parse(response.body).as[BSPResponse]
     (response, result)
   }
 
   // ── Assertion Helpers ──────────────────────────────────────────────────────
 
+  def assertBSPResponse(
+      payload: BSPRequest,
+      response: StandaloneWSRequest#Response
+  ): BSPResponse = {
+    val result = Json.parse(response.body).as[BSPResponse]
+
+    Then("All major response sections should contain valid data")
+    assertBasicResponseFields(result, payload, 200, response)
+    assertMarriageDetails(result)
+    assertNiContributions(result)
+
+    result
+  }
+
   def assertBasicResponseFields(
-      result: GYSPResponse,
-      payload: GYSPRequest,
+      result: BSPResponse,
+      payload: BSPRequest,
       expectedStatus: Int,
       response: StandaloneWSRequest#Response
   ): Unit = {
@@ -74,65 +86,33 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
   }
 
-  def assertGYSPResponseHasSectionsFromAllDownstreamAPIs(
-      payload: GYSPRequest,
-      result: GYSPResponse
-  ): Unit = {
-    result.benefitType shouldBe payload.benefitType
-    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-
-    result.marriageDetailsResult.marriageDetails should not be null
-    result.schemeMembershipDetailsResult.schemeMembershipDetails should not be empty
-    result.longTermBenefitCalculationDetailsResult.benefitCalculationDetails should not be empty
-    result.individualStatePensionInfoResult.contributionsByTaxYear should not be empty
-    result.niContributionsAndCreditsResult should not be null
+  def assertMarriageDetails(result: BSPResponse): Unit = {
+    result.marriageDetailsResult should not be null
+    result.marriageDetailsResult.marriageDetails should not be empty
+    result.marriageDetailsResult.marriageDetails.head.status should not be empty
   }
 
-  def assertRequiredFieldsInMarriageDetails(
-      marriageDetails: List[FilteredMarriageDetailsItem]
-  ): Unit =
-    marriageDetails.foreach { item =>
-      require(
-        item.status != null && item.status.trim.nonEmpty,
-        s"Marriage status is required but was missing for item: $item"
-      )
-    }
+  def assertNiContributions(result: BSPResponse): Unit = {
+    result.niContributionsAndCreditsResult should not be null
 
-  def assertClass2Contributions(
-      contributions: NIContributionsAndCreditsResult,
-      expectedCreditType: String
-  ): Unit =
-    contributions.class2ContributionAndCredits match {
+    result.niContributionsAndCreditsResult.class1ContributionAndCredits match {
       case Some(list) =>
         list should not be empty
-        list.exists(_.contributionCreditType == expectedCreditType) shouldBe true
-      case None => fail("Class 2 contributions are missing in the response")
+        list.exists(_.contributionCategory.contains("STANDARD RATE")) shouldBe true
+      case None => // Class1 is optional
     }
 
-  def assertEmptyResponse(result: GYSPResponse, payload: GYSPRequest): Unit = {
-    result.benefitType shouldBe payload.benefitType
-    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-
-    result.marriageDetailsResult.marriageDetails shouldBe empty
-    result.longTermBenefitCalculationDetailsResult.benefitCalculationDetails shouldBe empty
-    result.schemeMembershipDetailsResult.schemeMembershipDetails shouldBe empty
-    result.individualStatePensionInfoResult.contributionsByTaxYear shouldBe empty
-    result.niContributionsAndCreditsResult.class1ContributionAndCredits shouldBe empty
-    result.niContributionsAndCreditsResult.class2ContributionAndCredits shouldBe empty
-  }
-
-  def assertErrorResponse(
-      json: JsValue,
-      expectedCode: String,
-      expectedReason: String
-  ): Unit = {
-    (json \ "code").as[String] shouldBe expectedCode
-    (json \ "reason").as[String] shouldBe expectedReason
+    result.niContributionsAndCreditsResult.class2ContributionAndCredits match {
+      case Some(list) =>
+        list should not be empty
+        list.exists(_.contributionCreditType == "2B") shouldBe true
+      case None => // Class2 is optional
+    }
   }
 
   def assertDownstreamFailure(
       result: DownstreamErrorResponse,
-      payload: GYSPRequest,
+      payload: BSPRequest,
       expectedStatus: String,
       expectedTotalCalls: Int,
       expectedSuccessful: Int,
@@ -146,11 +126,20 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     result.summary.failed shouldBe expectedFailed
   }
 
+  def assertErrorResponse(
+      json: JsValue,
+      expectedCode: String,
+      expectedReason: String
+  ): Unit = {
+    (json \ "code").as[String] shouldBe expectedCode
+    (json \ "reason").as[String] shouldBe expectedReason
+  }
+
   // ── Print Helpers ──────────────────────────────────────────────────────────
 
   def printResponse(
       response: StandaloneWSRequest#Response,
-      result: GYSPResponse
+      result: BSPResponse
   ): Unit = {
     println(s"The Response Status Code is : ${response.status} ${response.statusText}")
     println(s"The Response Body is : ${Json.prettyPrint(Json.toJson(result))}")

@@ -98,9 +98,9 @@
       "endTaxYear": "2026"
     }
   },
-  "JSA_NTC009": {
-    "benefitType": "ESA",
-    "nationalInsuranceNumber": "AA000002",
+  "JSA_NTC008": {
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000012",
     "niContributionsAndCredits": {
       "dateOfBirth": "2005-01-02",
       "startTaxYear": "2026",
@@ -206,9 +206,9 @@
       "endTaxYear": "2026"
     }
   },
-  "ESA_NTC009": {
+  "ESA_NTC008": {
     "benefitType": "ESA",
-    "nationalInsuranceNumber": "AA000002",
+    "nationalInsuranceNumber": "AA000012",
     "niContributionsAndCredits": {
       "dateOfBirth": "2005-01-02",
       "startTaxYear": "2026",

@@ -29,7 +29,6 @@ class GyspService extends HttpClient with MakesHttpRequestWithToken {
 
   def makeRequest(
       request: GYSPRequest,
-      testDataKey: String,
       timeoutDuration: Int = 10
   ): StandaloneWSRequest#Response = {
     val url: String    = s"$host/benefit-eligibility-info/"

@@ -53,10 +53,9 @@ class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
 
   def makeRequestAndParseResponse(
-      payload: EsaJsaRequest,
-      payloadKey: String
+      payload: EsaJsaRequest
   ): (StandaloneWSRequest#Response, EsaJsaResponse) = {
-    val response = esaJsaService.makeRequest(payload, payloadKey)
+    val response = esaJsaService.makeRequest(payload)
     val result   = Json.parse(response.body).as[EsaJsaResponse]
     (response, result)
   }

@@ -18,7 +18,6 @@ package uk.gov.hmrc.api.models.bsp
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.api.models.common.NIContributionsAndCredits
-import uk.gov.hmrc.api.models.liabilitySummary.LiabilityRequest
 
 case class BSPRequest(
     benefitType: String,
