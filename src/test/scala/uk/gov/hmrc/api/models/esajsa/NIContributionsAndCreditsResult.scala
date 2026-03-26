@@ -17,12 +17,12 @@
 package uk.gov.hmrc.api.models.esajsa
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.api.models.common.{Class1ContributionAndCredits, Class2ContributionAndCredits}
+import uk.gov.hmrc.api.models.common.{Class1ContributionAndCredits, Class2Or3ContributionAndCredits}
 
 case class NIContributionsAndCreditsResult(
     totalGraduatedPensionUnits: Option[BigDecimal],
     class1ContributionAndCredits: Option[List[Class1ContributionAndCredits]],
-    class2ContributionAndCredits: Option[List[Class2ContributionAndCredits]]
+    class2Or3ContributionAndCredits: Option[List[Class2Or3ContributionAndCredits]]
 )
 
 object NIContributionsAndCreditsResult {

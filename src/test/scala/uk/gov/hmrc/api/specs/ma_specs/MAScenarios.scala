@@ -260,7 +260,7 @@ class MAScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     }
 
     // Class 2 contributions (important for MA)
-    result.niContributionsAndCreditsResult.class2ContributionAndCredits match {
+    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits match {
       case Some(list) =>
         list should not be empty
         list.exists(_.contributionCreditType == "2B") shouldBe true

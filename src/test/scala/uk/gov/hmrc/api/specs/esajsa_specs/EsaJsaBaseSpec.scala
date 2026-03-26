@@ -89,7 +89,7 @@ class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       contributions: NIContributionsAndCreditsResult,
       expectedCreditType: String
   ): Unit =
-    contributions.class2ContributionAndCredits match {
+    contributions.class2Or3ContributionAndCredits match {
       case Some(list) =>
         list should not be empty
         list.exists(_.contributionCreditType == expectedCreditType) shouldBe true
@@ -101,7 +101,7 @@ class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       case Some(list) if list.nonEmpty => fail("Class 1 contributions are present but should be empty")
       case _                           =>
     }
-    contributions.class2ContributionAndCredits match {
+    contributions.class2Or3ContributionAndCredits match {
       case Some(list) if list.nonEmpty => fail("Class 2 contributions are present but should be empty")
       case _                           =>
     }
