@@ -18,7 +18,7 @@ package uk.gov.hmrc.api.models.common
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Class2ContributionAndCredits(
+case class Class2Or3ContributionAndCredits(
     taxYear: Int,
     class2Or3EarningsFactor: Option[BigDecimal],
     class2NIContributionAmount: Option[BigDecimal],
@@ -29,6 +29,6 @@ case class Class2ContributionAndCredits(
     latePaymentPeriod: Option[String]
 )
 
-object Class2ContributionAndCredits {
-  implicit val format: OFormat[Class2ContributionAndCredits] = Json.format[Class2ContributionAndCredits]
+object Class2Or3ContributionAndCredits {
+  implicit val format: OFormat[Class2Or3ContributionAndCredits] = Json.format[Class2Or3ContributionAndCredits]
 }
