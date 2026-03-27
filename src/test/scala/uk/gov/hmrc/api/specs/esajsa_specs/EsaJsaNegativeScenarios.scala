@@ -164,7 +164,71 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         printRawResponse(response)
       }
 
-      Scenario(s"${benefitType}_NTC009: Request with missing benefit type returns 400") {
+      Scenario(s"${benefitType}_NTC009: Request receives 502 when downstream returns 503") {
+        Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
+        When(s"A request for $benefitType is sent and downstream returns 503")
+
+        val payloadKey = s"${benefitType}_NTC009"
+        val payload    = getPayload(payloadKey)
+        val response   = esaJsaService.makeRequest(payload)
+        val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+
+        Then("The API should return 502 with downstream failure details")
+        response.status shouldBe 502
+        result.status shouldBe "FAILURE"
+        result.benefitType shouldBe payload.benefitType
+        result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
+        result.summary.totalCalls shouldBe 1
+        result.summary.successful shouldBe 0
+        result.summary.failed shouldBe 1
+
+        val failedDownstream = result.downStreams.head
+        failedDownstream.apiName shouldBe "NI Contributions and credits"
+        failedDownstream.status shouldBe "FAILURE"
+        failedDownstream.error shouldBe defined
+        failedDownstream.error.get shouldBe NpsNormalizedError(
+          "SERVICE_UNAVAILABLE",
+          "downstream is currently unable to handle request",
+          503
+        )
+
+        printRawResponse(response)
+      }
+
+      Scenario(
+        s"${benefitType}_NTC010: Request receives 502 when downstream returns 422 when Tax year range over 6 years"
+      ) {
+        Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
+        When(s"A request for $benefitType is sent and downstream returns 422")
+
+        val payloadKey = s"${benefitType}_NTC010"
+        val payload    = getPayload(payloadKey)
+        val response   = esaJsaService.makeRequest(payload)
+        val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+
+        Then("The API should return 502 with downstream failure details")
+        response.status shouldBe 502
+        result.status shouldBe "FAILURE"
+        result.benefitType shouldBe payload.benefitType
+        result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
+        result.summary.totalCalls shouldBe 1
+        result.summary.successful shouldBe 0
+        result.summary.failed shouldBe 1
+
+        val failedDownstream = result.downStreams.head
+        failedDownstream.apiName shouldBe "NI Contributions and credits"
+        failedDownstream.status shouldBe "FAILURE"
+        failedDownstream.error shouldBe defined
+        failedDownstream.error.get shouldBe NpsNormalizedError(
+          "UNPROCESSABLE_ENTITY",
+          "downstream could not process data in request",
+          422
+        )
+
+        printRawResponse(response)
+      }
+
+      Scenario(s"${benefitType}_NTC011: Request with missing benefit type returns 400") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
         When(s"A request for $benefitType is sent with missing benefit type")
 

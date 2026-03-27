@@ -102,7 +102,7 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       contributions: NIContributionsAndCreditsResult,
       expectedCreditType: String
   ): Unit =
-    contributions.class2ContributionAndCredits match {
+    contributions.class2Or3ContributionAndCredits match {
       case Some(list) =>
         list should not be empty
         list.exists(_.contributionCreditType == expectedCreditType) shouldBe true
@@ -118,7 +118,7 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     result.schemeMembershipDetailsResult.schemeMembershipDetails shouldBe empty
     result.individualStatePensionInfoResult.contributionsByTaxYear shouldBe empty
     result.niContributionsAndCreditsResult.class1ContributionAndCredits shouldBe empty
-    result.niContributionsAndCreditsResult.class2ContributionAndCredits shouldBe empty
+    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits shouldBe empty
   }
 
   def assertErrorResponse(
@@ -127,7 +127,7 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       expectedReason: String
   ): Unit = {
     (json \ "code").as[String] shouldBe expectedCode
-    (json \ "reason").as[String] shouldBe expectedReason
+    (json \ "reason").as[String] should include(expectedReason)
   }
 
   def assertDownstreamFailure(

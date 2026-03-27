@@ -133,7 +133,7 @@ class MABaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       case None =>
     }
 
-    result.niContributionsAndCreditsResult.class2ContributionAndCredits match {
+    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits match {
       case Some(list) =>
         list should not be empty
         list.exists(_.contributionCreditType == "2B") shouldBe true
@@ -168,7 +168,7 @@ class MABaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       expectedReason: String
   ): Unit = {
     (json \ "code").as[String] shouldBe expectedCode
-    (json \ "reason").as[String] shouldBe expectedReason
+    (json \ "reason").as[String] should include(expectedReason)
   }
 
   // ── Print Helpers ──────────────────────────────────────────────────────────

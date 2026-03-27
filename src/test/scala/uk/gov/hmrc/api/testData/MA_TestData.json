@@ -8,7 +8,9 @@
       "endTaxYear": 2023
     },
     "liabilities": {
-      "searchCategories": ["CLASS-2-LIABILITY-UK"],
+      "searchCategories": [
+        "CLASS-2-LIABILITY-UK"
+      ],
       "earliestLiabilityStartDate": "2021-01-01",
       "liabilityStart": "2021-06-15",
       "liabilityEnd": "2022-06-14"
@@ -23,7 +25,9 @@
       "endTaxYear": 2023
     },
     "liabilities": {
-      "searchCategories": ["CLASS-2-LIABILITY-UK"],
+      "searchCategories": [
+        "CLASS-2-LIABILITY-UK"
+      ],
       "earliestLiabilityStartDate": "2021-01-01",
       "liabilityStart": "2021-06-15",
       "liabilityEnd": "2022-06-14"
@@ -38,7 +42,9 @@
       "endTaxYear": 2023
     },
     "liabilities": {
-      "searchCategories": ["CLASS-2-LIABILITY-UK"],
+      "searchCategories": [
+        "CLASS-2-LIABILITY-UK"
+      ],
       "earliestLiabilityStartDate": "2021-01-01",
       "liabilityStart": "2021-06-15",
       "liabilityEnd": "2022-06-14"
@@ -53,7 +59,9 @@
       "endTaxYear": 2023
     },
     "liabilities": {
-      "searchCategories": ["CLASS-2-LIABILITY-UK"],
+      "searchCategories": [
+        "CLASS-2-LIABILITY-UK"
+      ],
       "earliestLiabilityStartDate": "2021-01-01",
       "liabilityStart": "2021-06-15",
       "liabilityEnd": "2022-06-14"
@@ -68,7 +76,9 @@
       "endTaxYear": 2023
     },
     "liabilities": {
-      "searchCategories": [""]
+      "searchCategories": [
+        ""
+      ]
     }
   },
   "MA_PTC006": {
@@ -80,7 +90,23 @@
       "endTaxYear": 2023
     },
     "liabilities": {
-      "searchCategories": ["INVALID_NAME"]
+      "searchCategories": [
+        "INVALID_NAME"
+      ]
+    }
+  },
+  "MA_PTC007": {
+    "benefitType": "MA",
+    "nationalInsuranceNumber": "AA000010",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1988-07-25",
+      "startTaxYear": 2000,
+      "endTaxYear": 2023
+    },
+    "liabilities": {
+      "searchCategories": [
+        "CLASS-2-LIABILITY-UK"
+      ]
     }
   }
 }

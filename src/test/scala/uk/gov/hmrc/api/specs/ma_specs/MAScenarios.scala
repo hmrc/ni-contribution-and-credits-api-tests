@@ -95,25 +95,42 @@ class MAScenarios extends MABaseSpec {
       val response   = maService.makeRequest(payload)
       val json       = Json.parse(response.body)
 
-      Then("A 400 should be returned indicating request validation failure")
+      Then("A 400 status should be returned indicating request validation failure")
       response.status shouldBe 400
       assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
 
       printRawResponse(response)
     }
 
-    ignore("MA_PTC006: Verify API validation failure when using invalid liability field") {
+    Scenario("MA_PTC006: Verify API validation failure when using invalid liability field") {
       Given("The Benefit Eligibility Info API is up and running for MA")
       When("A request for MA is sent with invalid searchCategories entry")
 
-      val payloadKey = "MA_PTC006"
+      val payloadKey = s"MA_PTC006"
+      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
+      println(payload)
+      val response = maService.makeRequest(payload)
+      val json     = Json.parse(response.body)
+
+      Then("A 422 should be returned indicating request validation failure")
+      response.status shouldBe 400
+      assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
+
+      printRawResponse(response)
+    }
+
+    Scenario("MA_PTC007: Error validation for a tax year over 6 years returns 422") {
+      Given(s"The Benefit Eligibility Info API is up and running for MA")
+      When(s"A request for MA is sent with a tax year over 6 years")
+
+      val payloadKey = "MA_PTC007"
       val payload    = getPayload(payloadKey)
       val response   = maService.makeRequest(payload)
       val json       = Json.parse(response.body)
 
-      Then("A 422 should be returned indicating request validation failure")
+      Then("The API should return 422 with a tax year error")
       response.status shouldBe 422
-      assertErrorResponse(json, "UNPROCESSABLE_ENTITY", "Missing Header CorrelationId")
+      assertErrorResponse(json, "UNPROCESSABLE_ENTITY", "Tax year range greater than six years")
 
       printRawResponse(response)
     }

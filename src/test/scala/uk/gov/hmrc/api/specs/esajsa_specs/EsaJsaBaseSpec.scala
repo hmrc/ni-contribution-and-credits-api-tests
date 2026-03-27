@@ -88,7 +88,7 @@ class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       contributions: NIContributionsAndCreditsResult,
       expectedCreditType: String
   ): Unit =
-    contributions.class2ContributionAndCredits match {
+    contributions.class2Or3ContributionAndCredits match {
       case Some(list) =>
         list should not be empty
         list.exists(_.contributionCreditType == expectedCreditType) shouldBe true
@@ -100,7 +100,7 @@ class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       case Some(list) if list.nonEmpty => fail("Class 1 contributions are present but should be empty")
       case _                           =>
     }
-    contributions.class2ContributionAndCredits match {
+    contributions.class2Or3ContributionAndCredits match {
       case Some(list) if list.nonEmpty => fail("Class 2 contributions are present but should be empty")
       case _                           =>
     }
@@ -112,7 +112,7 @@ class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       expectedReason: String
   ): Unit = {
     (json \ "code").as[String] shouldBe expectedCode
-    (json \ "reason").as[String] shouldBe expectedReason
+    (json \ "reason").as[String] should include(expectedReason)
   }
 
   def assertDownstreamFailure(

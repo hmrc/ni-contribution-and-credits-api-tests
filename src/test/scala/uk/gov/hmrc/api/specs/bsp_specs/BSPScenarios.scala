@@ -19,9 +19,13 @@ package uk.gov.hmrc.api.specs.bsp_specs
 import play.api.libs.json.*
 import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
 
+//import uk.gov.hmrc.api.service.BSPService
+//import uk.gov.hmrc.api.specs.BaseSpec
+//import uk.gov.hmrc.api.utils.JsonUtils
+
 class BSPScenarios extends BSPBaseSpec {
 
-  Feature("Test Scenarios for BSP Benefit Type") {
+  Feature(s"Test Scenarios for BSP Benefit Type") {
 
     Scenario("BSP_PTC001: Verify full BSP response body for a valid NINO with suffix") {
       Given("The Benefit Eligibility Info API is up and running for BSP")
@@ -37,9 +41,10 @@ class BSPScenarios extends BSPBaseSpec {
       printResponse(response, result)
     }
 
-    Scenario("BSP_PTC002: Verify full BSP response body for a valid NINO without suffix") {
-      Given("The Benefit Eligibility Info API is up and running for BSP")
-      When("A valid request for BSP is sent with a NINO without suffix")
+    Scenario(s"BSP_PTC002: Verify full BSP response body for a valid NINO without Suffix") {
+
+      Given("The Benefit eligibility Info API is up and running for BSP")
+      When("A request for BSP is sent")
 
       val payloadKey         = "BSP_PTC002"
       val payload            = getPayload(payloadKey)
@@ -93,6 +98,7 @@ class BSPScenarios extends BSPBaseSpec {
     }
 
     Scenario("BSP_PTC004: Verify BSP complete failure response when all downstream services return errors") {
+
       Given("The Benefit Eligibility Info API is up and running for BSP")
       When("A request for BSP is sent and all downstream services return errors")
 
@@ -122,25 +128,40 @@ class BSPScenarios extends BSPBaseSpec {
       val response   = bspService.makeRequest(payload)
       val json       = Json.parse(response.body)
 
-      Then("A 400 should be returned indicating request validation failure")
+      Then("A 400 status should be returned indicating request validation failure")
       response.status shouldBe 400
       assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
 
       printRawResponse(response)
     }
 
-    ignore("BSP_PTC006: Verify API validation failure when using invalid NICC field") {
+    Scenario("BSP_PTC006: Verify API validation failure when using invalid NICC field") {
       Given("The Benefit Eligibility Info API is up and running for BSP")
       When("A request for BSP is sent with invalid searchCategories entry")
 
-      val payloadKey = "BSP_PTC006"
+      val payloadKey = s"BSP_PTC006"
       val payload    = getPayload(payloadKey)
       val response   = bspService.makeRequest(payload)
       val json       = Json.parse(response.body)
 
       Then("A 422 should be returned indicating request validation failure")
-      response.status shouldBe 422
-      assertErrorResponse(json, "UNPROCESSABLE_ENTITY", "Missing Header CorrelationId")
+      response.status shouldBe 400
+      assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
+
+      printRawResponse(response)
+    }
+
+    Scenario("BSP_PTC007: Verify when tax year over 6 years for BSP, then it should not return 422") {
+      Given("The Benefit Eligibility Info API is up and running for BSP")
+      When("A request for BSP is sent with tax year over 6 years")
+
+      val payloadKey = "BSP_PTC007"
+      val payload    = getPayload(payloadKey)
+      val response   = bspService.makeRequest(payload)
+      val json       = Json.parse(response.body)
+
+      Then("Response code 422 should NOT be returned indicating request validation failure")
+      response.status shouldBe 200
 
       printRawResponse(response)
     }
