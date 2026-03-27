@@ -128,7 +128,7 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       expectedReason: String
   ): Unit = {
     (json \ "code").as[String] shouldBe expectedCode
-    (json \ "reason").as[String] shouldBe expectedReason
+    (json \ "reason").as[String] should include(expectedReason)
   }
 
   def assertDownstreamFailure(

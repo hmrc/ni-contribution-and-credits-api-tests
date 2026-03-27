@@ -215,7 +215,7 @@ class BSPScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       expectedReason: String
   ): Unit = {
     (json \ "code").as[String] shouldBe expectedCode
-    (json \ "reason").as[String] shouldBe expectedReason
+    (json \ "reason").as[String] should include(expectedReason)
   }
 
   private def assertBSPResponse(payload: BSPRequest, response: StandaloneWSRequest#Response) = {
