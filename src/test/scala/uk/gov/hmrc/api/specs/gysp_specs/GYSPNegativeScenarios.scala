@@ -29,7 +29,7 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
 
       val payloadKey = "GYSP_NTC001"
       val payload    = getPayload(payloadKey)
-      val response   = gyspService.makeRequest(payload, payloadKey)
+      val response   = gyspService.makeRequest(payload)
       val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
       Then("A 502 should be returned with partial failure content")
@@ -76,7 +76,7 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
 
       val payloadKey = "GYSP_NPS_ERROR_ALL_DOWNSTREAMS"
       val payload    = getPayload(payloadKey)
-      val response   = gyspService.makeRequest(payload, payloadKey)
+      val response   = gyspService.makeRequest(payload)
       val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
       Then("A 502 should be returned with all downstreams failed")
@@ -118,7 +118,7 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
 
       val payloadKey = "GYSP_NTC002"
       val payload    = getPayload(payloadKey)
-      val response   = gyspService.makeRequest(payload, payloadKey)
+      val response   = gyspService.makeRequest(payload)
       val json       = Json.parse(response.body)
 
       Then("A 422 should be returned with unprocessable entity error")
@@ -134,7 +134,7 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
 
       val payloadKey = "GYSP_NTC003"
       val payload    = getPayload(payloadKey)
-      val response   = gyspService.makeRequest(payload, payloadKey)
+      val response   = gyspService.makeRequest(payload)
       val json       = Json.parse(response.body)
 
       Then("A 400 should be returned with schema mismatch error")
@@ -153,7 +153,7 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
 
       val payloadKey = "GYSP_NTC004"
       val payload    = getPayload(payloadKey)
-      val response   = gyspService.makeRequest(payload, payloadKey)
+      val response   = gyspService.makeRequest(payload)
       val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
       Then("A 502 should be returned with partial failure content")

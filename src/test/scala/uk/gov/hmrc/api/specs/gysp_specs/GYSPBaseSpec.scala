@@ -56,9 +56,8 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
       payload: GYSPRequest,
       payloadKey: String
   ): (StandaloneWSRequest#Response, GYSPResponse) = {
-    val response = gyspService.makeRequest(payload, payloadKey)
-    println("response:" + response.body)
-    val result = Json.parse(response.body).as[GYSPResponse]
+    val response = gyspService.makeRequest(payload)
+    val result   = Json.parse(response.body).as[GYSPResponse]
     (response, result)
   }
 

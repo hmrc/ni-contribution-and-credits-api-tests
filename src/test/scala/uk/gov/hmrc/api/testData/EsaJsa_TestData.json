@@ -26,15 +26,6 @@
       "endTaxYear": "2021"
     }
   },
-  "JSA_NTC001": {
-    "benefitType": "JSA",
-    "nationalInsuranceNumber": "AA000004",
-    "niContributionsAndCredits": {
-      "dateOfBirth": "1999-01-27",
-      "startTaxYear": "2018",
-      "endTaxYear": "2021"
-    }
-  },
   "JSA_PTC005": {
     "benefitType": "JSA",
     "nationalInsuranceNumber": "AA000005",
@@ -42,6 +33,15 @@
       "dateOfBirth": "2000-01-27",
       "startTaxYear": "2010",
       "endTaxYear": "2012"
+    }
+  },
+  "JSA_NTC001": {
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000004",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1999-01-27",
+      "startTaxYear": "2018",
+      "endTaxYear": "2021"
     }
   },
   "JSA_NTC002": {
@@ -91,7 +91,16 @@
   },
   "JSA_NTC007": {
     "benefitType": "JSA",
-    "nationalInsuranceNumber": "AA000002",
+    "nationalInsuranceNumber": "AA000007",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "2005-01-02",
+      "startTaxYear": "2026",
+      "endTaxYear": "2026"
+    }
+  },
+  "JSA_NTC008": {
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000008",
     "niContributionsAndCredits": {
       "dateOfBirth": "2005-01-02",
       "startTaxYear": "2026",
@@ -99,12 +108,21 @@
     }
   },
   "JSA_NTC009": {
-    "benefitType": "ESA",
-    "nationalInsuranceNumber": "AA000002",
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000009",
     "niContributionsAndCredits": {
       "dateOfBirth": "2005-01-02",
-      "startTaxYear": "2026",
-      "endTaxYear": "2026"
+      "startTaxYear": "2020",
+      "endTaxYear": "2025"
+    }
+  },
+  "JSA_NTC010": {
+    "benefitType": "JSA",
+    "nationalInsuranceNumber": "AA000010",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "2005-01-02",
+      "startTaxYear": "2020",
+      "endTaxYear": "2025"
     }
   },
   "ESA_PTC001": {
@@ -134,15 +152,6 @@
       "endTaxYear": "2021"
     }
   },
-  "ESA_NTC001": {
-    "benefitType": "ESA",
-    "nationalInsuranceNumber": "AA000004",
-    "niContributionsAndCredits": {
-      "dateOfBirth": "1999-01-27",
-      "startTaxYear": "2018",
-      "endTaxYear": "2021"
-    }
-  },
   "ESA_PTC005": {
     "benefitType": "ESA",
     "nationalInsuranceNumber": "AA000005",
@@ -150,6 +159,15 @@
       "dateOfBirth": "2000-01-27",
       "startTaxYear": "2010",
       "endTaxYear": "2012"
+    }
+  },
+  "ESA_NTC001": {
+    "benefitType": "ESA",
+    "nationalInsuranceNumber": "AA000004",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1999-01-27",
+      "startTaxYear": "2018",
+      "endTaxYear": "2021"
     }
   },
   "ESA_NTC002": {
@@ -206,13 +224,31 @@
       "endTaxYear": "2026"
     }
   },
-  "ESA_NTC009": {
+  "ESA_NTC008": {
     "benefitType": "ESA",
     "nationalInsuranceNumber": "AA000002",
     "niContributionsAndCredits": {
       "dateOfBirth": "2005-01-02",
       "startTaxYear": "2026",
       "endTaxYear": "2026"
+    }
+  },
+  "ESA_NTC009": {
+    "benefitType": "ESA",
+    "nationalInsuranceNumber": "AA000009",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "2005-01-02",
+      "startTaxYear": "2020",
+      "endTaxYear": "2025"
+    }
+  },
+  "ESA_NTC010": {
+    "benefitType": "ESA",
+    "nationalInsuranceNumber": "AA000010",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "2005-01-02",
+      "startTaxYear": "2020",
+      "endTaxYear": "2025"
     }
   }
 }

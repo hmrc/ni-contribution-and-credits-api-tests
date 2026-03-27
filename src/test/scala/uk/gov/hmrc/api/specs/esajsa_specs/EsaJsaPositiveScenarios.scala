@@ -29,7 +29,7 @@ class EsaJsaPositiveScenarios extends EsaJsaBaseSpec {
 
         val payloadKey         = s"${benefitType}_PTC001"
         val payload            = getPayload(payloadKey)
-        val (response, result) = makeRequestAndParseResponse(payload, payloadKey)
+        val (response, result) = makeRequestAndParseResponse(payload)
         val contributions      = result.niContributionsAndCreditsResult
 
         Then("Class 1 and Class 2 contributions details should be returned")
@@ -46,7 +46,7 @@ class EsaJsaPositiveScenarios extends EsaJsaBaseSpec {
 
         val payloadKey         = s"${benefitType}_PTC002"
         val payload            = getPayload(payloadKey)
-        val (response, result) = makeRequestAndParseResponse(payload, payloadKey)
+        val (response, result) = makeRequestAndParseResponse(payload)
         val contributions      = result.niContributionsAndCreditsResult
 
         Then("Class 1 and Class 2 contributions details should be returned")
@@ -63,7 +63,7 @@ class EsaJsaPositiveScenarios extends EsaJsaBaseSpec {
 
         val payloadKey         = s"${benefitType}_PTC003"
         val payload            = getPayload(payloadKey)
-        val (response, result) = makeRequestAndParseResponse(payload, payloadKey)
+        val (response, result) = makeRequestAndParseResponse(payload)
         val contributions      = result.niContributionsAndCreditsResult
 
         Then("Only Class 2 contributions should be returned")
@@ -80,7 +80,7 @@ class EsaJsaPositiveScenarios extends EsaJsaBaseSpec {
 
         val payloadKey         = s"${benefitType}_PTC005"
         val payload            = getPayload(payloadKey)
-        val (response, result) = makeRequestAndParseResponse(payload, payloadKey)
+        val (response, result) = makeRequestAndParseResponse(payload)
         val contributions      = result.niContributionsAndCreditsResult
 
         Then("Class 1 and Class 2 contributions should both be empty")

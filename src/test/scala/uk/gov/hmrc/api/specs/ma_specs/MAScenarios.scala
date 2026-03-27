@@ -16,258 +16,124 @@
 
 package uk.gov.hmrc.api.specs.ma_specs
 
-import org.scalatest.{BeforeAndAfterAll, Ignore}
-import play.api.libs.json.{JsArray, JsValue, Json}
-import play.api.libs.ws.StandaloneWSRequest
-import uk.gov.hmrc.api.helpers.BaseHelper
-import uk.gov.hmrc.api.models.ma.{MARequest, MAResponse}
-import uk.gov.hmrc.api.service.MAService
-import uk.gov.hmrc.api.specs.BaseSpec
-import uk.gov.hmrc.api.utils.JsonUtils
+import play.api.libs.json.*
 
-class MAScenarios extends BaseSpec with BaseHelper with BeforeAndAfterAll {
+class MAScenarios extends MABaseSpec {
 
-  val maService                              = new MAService
-  var PayloadMapping: Map[String, MARequest] = _
+  Feature("Test Scenarios for MA Benefit Type") {
 
-  override def beforeAll(): Unit = {
-    super.beforeAll()
-    val jsonString = JsonUtils.readJsonFile(
-      "src/test/scala/uk/gov/hmrc/api/testData/MA_TestData.json"
-    )
-    println(jsonString)
-    PayloadMapping = JsonUtils.parseJsonToMARequestMap(jsonString) match {
-      case Left(failure) => fail(s"Parsing failed: $failure")
-      case Right(map)    => map
-    }
-  }
+    Scenario("MA_PTC001: Verify full MA response body for a valid NINO with suffix") {
+      Given("The Benefit Eligibility Info API is up and running for MA")
+      When("A valid request for MA is sent with a NINO with suffix")
 
-  Feature(s"Test Scenarios for MA Benefit Type") {
+      val payloadKey         = "MA_PTC001"
+      val payload            = getPayload(payloadKey)
+      val (response, result) = makeAndParseRequest(payload, payloadKey)
 
-    Scenario(s"MA_PTC001: Verify full MA response body for a valid NINO with Suffix") {
+      Then("All major response sections should contain valid data")
+      assertMAResponse(payload, response)
 
-      Given("The Benefit eligibility Info API is up and running for MA")
-
-      When("A request for MA is sent")
-
-      val payloadKey = "MA_PTC001"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-
-      val response = maService.makeRequest(payload, payloadKey)
-
-      val result: MAResponse = assertMAResponse(payload, response)
-
-      println(s"Response Status: ${response.status} ${response.statusText}")
-      println(Json.prettyPrint(Json.toJson(result)))
+      printResponse(response, result)
     }
 
-    Scenario(s"MA_PTC002: Verify full MA response body for a valid NINO without suffix") {
-      Given(s"The Benefit eligibility Info API is up and running for MA")
-      When(s"A request for MA is sent")
+    Scenario("MA_PTC002: Verify full MA response body for a valid NINO without suffix") {
+      Given("The Benefit Eligibility Info API is up and running for MA")
+      When("A valid request for MA is sent with a NINO without suffix")
 
-      val payloadKey = s"MA_PTC002"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-      println(payload)
+      val payloadKey         = "MA_PTC002"
+      val payload            = getPayload(payloadKey)
+      val (response, result) = makeAndParseRequest(payload, payloadKey)
 
-      val response = maService.makeRequest(payload, payloadKey)
+      Then("All major response sections should contain valid data")
+      assertMAResponse(payload, response)
 
-      val result: MAResponse = assertMAResponse(payload, response)
-
-      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-      println(s"""The Response Body is :
-                          ${Json.prettyPrint(Json.toJson(result))}""")
+      printResponse(response, result)
     }
 
-    Scenario(s"MA_PTC003_502: Verify MA partial failure response when some services return errors") {
-      Given(s"The Benefit eligibility Info API is up and running for MA")
-      When(s"A request for MA is sent and Class2MAReceipts and LiabilitySummary return errors")
+    Scenario("MA_PTC003: Verify MA partial failure response when some downstream services return errors") {
+      Given("The Benefit Eligibility Info API is up and running for MA")
+      When("A request for MA is sent and Class2MAReceipts and LiabilitySummary return errors")
 
-      val payloadKey = s"MA_PTC003"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-      println(payload)
-
-      val response = maService.makeRequest(payload, payloadKey)
-
-      Then("A 502 status should be returned indicating partial failure")
-      response.status shouldBe 502
-
-      And("The response should contain partial failure status")
+      val payloadKey   = "MA_PTC003"
+      val payload      = getPayload(payloadKey)
+      val response     = maService.makeRequest(payload)
       val responseBody = Json.parse(response.body)
 
-      // Verify top-level partial failure status
-      (responseBody \ "status").as[String] shouldBe "PARTIAL FAILURE"
-
-      // Verify we have both SUCCESS and FAILURE statuses in downstream services
-      val downStreams = (responseBody \ "downStreams").as[JsArray]
-      val statuses    = downStreams.value.map(ds => (ds \ "status").as[String])
-
-      statuses should contain("SUCCESS")
-      statuses should contain("FAILURE")
-
-      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-      println(s"The Response Body is : ${response.body}")
-    }
-
-    Scenario(s"MA_PTC004_502: Verify MA complete failure response when all downstream services return errors") {
-      Given(s"The Benefit eligibility Info API is up and running for MA")
-      When(s"A request for MA is sent and all downstream services return errors")
-
-      val payloadKey = s"MA_PTC004"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-      println(payload)
-
-      val response = maService.makeRequest(payload, payloadKey)
-
-      Then("A 502 status should be returned indicating complete downstream failure")
+      Then("A 502 should be returned with partial failure content")
       response.status shouldBe 502
 
-      And("The response should contain failure status")
-      val responseBody = Json.parse(response.body)
+      And("The response should contain both SUCCESS and FAILURE downstream statuses")
+      assertPartialFailureResponse(responseBody)
 
-      (responseBody \ "status").as[String] shouldBe "FAILURE"
-
-      // Verify all downstream services failed
-      val downStreams = (responseBody \ "downStreams").as[JsArray]
-      downStreams.value.foreach(downstream => (downstream \ "status").as[String] shouldBe "FAILURE")
-
-      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-      println(s"Complete Failure Response Body : ${response.body}")
+      printRawResponse(response)
     }
 
-    Scenario(s"MA_PTC005_400: Verify API validation failure when required liability fields are empty") {
-      Given(s"The Benefit eligibility Info API is up and running for MA")
-      When(s"A request for MA is sent with empty searchCategories in liabilities")
+    Scenario("MA_PTC004: Verify MA complete failure response when all downstream services return errors") {
+      Given("The Benefit Eligibility Info API is up and running for MA")
+      When("A request for MA is sent and all downstream services return errors")
 
-      val payloadKey = s"MA_PTC005"
-      val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
-      println(payload)
-      val response = maService.makeRequest(payload, payloadKey)
-      val json     = Json.parse(response.body)
+      val payloadKey   = "MA_PTC004"
+      val payload      = getPayload(payloadKey)
+      val response     = maService.makeRequest(payload)
+      val responseBody = Json.parse(response.body)
+
+      Then("A 502 should be returned indicating complete downstream failure")
+      response.status shouldBe 502
+
+      And("All downstream services should have failed")
+      assertCompleteFailureResponse(responseBody)
+
+      printRawResponse(response)
+    }
+
+    Scenario("MA_PTC005: Verify API validation failure when required liability fields are empty") {
+      Given("The Benefit Eligibility Info API is up and running for MA")
+      When("A request for MA is sent with empty searchCategories in liabilities")
+
+      val payloadKey = "MA_PTC005"
+      val payload    = getPayload(payloadKey)
+      val response   = maService.makeRequest(payload)
+      val json       = Json.parse(response.body)
 
       Then("A 400 status should be returned indicating request validation failure")
       response.status shouldBe 400
       assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
 
-      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-      println(s"The Response Body is : ${response.body}")
+      printRawResponse(response)
     }
 
-    ignore(s"MA_PTC006_422: Verify API validation failure when using invalid liability field") {
-      Given(s"The Benefit eligibility Info API is up and running for MA")
-      When(s"A request for MA is sent with invalid searchCategories entry")
+    Scenario("MA_PTC006: Verify API validation failure when using invalid liability field") {
+      Given("The Benefit Eligibility Info API is up and running for MA")
+      When("A request for MA is sent with invalid searchCategories entry")
 
       val payloadKey = s"MA_PTC006"
       val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
       println(payload)
-      val response = maService.makeRequest(payload, payloadKey)
+      val response = maService.makeRequest(payload)
       val json     = Json.parse(response.body)
 
-      Then("A 422 status should be returned indicating request validation failure")
+      Then("A 422 should be returned indicating request validation failure")
+      response.status shouldBe 400
+      assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
+
+      printRawResponse(response)
+    }
+
+    Scenario("MA_PTC007: Error validation for a tax year over 6 years returns 422") {
+      Given(s"The Benefit Eligibility Info API is up and running for MA")
+      When(s"A request for MA is sent with a tax year over 6 years")
+
+      val payloadKey = "MA_PTC007"
+      val payload    = getPayload(payloadKey)
+      val response   = maService.makeRequest(payload)
+      val json       = Json.parse(response.body)
+
+      Then("The API should return 422 with a tax year error")
       response.status shouldBe 422
-      assertErrorResponse(json, "UNPROCESSABLE_ENTITY", "Missing Header CorrelationId")
+      assertErrorResponse(json, "UNPROCESSABLE_ENTITY", "Tax year range greater than six years")
 
-      println(s"The Response Status Code is : ${response.status} ${response.statusText}")
-      println(s"The Response Body is : ${response.body}")
+      printRawResponse(response)
     }
-
-  }
-
-  def assertErrorResponse(
-      json: JsValue,
-      expectedCode: String,
-      expectedReason: String
-  ): Unit = {
-    (json \ "code").as[String] shouldBe expectedCode
-    (json \ "reason").as[String] should include(expectedReason)
-  }
-
-  private def assertMAResponse(payload: MARequest, response: StandaloneWSRequest#Response) = {
-    response.status shouldBe 200
-
-    val result: MAResponse = Json.parse(response.body).as[MAResponse]
-
-    Then("All major response sections should contain valid data")
-
-    // --------------------------------------------------
-    // Basic response checks
-    // --------------------------------------------------
-    result.benefitType shouldBe payload.benefitType
-    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-
-    // --------------------------------------------------
-    // Class 2 MA Receipts Result
-    // --------------------------------------------------
-    result.class2MAReceiptsResult should not be null
-    result.class2MAReceiptsResult.receiptDates should not be empty
-
-    // Validate receipt dates are valid and not null
-    result.class2MAReceiptsResult.receiptDates.foreach { receiptDate =>
-      receiptDate should not be null
-      receiptDate.toString should not be empty
-    }
-
-    // Check we have at least one receipt date
-    result.class2MAReceiptsResult.receiptDates.size should be >= 1
-
-    // Validate receipt dates are in reasonable date range (not in far future/past)
-    result.class2MAReceiptsResult.receiptDates.foreach { date =>
-      date.getYear should be >= 2000
-      date.getYear should be <= 2030
-    }
-
-    // --------------------------------------------------
-    // Liability Summary Details Result
-    // --------------------------------------------------
-    result.liabilitySummaryDetailsResult should not be null
-    result.liabilitySummaryDetailsResult should not be empty
-
-    // Get the first item from the list and check its liability details
-    val firstLiabilityResult = result.liabilitySummaryDetailsResult.head
-    firstLiabilityResult.liabilityDetails should not be empty
-
-    // Validate individual liability details
-    val firstLiabilityDetail = firstLiabilityResult.liabilityDetails.head
-    firstLiabilityDetail.startDate should not be null
-
-    // Validate start date is reasonable
-    firstLiabilityDetail.startDate.getYear should be >= 2000
-    firstLiabilityDetail.startDate.getYear should be <= 2030
-
-    // If end date exists, validate it
-    firstLiabilityDetail.endDate match {
-      case Some(endDate) =>
-        endDate should not be null
-        endDate.getYear should be >= 2000
-        endDate.getYear should be <= 2030
-        endDate.isBefore(firstLiabilityDetail.startDate) shouldBe false
-      case None => succeed
-    }
-
-    // Check we have at least one liability detail per liability result
-    firstLiabilityResult.liabilityDetails.size should be >= 1
-
-    // --------------------------------------------------
-    // NI Contributions & Credits
-    // --------------------------------------------------
-    result.niContributionsAndCreditsResult should not be null
-
-    // Class 1 contributions (optional for MA)
-    result.niContributionsAndCreditsResult.class1ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCategory.contains("STANDARD RATE")) shouldBe true
-      case None => succeed // optional for MA
-    }
-
-    // Class 2 contributions (important for MA)
-    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCreditType == "2B") shouldBe true
-      case None => succeed // optional but expected for MA
-    }
-
-    result
   }
 
 }

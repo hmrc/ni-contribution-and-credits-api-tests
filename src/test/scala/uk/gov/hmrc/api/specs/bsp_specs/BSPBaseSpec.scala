@@ -14,34 +14,33 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.specs.esajsa_specs
+package uk.gov.hmrc.api.specs.bsp_specs
 
 import org.scalatest.BeforeAndAfterAll
 import play.api.libs.json.*
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
+import uk.gov.hmrc.api.models.bsp.*
 import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
-import uk.gov.hmrc.api.models.esajsa.*
-import uk.gov.hmrc.api.service.EsaJsaService
+import uk.gov.hmrc.api.service.BSPService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
-class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
+class BSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   // ── Configuration ──────────────────────────────────────────────────────────
 
-  val benefitTypes                               = Seq("JSA", "ESA")
-  val esaJsaService                              = new EsaJsaService
-  var PayloadMapping: Map[String, EsaJsaRequest] = _
+  val bspService                              = new BSPService
+  var PayloadMapping: Map[String, BSPRequest] = _
 
   // ── Setup ──────────────────────────────────────────────────────────────────
 
   override def beforeAll(): Unit = {
     super.beforeAll()
     val jsonString = JsonUtils.readJsonFile(
-      "src/test/scala/uk/gov/hmrc/api/testData/EsaJsa_TestData.json"
+      "src/test/scala/uk/gov/hmrc/api/testData/BSP_TestData.json"
     )
-    PayloadMapping = JsonUtils.parseJsonToEsaJsaRequestMap(jsonString) match {
+    PayloadMapping = JsonUtils.parseJsonToBSPRequestMap(jsonString) match {
       case Left(failure) => fail(s"Parsing failed: $failure")
       case Right(map)    => map
     }
@@ -49,22 +48,36 @@ class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
   // ── Payload Helpers ────────────────────────────────────────────────────────
 
-  def getPayload(payloadKey: String): EsaJsaRequest =
+  def getPayload(payloadKey: String): BSPRequest =
     PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
 
-  def makeRequestAndParseResponse(
-      payload: EsaJsaRequest
-  ): (StandaloneWSRequest#Response, EsaJsaResponse) = {
-    val response = esaJsaService.makeRequest(payload)
-    val result   = Json.parse(response.body).as[EsaJsaResponse]
+  def makeAndParseRequest(
+      payload: BSPRequest
+  ): (StandaloneWSRequest#Response, BSPResponse) = {
+    val response = bspService.makeRequest(payload)
+    val result   = Json.parse(response.body).as[BSPResponse]
     (response, result)
   }
 
   // ── Assertion Helpers ──────────────────────────────────────────────────────
 
+  def assertBSPResponse(
+      payload: BSPRequest,
+      response: StandaloneWSRequest#Response
+  ): BSPResponse = {
+    val result = Json.parse(response.body).as[BSPResponse]
+
+    Then("All major response sections should contain valid data")
+    assertBasicResponseFields(result, payload, 200, response)
+    assertMarriageDetails(result)
+    assertNiContributions(result)
+
+    result
+  }
+
   def assertBasicResponseFields(
-      result: EsaJsaResponse,
-      payload: EsaJsaRequest,
+      result: BSPResponse,
+      payload: BSPRequest,
       expectedStatus: Int,
       response: StandaloneWSRequest#Response
   ): Unit = {
@@ -73,37 +86,44 @@ class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
   }
 
-  def assertClass1Contributions(
-      contributions: NIContributionsAndCreditsResult,
-      expectedCategory: String
-  ): Unit =
-    contributions.class1ContributionAndCredits match {
+  def assertMarriageDetails(result: BSPResponse): Unit = {
+    result.marriageDetailsResult should not be null
+    result.marriageDetailsResult.marriageDetails should not be empty
+    result.marriageDetailsResult.marriageDetails.head.status should not be empty
+  }
+
+  def assertNiContributions(result: BSPResponse): Unit = {
+    result.niContributionsAndCreditsResult should not be null
+
+    result.niContributionsAndCreditsResult.class1ContributionAndCredits match {
       case Some(list) =>
         list should not be empty
-        list.exists(_.contributionCategory.contains(expectedCategory)) shouldBe true
-      case None => fail("Class 1 contributions are missing in the response")
+        list.exists(_.contributionCategory.contains("STANDARD RATE")) shouldBe true
+      case None => // Class1 is optional
     }
 
-  def assertClass2Contributions(
-      contributions: NIContributionsAndCreditsResult,
-      expectedCreditType: String
-  ): Unit =
-    contributions.class2Or3ContributionAndCredits match {
+    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits match {
       case Some(list) =>
         list should not be empty
-        list.exists(_.contributionCreditType == expectedCreditType) shouldBe true
-      case None => fail("Class 2 contributions are missing in the response")
+        list.exists(_.contributionCreditType == "2B") shouldBe true
+      case None => // Class2 is optional
     }
+  }
 
-  def assertEmptyContributions(contributions: NIContributionsAndCreditsResult): Unit = {
-    contributions.class1ContributionAndCredits match {
-      case Some(list) if list.nonEmpty => fail("Class 1 contributions are present but should be empty")
-      case _                           =>
-    }
-    contributions.class2Or3ContributionAndCredits match {
-      case Some(list) if list.nonEmpty => fail("Class 2 contributions are present but should be empty")
-      case _                           =>
-    }
+  def assertDownstreamFailure(
+      result: DownstreamErrorResponse,
+      payload: BSPRequest,
+      expectedStatus: String,
+      expectedTotalCalls: Int,
+      expectedSuccessful: Int,
+      expectedFailed: Int
+  ): Unit = {
+    result.status shouldBe expectedStatus
+    result.benefitType shouldBe payload.benefitType
+    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
+    result.summary.totalCalls shouldBe expectedTotalCalls
+    result.summary.successful shouldBe expectedSuccessful
+    result.summary.failed shouldBe expectedFailed
   }
 
   def assertErrorResponse(
@@ -115,23 +135,11 @@ class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     (json \ "reason").as[String] should include(expectedReason)
   }
 
-  def assertDownstreamFailure(
-      result: DownstreamErrorResponse,
-      payload: EsaJsaRequest,
-      expectedStatus: String
-  ): Unit = {
-    result.status shouldBe expectedStatus
-    result.benefitType shouldBe payload.benefitType
-    result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-    result.downStreams.head.status shouldBe "FAILURE"
-    result.downStreams.head.error shouldBe defined
-  }
-
   // ── Print Helpers ──────────────────────────────────────────────────────────
 
   def printResponse(
       response: StandaloneWSRequest#Response,
-      result: EsaJsaResponse
+      result: BSPResponse
   ): Unit = {
     println(s"The Response Status Code is : ${response.status} ${response.statusText}")
     println(s"The Response Body is : ${Json.prettyPrint(Json.toJson(result))}")

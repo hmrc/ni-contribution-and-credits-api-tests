@@ -21,8 +21,6 @@ import uk.gov.hmrc.api.models.common.{DownstreamErrorResponse, NpsNormalizedErro
 
 class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
-  // ── Scenarios ──────────────────────────────────────────────────────────────
-
   benefitTypes.foreach { benefitType =>
     Feature(s"Negative Test Scenarios for $benefitType Benefit Type") {
 
@@ -48,7 +46,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
         val payloadKey = s"${benefitType}_NTC002"
         val payload    = getPayload(payloadKey)
-        val response   = esaJsaService.makeRequest(payload, payloadKey)
+        val response   = esaJsaService.makeRequest(payload)
         val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
         Then("The API should return 502 with downstream failure details")
@@ -66,18 +64,18 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         printRawResponse(response)
       }
 
-      ignore(s"${benefitType}_NTC003: Request with missing authorisation returns 403") {
+      Scenario(s"${benefitType}_NTC003: Request with missing authorisation returns 403") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
         When(s"A request for $benefitType is sent without a bearer token")
 
         val payloadKey = s"${benefitType}_NTC003"
         val payload    = getPayload(payloadKey)
-        val response   = esaJsaService.makeRequestWithoutBearerToken(payload, payloadKey)
+        val response   = esaJsaService.makeRequestWithoutBearerToken(payload)
         val json       = Json.parse(response.body)
 
         Then("The API should return 403 with forbidden error")
         response.status shouldBe 403
-        assertErrorResponse(json, "FORBIDDEN", "authentication token is required")
+        assertErrorResponse(json, "FORBIDDEN", "Bearer token not supplied")
 
         printRawResponse(response)
       }
@@ -88,7 +86,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
         val payloadKey = s"${benefitType}_NTC004"
         val payload    = getPayload(payloadKey)
-        val response   = esaJsaService.makeRequest(payload, payloadKey)
+        val response   = esaJsaService.makeRequest(payload)
         val json       = Json.parse(response.body)
 
         Then("The API should return 422 with unprocessable entity error")
@@ -104,7 +102,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
         val payloadKey = s"${benefitType}_NTC005"
         val payload    = getPayload(payloadKey)
-        val response   = esaJsaService.makeRequest(payload, payloadKey)
+        val response   = esaJsaService.makeRequest(payload)
         val json       = Json.parse(response.body)
 
         Then("The API should return 400 with schema mismatch error")
@@ -120,7 +118,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
         val payloadKey = s"${benefitType}_NTC006"
         val payload    = getPayload(payloadKey)
-        val response   = esaJsaService.makeRequest(payload, payloadKey)
+        val response   = esaJsaService.makeRequest(payload)
         val json       = Json.parse(response.body)
 
         Then("The API should return 422 with invalid tax year error")
@@ -136,7 +134,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
         val payloadKey = s"${benefitType}_NTC007"
         val payload    = getPayload(payloadKey)
-        val response   = esaJsaService.makeRequest(payload, payloadKey)
+        val response   = esaJsaService.makeRequest(payload)
         val json       = Json.parse(response.body)
 
         Then("The API should return 422 with multiple validation errors")
@@ -150,45 +148,108 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         printRawResponse(response)
       }
 
-      Scenario(s"${benefitType}_NTC008: Request with missing benefit type returns 400") {
+      Scenario(s"${benefitType}_NTC008: Request with invalid bearer token returns 403") {
+        Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
+        When(s"A request for $benefitType is sent without a bearer token")
+
+        val payloadKey = s"${benefitType}_NTC008"
+        val payload    = getPayload(payloadKey)
+        val response   = esaJsaService.makeRequestWithInvalidBearerToken(payload)
+        val json       = Json.parse(response.body)
+
+        Then("The API should return 403 with forbidden error")
+        response.status shouldBe 403
+        assertErrorResponse(json, "FORBIDDEN", "Invalid bearer token")
+
+        printRawResponse(response)
+      }
+
+      Scenario(s"${benefitType}_NTC009: Request receives 502 when downstream returns 503") {
+        Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
+        When(s"A request for $benefitType is sent and downstream returns 503")
+
+        val payloadKey = s"${benefitType}_NTC009"
+        val payload    = getPayload(payloadKey)
+        val response   = esaJsaService.makeRequest(payload)
+        val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+
+        Then("The API should return 502 with downstream failure details")
+        response.status shouldBe 502
+        result.status shouldBe "FAILURE"
+        result.benefitType shouldBe payload.benefitType
+        result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
+        result.summary.totalCalls shouldBe 1
+        result.summary.successful shouldBe 0
+        result.summary.failed shouldBe 1
+
+        val failedDownstream = result.downStreams.head
+        failedDownstream.apiName shouldBe "NI Contributions and credits"
+        failedDownstream.status shouldBe "FAILURE"
+        failedDownstream.error shouldBe defined
+        failedDownstream.error.get shouldBe NpsNormalizedError(
+          "SERVICE_UNAVAILABLE",
+          "downstream is currently unable to handle request",
+          503
+        )
+
+        printRawResponse(response)
+      }
+
+      Scenario(
+        s"${benefitType}_NTC010: Request receives 502 when downstream returns 422 when Tax year range over 6 years"
+      ) {
+        Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
+        When(s"A request for $benefitType is sent and downstream returns 422")
+
+        val payloadKey = s"${benefitType}_NTC010"
+        val payload    = getPayload(payloadKey)
+        val response   = esaJsaService.makeRequest(payload)
+        val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+
+        Then("The API should return 502 with downstream failure details")
+        response.status shouldBe 502
+        result.status shouldBe "FAILURE"
+        result.benefitType shouldBe payload.benefitType
+        result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
+        result.summary.totalCalls shouldBe 1
+        result.summary.successful shouldBe 0
+        result.summary.failed shouldBe 1
+
+        val failedDownstream = result.downStreams.head
+        failedDownstream.apiName shouldBe "NI Contributions and credits"
+        failedDownstream.status shouldBe "FAILURE"
+        failedDownstream.error shouldBe defined
+        failedDownstream.error.get shouldBe NpsNormalizedError(
+          "UNPROCESSABLE_ENTITY",
+          "downstream could not process data in request",
+          422
+        )
+
+        printRawResponse(response)
+      }
+
+      Scenario(s"${benefitType}_NTC011: Request with missing benefit type returns 400") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
         When(s"A request for $benefitType is sent with missing benefit type")
 
-        val payloadKey = s"${benefitType}_NTC008"
         val payload: JsValue = Json.parse(
           """
-            {
-              "nationalInsuranceNumber": "AA000002",
-              "niContributionsAndCredits": {
-                "dateOfBirth": "2000-01-10",
-                "startTaxYear": 2026,
-                "endTaxYear": 2026
-              }
-            }
-          """
+                  {
+                    "nationalInsuranceNumber": "AA000012",
+                    "niContributionsAndCredits": {
+                      "dateOfBirth": "2000-01-10",
+                      "startTaxYear": 2026,
+                      "endTaxYear": 2026
+                    }
+                  }
+                """
         )
-        val response = esaJsaService.makeRawRequest(payload, payloadKey)
+        val response = esaJsaService.makeRawRequest(payload)
         val json     = Json.parse(response.body)
 
         Then("The API should return 400 with schema mismatch error")
         response.status shouldBe 400
         assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
-
-        printRawResponse(response)
-      }
-
-      ignore(s"${benefitType}_NTC009: Request with invalid bearer token returns 403") {
-        Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
-        When(s"A request for $benefitType is sent without a bearer token")
-
-        val payloadKey = s"${benefitType}_NTC009"
-        val payload    = getPayload(payloadKey)
-        val response   = esaJsaService.makeRequestWithInvalidBearerToken(payload, payloadKey)
-        val json       = Json.parse(response.body)
-
-        Then("The API should return 403 with forbidden error")
-        response.status shouldBe 403
-        assertErrorResponse(json, "FORBIDDEN", "invalid or expired authentication token")
 
         printRawResponse(response)
       }
