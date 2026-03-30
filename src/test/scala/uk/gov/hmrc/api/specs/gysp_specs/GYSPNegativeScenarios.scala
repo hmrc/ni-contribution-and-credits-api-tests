@@ -39,8 +39,8 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
         result = result,
         payload = payload,
         expectedStatus = "PARTIAL FAILURE",
-        expectedTotalCalls = 7,
-        expectedSuccessful = 5,
+        expectedTotalCalls = 9,
+        expectedSuccessful = 7,
         expectedFailed = 2
       )
 
@@ -65,7 +65,7 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
         }
       }
 
-      result.downStreams.filter(_.status == "SUCCESS") should have size 5
+      result.downStreams.filter(_.status == "SUCCESS") should have size 7
 
       printRawResponse(response)
     }
