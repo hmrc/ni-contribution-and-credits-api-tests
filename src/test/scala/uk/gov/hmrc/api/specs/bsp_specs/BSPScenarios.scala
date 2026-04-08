@@ -137,7 +137,7 @@ class BSPScenarios extends BSPBaseSpec {
 
     Scenario("BSP_PTC006: Verify API validation failure when using invalid NICC field") {
       Given("The Benefit Eligibility Info API is up and running for BSP")
-      When("A request for BSP is sent with invalid searchCategories entry")
+      When("A request for BSP is sent with invalid dateOfBirth entry")
 
       val payloadKey = s"BSP_PTC006"
       val payload    = getPayload(payloadKey)
