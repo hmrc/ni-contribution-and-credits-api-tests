@@ -24,6 +24,7 @@ import uk.gov.hmrc.api.models.esajsa.EsaJsaRequest
 import uk.gov.hmrc.api.models.gysp.GYSPRequest
 import uk.gov.hmrc.api.models.ma.MARequest
 import uk.gov.hmrc.api.models.nicc.v1.Request
+import uk.gov.hmrc.api.models.searchlight.SEARCHLIGHTRequest
 
 import scala.io.Source
 
@@ -49,5 +50,8 @@ object JsonUtils {
 
   def parseJsonToBSPRequestMap(jsonString: String): Either[Error, Map[String, BSPRequest]] =
     parse(jsonString).flatMap(_.as[Map[String, BSPRequest]])
+
+  def parseJsonToSEARCHLIGHTRequestMap(jsonString: String): Either[Error, Map[String, SEARCHLIGHTRequest]] =
+    parse(jsonString).flatMap(_.as[Map[String, SEARCHLIGHTRequest]])
 
 }

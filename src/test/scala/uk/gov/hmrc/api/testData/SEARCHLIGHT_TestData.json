@@ -1,0 +1,62 @@
+{
+  "SEARCHLIGHT_PTC001": {
+    "system": "SEARCHLIGHT",
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000002A",
+    "niContributionsAndCredits": {
+      "dateOfBirth":"1999-01-27",
+      "startTaxYear":2018,
+      "endTaxYear":2024
+    }
+  },
+  "SEARCHLIGHT_PTC002": {
+    "system": "SEARCHLIGHT",
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000002",
+    "niContributionsAndCredits": {
+      "dateOfBirth":"1999-01-27",
+      "startTaxYear":2018,
+      "endTaxYear":2024
+    }
+  },
+  "SEARCHLIGHT_PTC003": {
+    "system": "SEARCHLIGHT",
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000001A",
+    "niContributionsAndCredits": {
+      "dateOfBirth":"1999-01-27",
+      "startTaxYear":2018,
+      "endTaxYear":2024
+    }
+  },
+  "SEARCHLIGHT_PTC004": {
+    "system": "SEARCHLIGHT",
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000002A",
+    "niContributionsAndCredits": {
+      "dateOfBirth":"",
+      "startTaxYear":2018,
+      "endTaxYear":2024
+    }
+  },
+  "SEARCHLIGHT_PTC005": {
+    "system": "SEARCHLIGHT",
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000002A",
+    "niContributionsAndCredits": {
+      "dateOfBirth":"INVALID_DOB",
+      "startTaxYear":2018,
+      "endTaxYear":2024
+    }
+  },
+  "SEARCHLIGHT_PTC006": {
+    "system": "SEARCHLIGHT",
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AA000004",
+    "niContributionsAndCredits": {
+      "dateOfBirth":"1999-01-27",
+      "startTaxYear":1975,
+      "endTaxYear":2025
+    }
+  }
+}
