@@ -32,8 +32,8 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
       val response   = gyspService.makeRequest(payload)
       val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
-      Then("A 502 should be returned with partial failure content")
-      response.status shouldBe 502
+      Then("A 500 should be returned with partial failure content")
+      response.status shouldBe 500
 
       assertDownstreamFailure(
         result = result,
@@ -79,8 +79,8 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
       val response   = gyspService.makeRequest(payload)
       val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
-      Then("A 502 should be returned with all downstreams failed")
-      response.status shouldBe 502
+      Then("A 500 should be returned with all downstreams failed")
+      response.status shouldBe 500
 
       assertDownstreamFailure(
         result = result,
@@ -156,8 +156,8 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
       val response   = gyspService.makeRequest(payload)
       val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
-      Then("A 502 should be returned with partial failure content")
-      response.status shouldBe 502
+      Then("A 500 should be returned with partial failure content")
+      response.status shouldBe 500
 
       val failedDownStreams = result.downStreams.filter(_.status == "FAILURE")
       failedDownStreams should have size 1

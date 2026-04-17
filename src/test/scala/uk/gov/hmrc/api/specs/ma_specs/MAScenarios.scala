@@ -59,8 +59,8 @@ class MAScenarios extends MABaseSpec {
       val response     = maService.makeRequest(payload)
       val responseBody = Json.parse(response.body)
 
-      Then("A 502 should be returned with partial failure content")
-      response.status shouldBe 502
+      Then("A 500 should be returned with partial failure content")
+      response.status shouldBe 500
 
       And("The response should contain both SUCCESS and FAILURE downstream statuses")
       assertPartialFailureResponse(responseBody)
@@ -77,8 +77,8 @@ class MAScenarios extends MABaseSpec {
       val response     = maService.makeRequest(payload)
       val responseBody = Json.parse(response.body)
 
-      Then("A 502 should be returned indicating complete downstream failure")
-      response.status shouldBe 502
+      Then("A 500 should be returned indicating complete downstream failure")
+      response.status shouldBe 500
 
       And("All downstream services should have failed")
       assertCompleteFailureResponse(responseBody)
