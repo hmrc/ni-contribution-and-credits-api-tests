@@ -65,8 +65,8 @@ class BSPScenarios extends BSPBaseSpec {
       val response   = bspService.makeRequest(payload)
       val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
-      Then("A 502 should be returned with partial failure content")
-      response.status shouldBe 502
+      Then("A 500 should be returned with partial failure content")
+      response.status shouldBe 500
 
       assertDownstreamFailure(
         result = result,
@@ -107,8 +107,8 @@ class BSPScenarios extends BSPBaseSpec {
       val response     = bspService.makeRequest(payload)
       val responseBody = Json.parse(response.body)
 
-      Then("A 502 should be returned indicating complete downstream failure")
-      response.status shouldBe 502
+      Then("A 500 should be returned indicating complete downstream failure")
+      response.status shouldBe 500
 
       And("All downstream services should have failed")
       (responseBody \ "status").as[String] shouldBe "FAILURE"

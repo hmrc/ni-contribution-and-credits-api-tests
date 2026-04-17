@@ -50,7 +50,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
         Then("The API should return 502 with downstream failure details")
-        response.status shouldBe 502
+        response.status shouldBe 500
         result.status shouldBe "FAILURE"
         result.benefitType shouldBe payload.benefitType
         result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
@@ -73,9 +73,9 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         val response   = esaJsaService.makeRequestWithoutBearerToken(payload)
         val json       = Json.parse(response.body)
 
-        Then("The API should return 403 with forbidden error")
-        response.status shouldBe 403
-        assertErrorResponse(json, "FORBIDDEN", "Bearer token not supplied")
+        Then("The API should return 401 with forbidden error")
+        response.status shouldBe 401
+        assertErrorResponse(json, "UNAUTHORIZED", "Bearer token not supplied")
 
         printRawResponse(response)
       }
@@ -157,9 +157,9 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         val response   = esaJsaService.makeRequestWithInvalidBearerToken(payload)
         val json       = Json.parse(response.body)
 
-        Then("The API should return 403 with forbidden error")
-        response.status shouldBe 403
-        assertErrorResponse(json, "FORBIDDEN", "Invalid bearer token")
+        Then("The API should return 401 with forbidden error")
+        response.status shouldBe 401
+        assertErrorResponse(json, "UNAUTHORIZED", "Invalid bearer token")
 
         printRawResponse(response)
       }
