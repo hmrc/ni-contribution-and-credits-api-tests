@@ -23,7 +23,7 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
 
   Feature("Negative Test Scenarios for GYSP Benefit Type") {
 
-    Scenario("GYSP_NTC001: A GYSP request where some downstreams fail returns 502 with partial failure") {
+    Scenario("GYSP_NTC001: A GYSP request where some downstreams fail returns 500 with partial failure") {
       Given("The Benefit Eligibility Info API is up and running")
       When("A request for GYSP is sent and NICC and LTB Calc return errors")
 
@@ -70,7 +70,7 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("GYSP_NPS_ERROR_ALL_DOWNSTREAMS: A GYSP request where all downstreams fail returns 502") {
+    Scenario("GYSP_NPS_ERROR_ALL_DOWNSTREAMS: A GYSP request where all downstreams fail returns 500") {
       Given("The Benefit Eligibility Info API is up and running")
       When("A request for GYSP is sent and all downstreams return errors")
 
@@ -145,7 +145,7 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
     }
 
     Scenario(
-      "GYSP_NTC004: A GYSP request where NICC downstream fail with 404 error and returns 502 with partial failure"
+      "GYSP_NTC004: A GYSP request where NICC downstream fail with 404 error and returns 500 with partial failure"
     ) {
 
       Given("The Benefit Eligibility Info API is up and running")
