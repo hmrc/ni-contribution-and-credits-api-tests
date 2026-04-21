@@ -19,10 +19,6 @@ package uk.gov.hmrc.api.specs.bsp_specs
 import play.api.libs.json.*
 import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
 
-//import uk.gov.hmrc.api.service.BSPService
-//import uk.gov.hmrc.api.specs.BaseSpec
-//import uk.gov.hmrc.api.utils.JsonUtils
-
 class BSPScenarios extends BSPBaseSpec {
 
   Feature(s"Test Scenarios for BSP Benefit Type") {
@@ -158,7 +154,6 @@ class BSPScenarios extends BSPBaseSpec {
       val payloadKey = "BSP_PTC007"
       val payload    = getPayload(payloadKey)
       val response   = bspService.makeRequest(payload)
-      val json       = Json.parse(response.body)
 
       Then("Response code 422 should NOT be returned indicating request validation failure")
       response.status shouldBe 200

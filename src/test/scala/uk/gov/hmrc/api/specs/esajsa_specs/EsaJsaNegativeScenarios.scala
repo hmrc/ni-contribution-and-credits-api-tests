@@ -40,7 +40,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         printRawResponse(response)
       }
 
-      Scenario(s"${benefitType}_NTC002: Request receives 502 when downstream returns 403") {
+      Scenario(s"${benefitType}_NTC002: Request receives 500 when downstream returns 403") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
         When(s"A request for $benefitType is sent and downstream returns 403")
 
@@ -49,7 +49,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         val response   = esaJsaService.makeRequest(payload)
         val result     = Json.parse(response.body).as[DownstreamErrorResponse]
 
-        Then("The API should return 502 with downstream failure details")
+        Then("The API should return 500 with downstream failure details")
         response.status shouldBe 500
         result.status shouldBe "FAILURE"
         result.benefitType shouldBe payload.benefitType
@@ -64,7 +64,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         printRawResponse(response)
       }
 
-      Scenario(s"${benefitType}_NTC003: Request with missing authorisation returns 403") {
+      Scenario(s"${benefitType}_NTC003: Request with missing authorisation returns 401") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
         When(s"A request for $benefitType is sent without a bearer token")
 
@@ -148,7 +148,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         printRawResponse(response)
       }
 
-      Scenario(s"${benefitType}_NTC008: Request with invalid bearer token returns 403") {
+      Scenario(s"${benefitType}_NTC008: Request with invalid bearer token returns 401") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
         When(s"A request for $benefitType is sent without a bearer token")
 

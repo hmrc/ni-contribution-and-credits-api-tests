@@ -114,7 +114,6 @@ class SEARCHLIGHTScenarios extends SEARCHLIGHTBaseSpec {
       val payloadKey = "SEARCHLIGHT_PTC006"
       val payload    = getPayload(payloadKey)
       val response   = searchlightService.makeRequest(payload)
-      val json       = Json.parse(response.body)
 
       Then("Response code 422 should NOT be returned indicating request validation failure")
       response.status shouldBe 200
