@@ -164,7 +164,55 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         printRawResponse(response)
       }
 
-      Scenario(s"${benefitType}_NTC011: Request with missing benefit type returns 400") {
+      Scenario(s"${benefitType}_NTC009: Request with missing OriginatorId header returns 400") {
+        Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
+        When(s"A request for $benefitType is sent without a OriginatorId header")
+
+        val payloadKey = s"${benefitType}_NTC009"
+        val payload    = getPayload(payloadKey)
+        val response   = esaJsaService.makeRequestWithoutOriginatorId(payload)
+        val json       = Json.parse(response.body)
+
+        Then("The API should return 400 with missing header error")
+        response.status shouldBe 400
+        assertErrorResponse(json, "BAD_REQUEST", "Missing Originator Id")
+
+        printRawResponse(response)
+      }
+
+      Scenario(s"${benefitType}_NTC010: Request with invalid OriginatorId header returns 400") {
+        Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
+        When(s"A request for $benefitType is sent with invalid OriginatorId header")
+
+        val payloadKey = s"${benefitType}_NTC010"
+        val payload    = getPayload(payloadKey)
+        val response   = esaJsaService.makeRequestWithOriginatorId(payload, originatorId = "Invalid_OriginatorID")
+        val json       = Json.parse(response.body)
+
+        Then("The API should return 400 with missing header error")
+        response.status shouldBe 400
+        assertErrorResponse(json, "BAD_REQUEST", "Originator Id is missing or invalid")
+
+        printRawResponse(response)
+      }
+
+      Scenario(s"${benefitType}_NTC011: Request with OriginatorId not matching with benefit type returns 400") {
+        Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
+        When(s"A request for $benefitType is sent with OriginatorId header not matching with benefit type")
+
+        val payloadKey = s"${benefitType}_NTC010"
+        val payload    = getPayload(payloadKey)
+        val response   = esaJsaService.makeRequestWithOriginatorId(payload, originatorId = "DWP-CF-BSP-6")
+        val json       = Json.parse(response.body)
+
+        Then("The API should return 400 with missing header error")
+        response.status shouldBe 400
+        assertErrorResponse(json, "BAD_REQUEST", "Originator Id doesnt match benefit type")
+
+        printRawResponse(response)
+      }
+
+      Scenario(s"${benefitType}_NTC012: Request with missing benefit type returns 400") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
         When(s"A request for $benefitType is sent with missing benefit type")
 
