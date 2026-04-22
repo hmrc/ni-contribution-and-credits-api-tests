@@ -41,7 +41,8 @@ class MAService extends HttpClient with MakesHttpRequestWithToken {
         Json.stringify(requestPayload),
         ("Authorization", token),
         ("Content-Type", "application/json"),
-        ("CorrelationID", correlationId)
+        ("CorrelationID", correlationId),
+        "OriginatorId" -> "DWP-CF-MA-6"
       ),
       timeoutDuration.seconds
     )
