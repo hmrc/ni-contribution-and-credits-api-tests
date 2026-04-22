@@ -37,7 +37,7 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
   ): StandaloneWSRequest#Response =
     execute(
       payload = toJsonString(request),
-      headers = buildHeaders(),
+      headers = buildHeaders(request.benefitType),
       timeoutDuration = timeoutDuration
     )
 
@@ -47,7 +47,7 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
   ): StandaloneWSRequest#Response =
     execute(
       payload = Json.stringify(request),
-      headers = buildHeaders(),
+      headers = buildHeaders("ESA"),
       timeoutDuration = timeoutDuration
     )
 
@@ -57,7 +57,7 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
   ): StandaloneWSRequest#Response =
     execute(
       payload = toJsonString(request),
-      headers = buildHeaders(includeCorrelationId = false),
+      headers = buildHeaders(request.benefitType, includeCorrelationId = false),
       timeoutDuration = timeoutDuration
     )
 
@@ -67,7 +67,7 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
   ): StandaloneWSRequest#Response =
     execute(
       payload = toJsonString(request),
-      headers = buildHeaders(includeBearerToken = false),
+      headers = buildHeaders(request.benefitType, includeBearerToken = false),
       timeoutDuration = timeoutDuration
     )
 
@@ -77,8 +77,10 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
     Json.stringify(Json.toJsObject(request))
 
   private def buildHeaders(
+      benefitType: String,
       includeCorrelationId: Boolean = true,
-      includeBearerToken: Boolean = true
+      includeBearerToken: Boolean = true,
+      includeOriginatorId: Boolean = true
   ): Seq[(String, String)] = {
     val baseHeaders = Seq("Content-Type" -> "application/json")
 
@@ -94,8 +96,21 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
       else
         withAuth
 
-    withCorrelation
+    val withOriginatorId =
+      if (includeOriginatorId)
+        withCorrelation :+ ("OriginatorId" -> getOriginatorId(benefitType))
+      else
+        withCorrelation
+
+    withOriginatorId
   }
+  
+  private def getOriginatorId(str: String): String = 
+    {
+      if (str == "JSA") "DWP-CF-JSA-6"
+      else if (str == "ESA") "DWP-CF-ESA-6"
+      else str
+    }
 
   private def generateCorrelationId(): String =
     s"${UUID.randomUUID()}"
@@ -114,7 +129,7 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
       request: EsaJsaRequest,
       timeoutDuration: Int = 10
   ): StandaloneWSRequest#Response = {
-    val invalidTokenHeaders = buildHeaders(includeBearerToken = false) :+
+    val invalidTokenHeaders = buildHeaders(request.benefitType, includeBearerToken = false) :+
       ("Authorization" -> "Bearer invalid-token")
     execute(
       payload = toJsonString(request),

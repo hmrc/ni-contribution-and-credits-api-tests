@@ -42,7 +42,8 @@ class BSPService extends HttpClient with MakesHttpRequestWithToken {
         Json.stringify(requestPayload),
         ("Authorization", token),
         ("Content-Type", "application/json"),
-        ("CorrelationID", correlationId)
+        ("CorrelationID", correlationId),
+        ("OriginatorId" -> "DWP-CF-BSP-6")
       ),
       timeoutDuration.seconds
     )

@@ -41,7 +41,8 @@ class SEARCHLIGHTService extends HttpClient with MakesHttpRequestWithToken {
         Json.stringify(requestPayload),
         ("Authorization", token),
         ("Content-Type", "application/json"),
-        ("CorrelationID", correlationId)
+        ("CorrelationID", correlationId),
+        ("OriginatorId" -> "DWP-CF-".concat(request.benefitType).concat("-6"))
       ),
       timeoutDuration.seconds
     )
