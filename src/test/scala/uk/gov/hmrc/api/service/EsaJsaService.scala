@@ -33,7 +33,8 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
 
   def makeRequest(
       request: EsaJsaRequest,
-      timeoutDuration: Int = 10
+      timeoutDuration: Int = 10,
+      originatorId: Option[String] = None
   ): StandaloneWSRequest#Response =
     execute(
       payload = toJsonString(request),
@@ -61,6 +62,27 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
       timeoutDuration = timeoutDuration
     )
 
+  def makeRequestWithoutOriginatorId(
+      request: EsaJsaRequest,
+      timeoutDuration: Int = 10
+  ): StandaloneWSRequest#Response =
+    execute(
+      payload = toJsonString(request),
+      headers = buildHeaders(request.benefitType, includeOriginatorId = false),
+      timeoutDuration = timeoutDuration
+    )
+
+  def makeRequestWithOriginatorId(
+      request: EsaJsaRequest,
+      timeoutDuration: Int = 10,
+      originatorId: String
+  ): StandaloneWSRequest#Response =
+    execute(
+      payload = toJsonString(request),
+      headers = buildHeaders(request.benefitType, originatorId = Option(originatorId)),
+      timeoutDuration = timeoutDuration
+    )
+
   def makeRequestWithoutBearerToken(
       request: EsaJsaRequest,
       timeoutDuration: Int = 10
@@ -80,7 +102,8 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
       benefitType: String,
       includeCorrelationId: Boolean = true,
       includeBearerToken: Boolean = true,
-      includeOriginatorId: Boolean = true
+      includeOriginatorId: Boolean = true,
+      originatorId: Option[String] = None
   ): Seq[(String, String)] = {
     val baseHeaders = Seq("Content-Type" -> "application/json")
 
@@ -98,19 +121,17 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
 
     val withOriginatorId =
       if (includeOriginatorId)
-        withCorrelation :+ ("OriginatorId" -> getOriginatorId(benefitType))
+        withCorrelation :+ ("OriginatorId" -> originatorId.getOrElse(getOriginatorId(benefitType)))
       else
         withCorrelation
 
     withOriginatorId
   }
-  
-  private def getOriginatorId(str: String): String = 
-    {
-      if (str == "JSA") "DWP-CF-JSA-6"
-      else if (str == "ESA") "DWP-CF-ESA-6"
-      else str
-    }
+
+  private def getOriginatorId(str: String): String =
+    if (str == "JSA") "DWP-CF-JSA-6"
+    else if (str == "ESA") "DWP-CF-ESA-6"
+    else str
 
   private def generateCorrelationId(): String =
     s"${UUID.randomUUID()}"
