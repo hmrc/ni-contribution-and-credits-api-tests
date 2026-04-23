@@ -238,6 +238,29 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         printRawResponse(response)
       }
 
+      Scenario(s"${benefitType}_NTC013: Request receives 500 when downstream returns 500") {
+        Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
+        When(s"A request for $benefitType is sent and downstream returns 500")
+
+        val payloadKey = s"${benefitType}_NTC009"
+        val payload    = getPayload(payloadKey)
+        val response   = esaJsaService.makeRequest(payload)
+        val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+
+        Then("The API should return 500 with downstream failure details")
+        response.status shouldBe 500
+        result.status shouldBe "FAILURE"
+        result.benefitType shouldBe payload.benefitType
+        result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
+        result.downStreams.head.status shouldBe "FAILURE"
+        result.downStreams.head.error.head shouldBe NpsNormalizedError(
+          "INTERNAL_SERVER_ERROR",
+          "downstream failed to fulfil request",
+          500
+        )
+
+        printRawResponse(response)
+      }
     }
   }
 
