@@ -121,7 +121,7 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
 
     val withOriginatorId =
       if (includeOriginatorId)
-        withCorrelation :+ ("OriginatorId" -> originatorId.getOrElse(getOriginatorId(benefitType)))
+        withCorrelation :+ ("gov-uk-originator-id" -> originatorId.getOrElse(getOriginatorId(benefitType)))
       else
         withCorrelation
 
