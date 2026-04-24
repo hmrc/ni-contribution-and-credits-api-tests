@@ -164,9 +164,9 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         printRawResponse(response)
       }
 
-      Scenario(s"${benefitType}_NTC009: Request with missing OriginatorId header returns 400") {
+      Scenario(s"${benefitType}_NTC009: Request with missing gov-uk-originator-id header returns 400") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
-        When(s"A request for $benefitType is sent without a OriginatorId header")
+        When(s"A request for $benefitType is sent without a gov-uk-originator-id header")
 
         val payloadKey = s"${benefitType}_NTC009"
         val payload    = getPayload(payloadKey)
@@ -175,14 +175,14 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
         Then("The API should return 400 with missing header error")
         response.status shouldBe 400
-        assertErrorResponse(json, "BAD_REQUEST", "Missing Originator Id")
+        assertErrorResponse(json, "BAD_REQUEST", "Missing header 'gov-uk-originator-id'")
 
         printRawResponse(response)
       }
 
-      Scenario(s"${benefitType}_NTC010: Request with invalid OriginatorId header returns 400") {
+      Scenario(s"${benefitType}_NTC010: Request with invalid gov-uk-originator-id header returns 400") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
-        When(s"A request for $benefitType is sent with invalid OriginatorId header")
+        When(s"A request for $benefitType is sent with invalid gov-uk-originator-id header")
 
         val payloadKey = s"${benefitType}_NTC010"
         val payload    = getPayload(payloadKey)
@@ -196,9 +196,9 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         printRawResponse(response)
       }
 
-      Scenario(s"${benefitType}_NTC011: Request with OriginatorId not matching with benefit type returns 400") {
+      Scenario(s"${benefitType}_NTC011: Request with gov-uk-originator-id not matching with benefit type returns 400") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
-        When(s"A request for $benefitType is sent with OriginatorId header not matching with benefit type")
+        When(s"A request for $benefitType is sent with gov-uk-originator-id header not matching with benefit type")
 
         val payloadKey = s"${benefitType}_NTC010"
         val payload    = getPayload(payloadKey)

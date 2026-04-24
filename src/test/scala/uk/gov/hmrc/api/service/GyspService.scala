@@ -42,7 +42,7 @@ class GyspService extends HttpClient with MakesHttpRequestWithToken {
         ("Authorization", token),
         ("Content-Type", "application/json"),
         ("CorrelationID", correlationId),
-        "OriginatorId" -> "DWP-CF-GYSP-6"
+        "gov-uk-originator-id" -> "DWP-CF-GYSP-6"
       ),
       timeoutDuration.seconds
     )
