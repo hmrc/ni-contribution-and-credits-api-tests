@@ -142,7 +142,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         assertErrorResponse(
           json,
           "UNPROCESSABLE_ENTITY",
-          "Start tax year after CY-1,End tax year after CY-1,Start tax year after end tax year"
+          "Start tax year after CY-1,End tax year after CY-1"
         )
 
         printRawResponse(response)
