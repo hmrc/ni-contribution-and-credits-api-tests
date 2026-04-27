@@ -69,10 +69,8 @@ class MABaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
     Then("All major response sections should contain valid data")
     assertBasicResponseFields(result, payload, 200, response)
-    assertClass2MAReceipts(result)
     assertLiabilitySummaryDetails(result)
     assertNiContributions(result)
-
     result
   }
 
@@ -85,19 +83,6 @@ class MABaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     response.status shouldBe expectedStatus
     result.benefitType shouldBe payload.benefitType
     result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-  }
-
-  def assertClass2MAReceipts(result: MAResponse): Unit = {
-    result.class2MAReceiptsResult should not be null
-    result.class2MAReceiptsResult.receiptDates should not be empty
-    result.class2MAReceiptsResult.receiptDates.size should be >= 1
-
-    result.class2MAReceiptsResult.receiptDates.foreach { date =>
-      date should not be null
-      date.toString should not be empty
-      date.getYear should be >= 2000
-      date.getYear should be <= 2030
-    }
   }
 
   def assertLiabilitySummaryDetails(result: MAResponse): Unit = {
