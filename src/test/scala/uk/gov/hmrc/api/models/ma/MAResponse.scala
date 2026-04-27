@@ -55,7 +55,6 @@ object FilteredLiabilitySummaryDetails {
 case class MAResponse(
     benefitType: String,
     nationalInsuranceNumber: String,
-    class2MAReceiptsResult: FilteredClass2MaReceipts,
     liabilitySummaryDetailsResult: List[FilteredLiabilitySummaryDetails],
     niContributionsAndCreditsResult: NIContributionsAndCreditsResult
 )
