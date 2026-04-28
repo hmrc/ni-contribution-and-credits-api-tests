@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.api.specs.bsp_specs
 
-import org.scalatest.BeforeAndAfterAll
+import org.scalatest.{BeforeAndAfterAll, OptionValues}
 import play.api.libs.json.*
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
@@ -26,7 +26,7 @@ import uk.gov.hmrc.api.service.BSPService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
 
-class BSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
+class BSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll with OptionValues {
 
   // ── Configuration ──────────────────────────────────────────────────────────
 
@@ -84,7 +84,7 @@ class BSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
     response.status shouldBe expectedStatus
     result.benefitType shouldBe payload.benefitType
     result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-    val correlationId = response.header("correlationid").getOrElse("")
+    val correlationId = response.header("correlationid").value
     correlationId should not be empty
   }
 
