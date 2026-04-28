@@ -20,11 +20,11 @@ import org.scalatest.BeforeAndAfterAll
 import play.api.libs.json.*
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.api.helpers.BaseHelper
+import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
 import uk.gov.hmrc.api.models.searchlight.*
 import uk.gov.hmrc.api.service.SEARCHLIGHTService
 import uk.gov.hmrc.api.specs.BaseSpec
 import uk.gov.hmrc.api.utils.JsonUtils
-import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
 
 class SEARCHLIGHTBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll {
 
@@ -85,6 +85,8 @@ class SEARCHLIGHTBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAl
     result.nextCursor shouldBe a[String]
     result.benefitType shouldBe payload.benefitType
     result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
+    val correlationId = response.header("correlationid").getOrElse("")
+    correlationId should not be empty
   }
 
   def assertNiContributions(result: SEARCHLIGHTResponse): Unit = {
@@ -136,6 +138,8 @@ class SEARCHLIGHTBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAl
       response: StandaloneWSRequest#Response,
       result: SEARCHLIGHTResponse
   ): Unit = {
+    val correlationId = response.header("correlationid").getOrElse("N/A")
+    println(s"The Response correlationId is: $correlationId")
     println(s"The Response Status Code is : ${response.status} ${response.statusText}")
     println(s"The Response Body is : ${Json.prettyPrint(Json.toJson(result))}")
   }
