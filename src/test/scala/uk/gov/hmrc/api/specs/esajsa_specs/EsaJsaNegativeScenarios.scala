@@ -207,7 +207,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
         Then("The API should return 400 with missing header error")
         response.status shouldBe 400
-        assertErrorResponse(json, "BAD_REQUEST", "Originator Id doesnt match benefit type")
+        assertErrorResponse(json, "BAD_REQUEST", "Invalid Originator Id")
 
         printRawResponse(response)
       }
