@@ -42,7 +42,7 @@ class SEARCHLIGHTService extends HttpClient with MakesHttpRequestWithToken {
         ("Authorization", token),
         ("Content-Type", "application/json"),
         ("CorrelationID", correlationId),
-        "gov-uk-originator-id" -> s"DWP-CF-${request.benefitType}-6"
+        "gov-uk-originator-id" -> "originatorIdBspSearchlight"
       ),
       timeoutDuration.seconds
     )

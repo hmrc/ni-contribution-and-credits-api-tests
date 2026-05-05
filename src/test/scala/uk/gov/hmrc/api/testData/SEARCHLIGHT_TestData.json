@@ -1,7 +1,7 @@
 {
   "SEARCHLIGHT_PTC001": {
     "system": "SEARCHLIGHT",
-    "benefitType": "GYSP",
+    "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000002A",
     "niContributionsAndCredits": {
       "dateOfBirth":"1999-01-27",
@@ -11,7 +11,7 @@
   },
   "SEARCHLIGHT_PTC002": {
     "system": "SEARCHLIGHT",
-    "benefitType": "GYSP",
+    "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000002",
     "niContributionsAndCredits": {
       "dateOfBirth":"1999-01-27",
@@ -21,7 +21,7 @@
   },
   "SEARCHLIGHT_PTC003": {
     "system": "SEARCHLIGHT",
-    "benefitType": "GYSP",
+    "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000001A",
     "niContributionsAndCredits": {
       "dateOfBirth":"1999-01-27",
@@ -31,7 +31,7 @@
   },
   "SEARCHLIGHT_PTC004": {
     "system": "SEARCHLIGHT",
-    "benefitType": "GYSP",
+    "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000002A",
     "niContributionsAndCredits": {
       "dateOfBirth":"",
@@ -41,7 +41,7 @@
   },
   "SEARCHLIGHT_PTC005": {
     "system": "SEARCHLIGHT",
-    "benefitType": "GYSP",
+    "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000002A",
     "niContributionsAndCredits": {
       "dateOfBirth":"INVALID_DOB",
@@ -51,7 +51,7 @@
   },
   "SEARCHLIGHT_PTC006": {
     "system": "SEARCHLIGHT",
-    "benefitType": "GYSP",
+    "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000004",
     "niContributionsAndCredits": {
       "dateOfBirth":"1999-01-27",

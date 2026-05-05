@@ -129,8 +129,8 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
   }
 
   private def getOriginatorId(str: String): String =
-    if (str == "JSA") "DWP-CF-JSA-6"
-    else if (str == "ESA") "DWP-CF-ESA-6"
+    if (str == "JSA") "originatorIdJsa"
+    else if (str == "ESA") "originatorIdEsa"
     else str
 
   private def generateCorrelationId(): String =

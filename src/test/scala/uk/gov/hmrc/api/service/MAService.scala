@@ -42,7 +42,7 @@ class MAService extends HttpClient with MakesHttpRequestWithToken {
         ("Authorization", token),
         ("Content-Type", "application/json"),
         ("CorrelationID", correlationId),
-        "gov-uk-originator-id" -> "DWP-CF-MA-6"
+        "gov-uk-originator-id" -> "originatorIdMa"
       ),
       timeoutDuration.seconds
     )

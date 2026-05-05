@@ -202,7 +202,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
         val payloadKey = s"${benefitType}_NTC010"
         val payload    = getPayload(payloadKey)
-        val response   = esaJsaService.makeRequestWithOriginatorId(payload, originatorId = "DWP-CF-BSP-6")
+        val response   = esaJsaService.makeRequestWithOriginatorId(payload, originatorId = "originatorIdBsp")
         val json       = Json.parse(response.body)
 
         Then("The API should return 400 with missing header error")
