@@ -21,8 +21,8 @@ import uk.gov.hmrc.api.models.common.{Class1ContributionAndCredits, Class2Or3Con
 
 case class NIContributionsAndCreditsResult(
     totalGraduatedPensionUnits: Option[BigDecimal],
-    class1ContributionAndCredits: Option[List[Class1ContributionAndCredits]],
-    class2Or3ContributionAndCredits: Option[List[Class2Or3ContributionAndCredits]]
+    class1ContributionAndCredits: List[Class1ContributionAndCredits],
+    class2Or3ContributionAndCredits: List[Class2Or3ContributionAndCredits]
 )
 
 object NIContributionsAndCreditsResult {

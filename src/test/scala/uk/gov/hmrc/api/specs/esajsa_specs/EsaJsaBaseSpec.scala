@@ -78,35 +78,29 @@ class EsaJsaBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll wit
   def assertClass1Contributions(
       contributions: NIContributionsAndCreditsResult,
       expectedCategory: String
-  ): Unit =
-    contributions.class1ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCategory.contains(expectedCategory)) shouldBe true
-      case None => fail("Class 1 contributions are missing in the response")
-    }
+  ): Unit = {
+
+    contributions.class1ContributionAndCredits should not be empty
+    contributions.class1ContributionAndCredits.exists(_.contributionCategory.contains(expectedCategory)) shouldBe true
+
+  }
 
   def assertClass2Contributions(
       contributions: NIContributionsAndCreditsResult,
       expectedCreditType: String
-  ): Unit =
-    contributions.class2Or3ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCreditType == expectedCreditType) shouldBe true
-      case None => fail("Class 2 contributions are missing in the response")
-    }
+  ): Unit = {
+    contributions.class2Or3ContributionAndCredits should not be empty
+    contributions.class2Or3ContributionAndCredits.exists(_.contributionCreditType == expectedCreditType) shouldBe true
 
-  def assertEmptyContributions(contributions: NIContributionsAndCreditsResult): Unit = {
-    contributions.class1ContributionAndCredits match {
-      case Some(list) if list.nonEmpty => fail("Class 1 contributions are present but should be empty")
-      case _                           =>
-    }
-    contributions.class2Or3ContributionAndCredits match {
-      case Some(list) if list.nonEmpty => fail("Class 2 contributions are present but should be empty")
-      case _                           =>
-    }
   }
+
+  def assertEmptyContributions(contributions: NIContributionsAndCreditsResult): Unit =
+
+    if (contributions.class1ContributionAndCredits.nonEmpty)
+      fail("Class 1 contributions are present but should be empty")
+    else if (contributions.class2Or3ContributionAndCredits.nonEmpty)
+      fail("Class 2 contributions are present but should be empty")
+    else ()
 
   def assertErrorResponse(
       json: JsValue,

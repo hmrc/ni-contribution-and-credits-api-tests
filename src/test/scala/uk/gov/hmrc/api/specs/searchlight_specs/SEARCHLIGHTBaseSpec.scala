@@ -92,19 +92,16 @@ class SEARCHLIGHTBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAl
   def assertNiContributions(result: SEARCHLIGHTResponse): Unit = {
     result.niContributionsAndCreditsResult should not be null
 
-    result.niContributionsAndCreditsResult.class1ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCategory.contains("STANDARD RATE")) shouldBe true
-      case None => // Class1 is optional
-    }
+    result.niContributionsAndCreditsResult.class1ContributionAndCredits should not be empty
+    result.niContributionsAndCreditsResult.class1ContributionAndCredits.exists(
+      _.contributionCategory.contains("STANDARD RATE")
+    ) shouldBe true
 
-    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCreditType == "2B") shouldBe true
-      case None => // Class2 is optional
-    }
+    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits should not be empty
+    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits.exists(
+      _.contributionCreditType == "2B"
+    ) shouldBe true
+
   }
 
   def assertDownstreamFailure(
