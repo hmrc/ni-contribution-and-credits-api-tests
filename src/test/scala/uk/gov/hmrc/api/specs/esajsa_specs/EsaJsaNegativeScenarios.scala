@@ -107,7 +107,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
         Then("The API should return 400 with schema mismatch error")
         response.status shouldBe 400
-        assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
+        assertErrorResponse(json, "BAD_REQUEST", "incompatible JSON, request body does not match schema")
 
         printRawResponse(response)
       }
@@ -233,7 +233,7 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
         Then("The API should return 400 with schema mismatch error")
         response.status shouldBe 400
-        assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
+        assertErrorResponse(json, "BAD_REQUEST", "incompatible JSON, request body does not match schema")
 
         printRawResponse(response)
       }

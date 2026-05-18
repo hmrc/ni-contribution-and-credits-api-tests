@@ -139,7 +139,7 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
 
       Then("A 400 should be returned with schema mismatch error")
       response.status shouldBe 400
-      assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
+      assertErrorResponse(json, "BAD_REQUEST", "incompatible JSON, request body does not match schema")
 
       printRawResponse(response)
     }

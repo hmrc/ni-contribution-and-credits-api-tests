@@ -97,7 +97,7 @@ class MAScenarios extends MABaseSpec {
 
       Then("A 400 status should be returned indicating request validation failure")
       response.status shouldBe 400
-      assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
+      assertErrorResponse(json, "BAD_REQUEST", "incompatible JSON, request body does not match schema")
 
       printRawResponse(response)
     }
@@ -114,7 +114,7 @@ class MAScenarios extends MABaseSpec {
 
       Then("A 422 should be returned indicating request validation failure")
       response.status shouldBe 400
-      assertErrorResponse(json, "BAD_REQUEST", "incompatible json, request body does not match schema")
+      assertErrorResponse(json, "BAD_REQUEST", "incompatible JSON, request body does not match schema")
 
       printRawResponse(response)
     }
