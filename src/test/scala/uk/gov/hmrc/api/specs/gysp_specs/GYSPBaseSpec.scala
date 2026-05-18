@@ -103,13 +103,10 @@ class GYSPBaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll with 
   def assertClass2Contributions(
       contributions: NIContributionsAndCreditsResult,
       expectedCreditType: String
-  ): Unit =
-    contributions.class2Or3ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCreditType == expectedCreditType) shouldBe true
-      case None => fail("Class 2 contributions are missing in the response")
-    }
+  ): Unit = {
+    contributions.class2Or3ContributionAndCredits should not be empty
+    contributions.class2Or3ContributionAndCredits.exists(_.contributionCreditType == expectedCreditType) shouldBe true
+  }
 
   def assertEmptyResponse(result: GYSPResponse, payload: GYSPRequest): Unit = {
     result.benefitType shouldBe payload.benefitType

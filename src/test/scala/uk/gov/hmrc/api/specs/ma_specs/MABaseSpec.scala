@@ -112,20 +112,16 @@ class MABaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll with Op
 
   def assertNiContributions(result: MAResponse): Unit = {
     result.niContributionsAndCreditsResult should not be null
+    result.niContributionsAndCreditsResult.class1ContributionAndCredits should not be empty
+    result.niContributionsAndCreditsResult.class1ContributionAndCredits.exists(
+      _.contributionCategory.contains("STANDARD RATE")
+    ) shouldBe true
 
-    result.niContributionsAndCreditsResult.class1ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCategory.contains("STANDARD RATE")) shouldBe true
-      case None =>
-    }
+    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits should not be empty
+    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits.exists(
+      _.contributionCreditType == "2B"
+    ) shouldBe true
 
-    result.niContributionsAndCreditsResult.class2Or3ContributionAndCredits match {
-      case Some(list) =>
-        list should not be empty
-        list.exists(_.contributionCreditType == "2B") shouldBe true
-      case None =>
-    }
   }
 
   def assertPartialFailureResponse(responseBody: JsValue): Unit = {
