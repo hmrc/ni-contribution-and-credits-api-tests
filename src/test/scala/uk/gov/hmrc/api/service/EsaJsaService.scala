@@ -38,72 +38,16 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
   ): StandaloneWSRequest#Response =
     execute(
       payload = toJsonString(request),
-      headers = buildHeaders(request.benefitType),
+      headers = buildHeaders(),
       timeoutDuration = timeoutDuration
     )
-
-  def makeRawRequest(
-      request: JsValue,
-      timeoutDuration: Int = 10
-  ): StandaloneWSRequest#Response =
-    execute(
-      payload = Json.stringify(request),
-      headers = buildHeaders("ESA"),
-      timeoutDuration = timeoutDuration
-    )
-
-  def makeRequestWithoutCorrelationId(
-      request: EsaJsaRequest,
-      timeoutDuration: Int = 10
-  ): StandaloneWSRequest#Response =
-    execute(
-      payload = toJsonString(request),
-      headers = buildHeaders(request.benefitType, includeCorrelationId = false),
-      timeoutDuration = timeoutDuration
-    )
-
-  def makeRequestWithoutOriginatorId(
-      request: EsaJsaRequest,
-      timeoutDuration: Int = 10
-  ): StandaloneWSRequest#Response =
-    execute(
-      payload = toJsonString(request),
-      headers = buildHeaders(request.benefitType, includeOriginatorId = false),
-      timeoutDuration = timeoutDuration
-    )
-
-  def makeRequestWithOriginatorId(
-      request: EsaJsaRequest,
-      timeoutDuration: Int = 10,
-      originatorId: String
-  ): StandaloneWSRequest#Response =
-    execute(
-      payload = toJsonString(request),
-      headers = buildHeaders(request.benefitType, originatorId = Option(originatorId)),
-      timeoutDuration = timeoutDuration
-    )
-
-  def makeRequestWithoutBearerToken(
-      request: EsaJsaRequest,
-      timeoutDuration: Int = 10
-  ): StandaloneWSRequest#Response =
-    execute(
-      payload = toJsonString(request),
-      headers = buildHeaders(request.benefitType, includeBearerToken = false),
-      timeoutDuration = timeoutDuration
-    )
-
-  // ── Public Methods ─────────────────────────────────────────────────────────
 
   private def toJsonString(request: EsaJsaRequest): String =
     Json.stringify(Json.toJsObject(request))
 
   private def buildHeaders(
-      benefitType: String,
       includeCorrelationId: Boolean = true,
-      includeBearerToken: Boolean = true,
-      includeOriginatorId: Boolean = true,
-      originatorId: Option[String] = None
+      includeBearerToken: Boolean = true
   ): Seq[(String, String)] = {
     val baseHeaders = Seq("Content-Type" -> "application/json")
 
@@ -119,22 +63,13 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
       else
         withAuth
 
-    val withOriginatorId =
-      if (includeOriginatorId)
-        withCorrelation :+ ("gov-uk-originator-id" -> originatorId.getOrElse(getOriginatorId(benefitType)))
-      else
-        withCorrelation
-
-    withOriginatorId
+    withCorrelation
   }
-
-  private def getOriginatorId(str: String): String =
-    if (str == "JSA") "originatorIdJsa"
-    else if (str == "ESA") "originatorIdEsa"
-    else str
 
   private def generateCorrelationId(): String =
     s"${UUID.randomUUID()}"
+
+  // ── Public Methods ─────────────────────────────────────────────────────────
 
   private def execute(
       payload: String,
@@ -146,11 +81,41 @@ class EsaJsaService extends HttpClient with MakesHttpRequestWithToken {
       timeoutDuration.seconds
     )
 
+  def makeRawRequest(
+      request: JsValue,
+      timeoutDuration: Int = 10
+  ): StandaloneWSRequest#Response =
+    execute(
+      payload = Json.stringify(request),
+      headers = buildHeaders(),
+      timeoutDuration = timeoutDuration
+    )
+
+  def makeRequestWithoutCorrelationId(
+      request: EsaJsaRequest,
+      timeoutDuration: Int = 10
+  ): StandaloneWSRequest#Response =
+    execute(
+      payload = toJsonString(request),
+      headers = buildHeaders(includeCorrelationId = false),
+      timeoutDuration = timeoutDuration
+    )
+
+  def makeRequestWithoutBearerToken(
+      request: EsaJsaRequest,
+      timeoutDuration: Int = 10
+  ): StandaloneWSRequest#Response =
+    execute(
+      payload = toJsonString(request),
+      headers = buildHeaders(includeBearerToken = false),
+      timeoutDuration = timeoutDuration
+    )
+
   def makeRequestWithInvalidBearerToken(
       request: EsaJsaRequest,
       timeoutDuration: Int = 10
   ): StandaloneWSRequest#Response = {
-    val invalidTokenHeaders = buildHeaders(request.benefitType, includeBearerToken = false) :+
+    val invalidTokenHeaders = buildHeaders(includeBearerToken = false) :+
       ("Authorization" -> "Bearer invalid-token")
     execute(
       payload = toJsonString(request),
