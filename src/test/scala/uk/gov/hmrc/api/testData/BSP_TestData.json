@@ -17,7 +17,7 @@
       "endTaxYear": 2024
     }
   },
-  "BSP_PTC003": {
+  "BSP_NTC001": {
     "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000008",
     "niContributionsAndCredits": {
@@ -26,7 +26,7 @@
       "endTaxYear": 2024
     }
   },
-  "BSP_PTC004": {
+  "BSP_NTC002": {
     "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000001A",
     "niContributionsAndCredits": {
@@ -35,7 +35,7 @@
       "endTaxYear": 2024
     }
   },
-  "BSP_PTC005": {
+  "BSP_NTC003": {
     "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000002A",
     "niContributionsAndCredits": {
@@ -44,7 +44,7 @@
       "endTaxYear": 2024
     }
   },
-  "BSP_PTC006": {
+  "BSP_NTC004": {
     "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000002A",
     "niContributionsAndCredits": {
@@ -53,7 +53,7 @@
       "endTaxYear": 2024
     }
   },
-  "BSP_PTC007": {
+  "BSP_PTC003": {
     "benefitType": "BSP",
     "nationalInsuranceNumber": "AA000004",
     "niContributionsAndCredits": {

@@ -52,13 +52,13 @@ class SEARCHLIGHTScenarios extends SEARCHLIGHTBaseSpec {
     }
 
     Scenario(
-      "SEARCHLIGHT_PTC003: Verify SEARCHLIGHT complete failure response when all downstream services return errors"
+      "SEARCHLIGHT_NTC001: Verify SEARCHLIGHT complete failure response when all downstream services return errors"
     ) {
 
       Given("The Benefit Eligibility Info API is up and running for SEARCHLIGHT")
       When("A request for SEARCHLIGHT is sent and all downstream services return errors")
 
-      val payloadKey   = "SEARCHLIGHT_PTC003"
+      val payloadKey   = "SEARCHLIGHT_NTC001"
       val payload      = getPayload(payloadKey)
       val response     = searchlightService.makeRequest(payload)
       val responseBody = Json.parse(response.body)
@@ -75,11 +75,11 @@ class SEARCHLIGHTScenarios extends SEARCHLIGHTBaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("SEARCHLIGHT_PTC004: Verify API validation failure when required NICC details field is empty") {
+    Scenario("SEARCHLIGHT_NTC002: Verify API validation failure when required NICC details field is empty") {
       Given("The Benefit Eligibility Info API is up and running for SEARCHLIGHT")
       When("A request for SEARCHLIGHT is sent with empty dateOfBirth in NICC")
 
-      val payloadKey = "SEARCHLIGHT_PTC004"
+      val payloadKey = "SEARCHLIGHT_NTC002"
       val payload    = getPayload(payloadKey)
       val response   = searchlightService.makeRequest(payload)
       val json       = Json.parse(response.body)
@@ -91,11 +91,11 @@ class SEARCHLIGHTScenarios extends SEARCHLIGHTBaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("SEARCHLIGHT_PTC005: Verify API validation failure when using invalid NICC field") {
+    Scenario("SEARCHLIGHT_NTC003: Verify API validation failure when using invalid NICC field") {
       Given("The Benefit Eligibility Info API is up and running for SEARCHLIGHT")
       When("A request for SEARCHLIGHT is sent with invalid dateOfBirth entry")
 
-      val payloadKey = s"SEARCHLIGHT_PTC005"
+      val payloadKey = s"SEARCHLIGHT_NTC003"
       val payload    = getPayload(payloadKey)
       val response   = searchlightService.makeRequest(payload)
       val json       = Json.parse(response.body)
@@ -107,11 +107,11 @@ class SEARCHLIGHTScenarios extends SEARCHLIGHTBaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("SEARCHLIGHT_PTC006: Verify when tax year over 6 years for SEARCHLIGHT, then it should not return 422") {
+    Scenario("SEARCHLIGHT_PTC003: Verify tax year over 6 years for SEARCHLIGHT should not return 422") {
       Given("The Benefit Eligibility Info API is up and running for SEARCHLIGHT")
       When("A request for SEARCHLIGHT is sent with tax year over 6 years")
 
-      val payloadKey = "SEARCHLIGHT_PTC006"
+      val payloadKey = "SEARCHLIGHT_PTC003"
       val payload    = getPayload(payloadKey)
       val response   = searchlightService.makeRequest(payload)
 
