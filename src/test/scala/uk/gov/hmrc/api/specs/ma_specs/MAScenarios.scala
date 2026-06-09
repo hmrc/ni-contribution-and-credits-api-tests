@@ -50,11 +50,11 @@ class MAScenarios extends MABaseSpec {
       printResponse(response, result)
     }
 
-    Scenario("MA_PTC003: Verify MA partial failure response when some downstream services return errors") {
+    Scenario("MA_NTC001: Verify MA partial failure response when some downstream services return errors") {
       Given("The Benefit Eligibility Info API is up and running for MA")
       When("A request for MA is sent and Class2MAReceipts and LiabilitySummary return errors")
 
-      val payloadKey   = "MA_PTC003"
+      val payloadKey   = "MA_NTC001"
       val payload      = getPayload(payloadKey)
       val response     = maService.makeRequest(payload)
       val responseBody = Json.parse(response.body)
@@ -68,11 +68,11 @@ class MAScenarios extends MABaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("MA_PTC004: Verify MA complete failure response when all downstream services return errors") {
+    Scenario("MA_NTC002: Verify MA complete failure response when all downstream services return errors") {
       Given("The Benefit Eligibility Info API is up and running for MA")
       When("A request for MA is sent and all downstream services return errors")
 
-      val payloadKey   = "MA_PTC004"
+      val payloadKey   = "MA_NTC002"
       val payload      = getPayload(payloadKey)
       val response     = maService.makeRequest(payload)
       val responseBody = Json.parse(response.body)
@@ -86,11 +86,11 @@ class MAScenarios extends MABaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("MA_PTC005: Verify API validation failure when required liability fields are empty") {
+    Scenario("MA_NTC003: Verify API validation failure when required liability fields are empty") {
       Given("The Benefit Eligibility Info API is up and running for MA")
       When("A request for MA is sent with empty searchCategories in liabilities")
 
-      val payloadKey = "MA_PTC005"
+      val payloadKey = "MA_NTC003"
       val payload    = getPayload(payloadKey)
       val response   = maService.makeRequest(payload)
       val json       = Json.parse(response.body)
@@ -102,11 +102,11 @@ class MAScenarios extends MABaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("MA_PTC006: Verify API validation failure when using invalid liability field") {
+    Scenario("MA_NTC004: Verify API validation failure when using invalid liability field") {
       Given("The Benefit Eligibility Info API is up and running for MA")
       When("A request for MA is sent with invalid searchCategories entry")
 
-      val payloadKey = s"MA_PTC006"
+      val payloadKey = s"MA_NTC004"
       val payload    = PayloadMapping.getOrElse(payloadKey, fail(s"$payloadKey not found"))
       println(payload)
       val response = maService.makeRequest(payload)
@@ -119,11 +119,11 @@ class MAScenarios extends MABaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("MA_PTC007: Error validation for a tax year over 6 years returns 422") {
+    Scenario("MA_NTC005: Error validation for a tax year over 6 years returns 422") {
       Given(s"The Benefit Eligibility Info API is up and running for MA")
       When(s"A request for MA is sent with a tax year over 6 years")
 
-      val payloadKey = "MA_PTC007"
+      val payloadKey = "MA_NTC005"
       val payload    = getPayload(payloadKey)
       val response   = maService.makeRequest(payload)
       val json       = Json.parse(response.body)

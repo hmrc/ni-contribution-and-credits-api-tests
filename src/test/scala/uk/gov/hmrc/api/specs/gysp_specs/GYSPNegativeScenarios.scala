@@ -70,48 +70,6 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("GYSP_NPS_ERROR_ALL_DOWNSTREAMS: A GYSP request where all downstreams fail returns 500") {
-      Given("The Benefit Eligibility Info API is up and running")
-      When("A request for GYSP is sent and all downstreams return errors")
-
-      val payloadKey = "GYSP_NPS_ERROR_ALL_DOWNSTREAMS"
-      val payload    = getPayload(payloadKey)
-      val response   = gyspService.makeRequest(payload)
-      val result     = Json.parse(response.body).as[DownstreamErrorResponse]
-
-      Then("A 500 should be returned with all downstreams failed")
-      response.status shouldBe 500
-
-      assertDownstreamFailure(
-        result = result,
-        payload = payload,
-        expectedStatus = "FAILURE",
-        expectedTotalCalls = 5,
-        expectedSuccessful = 0,
-        expectedFailed = 5
-      )
-
-      result.downStreams should have size 5
-      result.downStreams.foreach { ds =>
-        ds.status shouldBe "FAILURE"
-        ds.error.get shouldBe NpsNormalizedError(
-          "BAD_REQUEST",
-          "downstream received a malformed request",
-          400
-        )
-      }
-
-      (result.downStreams.map(_.apiName) should contain).allOf(
-        "NI Contributions and credits",
-        "Marriage Details",
-        "Scheme Membership Details",
-        "Long Term Benefit Calculation Details",
-        "Individual State Pension Information"
-      )
-
-      printRawResponse(response)
-    }
-
     Scenario("GYSP_NTC002: A GYSP request with an invalid NI number returns 422") {
       Given("The Benefit Eligibility Info API is up and running")
       When("A request for GYSP is sent with an invalid NI number")
@@ -184,6 +142,48 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
       }
 
       result.downStreams.filter(_.status == "SUCCESS") should have size 9
+
+      printRawResponse(response)
+    }
+
+    Scenario("GYSP_NTC005: A GYSP request where all downstreams fail returns 500") {
+      Given("The Benefit Eligibility Info API is up and running")
+      When("A request for GYSP is sent and all downstreams return errors")
+
+      val payloadKey = "GYSP_NTC005"
+      val payload    = getPayload(payloadKey)
+      val response   = gyspService.makeRequest(payload)
+      val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+
+      Then("A 500 should be returned with all downstreams failed")
+      response.status shouldBe 500
+
+      assertDownstreamFailure(
+        result = result,
+        payload = payload,
+        expectedStatus = "FAILURE",
+        expectedTotalCalls = 5,
+        expectedSuccessful = 0,
+        expectedFailed = 5
+      )
+
+      result.downStreams should have size 5
+      result.downStreams.foreach { ds =>
+        ds.status shouldBe "FAILURE"
+        ds.error.get shouldBe NpsNormalizedError(
+          "BAD_REQUEST",
+          "downstream received a malformed request",
+          400
+        )
+      }
+
+      (result.downStreams.map(_.apiName) should contain).allOf(
+        "NI Contributions and credits",
+        "Marriage Details",
+        "Scheme Membership Details",
+        "Long Term Benefit Calculation Details",
+        "Individual State Pension Information"
+      )
 
       printRawResponse(response)
     }

@@ -64,19 +64,6 @@
       "pensionProcessingArea": "Job Centre+ Electronic Enabled Pension Processing"
     }
   },
-  "GYSP_NPS_ERROR_ALL_DOWNSTREAMS": {
-    "benefitType": "GYSP",
-    "nationalInsuranceNumber": "AB123456C",
-    "niContributionsAndCredits": {
-      "dateOfBirth": "1956-06-20",
-      "startTaxYear": 2018,
-      "endTaxYear": 2025
-    },
-    "longTermBenefitCalculation": {
-      "longTermBenefitType": "ALL",
-      "pensionProcessingArea": "Job Centre+ Electronic Enabled Pension Processing"
-    }
-  },
   "GYSP_NTC002": {
     "benefitType": "GYSP",
     "nationalInsuranceNumber": "ABC",
@@ -106,6 +93,19 @@
   "GYSP_NTC004": {
     "benefitType": "GYSP",
     "nationalInsuranceNumber": "AA000007",
+    "niContributionsAndCredits": {
+      "dateOfBirth": "1956-06-20",
+      "startTaxYear": 2018,
+      "endTaxYear": 2025
+    },
+    "longTermBenefitCalculation": {
+      "longTermBenefitType": "ALL",
+      "pensionProcessingArea": "Job Centre+ Electronic Enabled Pension Processing"
+    }
+  },
+  "GYSP_NTC005": {
+    "benefitType": "GYSP",
+    "nationalInsuranceNumber": "AB123456C",
     "niContributionsAndCredits": {
       "dateOfBirth": "1956-06-20",
       "startTaxYear": 2018,

@@ -52,11 +52,11 @@ class BSPScenarios extends BSPBaseSpec {
       printResponse(response, result)
     }
 
-    Scenario("BSP_PTC003: Verify BSP partial failure response when some downstream services return errors") {
+    Scenario("BSP_NTC001: Verify BSP partial failure response when some downstream services return errors") {
       Given("The Benefit Eligibility Info API is up and running for BSP")
       When("A request for BSP is sent and some downstream services return errors")
 
-      val payloadKey = "BSP_PTC003"
+      val payloadKey = "BSP_NTC001"
       val payload    = getPayload(payloadKey)
       val response   = bspService.makeRequest(payload)
       val result     = Json.parse(response.body).as[DownstreamErrorResponse]
@@ -93,12 +93,12 @@ class BSPScenarios extends BSPBaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("BSP_PTC004: Verify BSP complete failure response when all downstream services return errors") {
+    Scenario("BSP_NTC002: Verify BSP complete failure response when all downstream services return errors") {
 
       Given("The Benefit Eligibility Info API is up and running for BSP")
       When("A request for BSP is sent and all downstream services return errors")
 
-      val payloadKey   = "BSP_PTC004"
+      val payloadKey   = "BSP_NTC002"
       val payload      = getPayload(payloadKey)
       val response     = bspService.makeRequest(payload)
       val responseBody = Json.parse(response.body)
@@ -115,11 +115,11 @@ class BSPScenarios extends BSPBaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("BSP_PTC005: Verify API validation failure when required NICC details field is empty") {
+    Scenario("BSP_NTC003: Verify API validation failure when required NICC details field is empty") {
       Given("The Benefit Eligibility Info API is up and running for BSP")
       When("A request for BSP is sent with empty dateOfBirth in NICC")
 
-      val payloadKey = "BSP_PTC005"
+      val payloadKey = "BSP_NTC003"
       val payload    = getPayload(payloadKey)
       val response   = bspService.makeRequest(payload)
       val json       = Json.parse(response.body)
@@ -131,11 +131,11 @@ class BSPScenarios extends BSPBaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("BSP_PTC006: Verify API validation failure when using invalid NICC field") {
+    Scenario("BSP_NTC004: Verify API validation failure when using invalid NICC field") {
       Given("The Benefit Eligibility Info API is up and running for BSP")
       When("A request for BSP is sent with invalid dateOfBirth entry")
 
-      val payloadKey = s"BSP_PTC006"
+      val payloadKey = s"BSP_NTC004"
       val payload    = getPayload(payloadKey)
       val response   = bspService.makeRequest(payload)
       val json       = Json.parse(response.body)
@@ -147,11 +147,11 @@ class BSPScenarios extends BSPBaseSpec {
       printRawResponse(response)
     }
 
-    Scenario("BSP_PTC007: Verify when tax year over 6 years for BSP, then it should not return 422") {
+    Scenario("BSP_PTC003: Verify tax year over 6 years for BSP should not return 422") {
       Given("The Benefit Eligibility Info API is up and running for BSP")
       When("A request for BSP is sent with tax year over 6 years")
 
-      val payloadKey = "BSP_PTC007"
+      val payloadKey = "BSP_PTC003"
       val payload    = getPayload(payloadKey)
       val response   = bspService.makeRequest(payload)
 
