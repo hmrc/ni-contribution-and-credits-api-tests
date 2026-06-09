@@ -33,7 +33,7 @@
       "liabilityEnd": "2022-06-14"
     }
   },
-  "MA_PTC003": {
+  "MA_NTC001": {
     "benefitType": "MA",
     "nationalInsuranceNumber": "AA000003",
     "niContributionsAndCredits": {
@@ -50,7 +50,7 @@
       "liabilityEnd": "2022-06-14"
     }
   },
-  "MA_PTC004": {
+  "MA_NTC002": {
     "benefitType": "MA",
     "nationalInsuranceNumber": "AA000001A",
     "niContributionsAndCredits": {
@@ -67,7 +67,7 @@
       "liabilityEnd": "2022-06-14"
     }
   },
-  "MA_PTC005": {
+  "MA_NTC003": {
     "benefitType": "MA",
     "nationalInsuranceNumber": "AA000002A",
     "niContributionsAndCredits": {
@@ -81,7 +81,7 @@
       ]
     }
   },
-  "MA_PTC006": {
+  "MA_NTC004": {
     "benefitType": "MA",
     "nationalInsuranceNumber": "AA000002A",
     "niContributionsAndCredits": {
@@ -95,7 +95,7 @@
       ]
     }
   },
-  "MA_PTC007": {
+  "MA_NTC005": {
     "benefitType": "MA",
     "nationalInsuranceNumber": "AA000010",
     "niContributionsAndCredits": {

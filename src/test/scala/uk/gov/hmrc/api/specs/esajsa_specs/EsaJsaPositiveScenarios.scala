@@ -23,7 +23,7 @@ class EsaJsaPositiveScenarios extends EsaJsaBaseSpec {
   benefitTypes.foreach { benefitType =>
     Feature(s"Positive Test Scenarios for $benefitType Benefit Type") {
 
-      Scenario(s"${benefitType}_PTC001: Retrieve Class 1 and Class 2 contributions for NINO with suffix") {
+      Scenario(s"${benefitType}_PTC001: Retrieve Class 1 and Class 2 Or 3 contributions for NINO with suffix") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
         When(s"A valid request for $benefitType is sent with a NINO with suffix")
 
@@ -40,7 +40,7 @@ class EsaJsaPositiveScenarios extends EsaJsaBaseSpec {
         printResponse(response, result)
       }
 
-      Scenario(s"${benefitType}_PTC002: Retrieve Class 1 and Class 2 contributions for NINO without suffix") {
+      Scenario(s"${benefitType}_PTC002: Retrieve Class 1 and Class 2 Or 3 contributions for NINO without suffix") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
         When(s"A valid request for $benefitType is sent with a NINO without suffix")
 
@@ -49,7 +49,7 @@ class EsaJsaPositiveScenarios extends EsaJsaBaseSpec {
         val (response, result) = makeRequestAndParseResponse(payload)
         val contributions      = result.niContributionsAndCreditsResult
 
-        Then("Class 1 and Class 2 contributions details should be returned")
+        Then("Class 1 and Class 2 Or 3 contributions details should be returned")
         assertBasicResponseFields(result, payload, 200, response)
         assertClass1Contributions(contributions, "STANDARD RATE")
         assertClass2Contributions(contributions, "2B")
@@ -57,7 +57,7 @@ class EsaJsaPositiveScenarios extends EsaJsaBaseSpec {
         printResponse(response, result)
       }
 
-      Scenario(s"${benefitType}_PTC003: Retrieve only Class 2 contributions for given NINO") {
+      Scenario(s"${benefitType}_PTC003: Retrieve only Class 2 Or 3 contributions for given NINO") {
         Given(s"The Benefit Eligibility Info API is up and running for $benefitType")
         When(s"A valid request for $benefitType is sent for a self-employed claimant")
 
@@ -66,7 +66,7 @@ class EsaJsaPositiveScenarios extends EsaJsaBaseSpec {
         val (response, result) = makeRequestAndParseResponse(payload)
         val contributions      = result.niContributionsAndCreditsResult
 
-        Then("Only Class 2 contributions should be returned")
+        Then("Only Class 2 Or 3 contributions should be returned")
         assertBasicResponseFields(result, payload, 200, response)
         contributions.class1ContributionAndCredits shouldBe empty
         assertClass2Contributions(contributions, "C2")
@@ -83,7 +83,7 @@ class EsaJsaPositiveScenarios extends EsaJsaBaseSpec {
         val (response, result) = makeRequestAndParseResponse(payload)
         val contributions      = result.niContributionsAndCreditsResult
 
-        Then("Class 1 and Class 2 contributions should both be empty")
+        Then("Class 1 and Class 2 Or 3 contributions should both be empty")
         assertBasicResponseFields(result, payload, 200, response)
         assertEmptyContributions(contributions)
 
