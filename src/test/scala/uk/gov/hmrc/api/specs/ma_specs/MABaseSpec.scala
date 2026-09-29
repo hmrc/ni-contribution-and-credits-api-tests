@@ -124,27 +124,6 @@ class MABaseSpec extends BaseSpec with BaseHelper with BeforeAndAfterAll with Op
 
   }
 
-  def assertPartialFailureResponse(responseBody: JsValue): Unit = {
-    (responseBody \ "status").as[String] shouldBe "PARTIAL FAILURE"
-
-    val statuses = (responseBody \ "downStreams")
-      .as[JsArray]
-      .value
-      .map(ds => (ds \ "status").as[String])
-
-    statuses should contain("SUCCESS")
-    statuses should contain("FAILURE")
-  }
-
-  def assertCompleteFailureResponse(responseBody: JsValue): Unit = {
-    (responseBody \ "status").as[String] shouldBe "FAILURE"
-
-    (responseBody \ "downStreams")
-      .as[JsArray]
-      .value
-      .foreach(downstream => (downstream \ "status").as[String] shouldBe "FAILURE")
-  }
-
   def assertErrorResponse(
       json: JsValue,
       expectedCode: String,

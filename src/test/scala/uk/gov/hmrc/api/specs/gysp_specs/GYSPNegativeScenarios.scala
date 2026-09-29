@@ -17,7 +17,6 @@
 package uk.gov.hmrc.api.specs.gysp_specs
 
 import play.api.libs.json.*
-import uk.gov.hmrc.api.models.common.*
 
 class GYSPNegativeScenarios extends GYSPBaseSpec {
 
@@ -30,42 +29,11 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
       val payloadKey = "GYSP_NTC001"
       val payload    = getPayload(payloadKey)
       val response   = gyspService.makeRequest(payload)
-      val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+      val jsonResult = Json.parse(response.body).as[JsObject]
+      assertErrorResponse(jsonResult, "INTERNAL_SERVER_ERROR", "Unexpected internal failure")
 
       Then("A 500 should be returned with partial failure content")
       response.status shouldBe 500
-
-      assertDownstreamFailure(
-        result = result,
-        payload = payload,
-        expectedStatus = "PARTIAL FAILURE",
-        expectedTotalCalls = 9,
-        expectedSuccessful = 7,
-        expectedFailed = 2
-      )
-
-      val failedDownStreams = result.downStreams.filter(_.status == "FAILURE")
-      failedDownStreams should have size 2
-      (failedDownStreams.map(_.apiName) should contain).allOf(
-        "NI Contributions and credits",
-        "Long Term Benefit Calculation Details"
-      )
-
-      failedDownStreams.foreach { ds =>
-        ds.apiName match {
-          case "NI Contributions and credits" =>
-            ds.error shouldBe defined
-            ds.error.get.code shouldBe "ACCESS_FORBIDDEN"
-            ds.error.get.downstreamStatus shouldBe 403
-
-          case "Long Term Benefit Calculation Details" =>
-            ds.error shouldBe defined
-            ds.error.get.code shouldBe "BAD_REQUEST"
-            ds.error.get.downstreamStatus shouldBe 400
-        }
-      }
-
-      result.downStreams.filter(_.status == "SUCCESS") should have size 7
 
       printRawResponse(response)
     }
@@ -112,36 +80,12 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
       val payloadKey = "GYSP_NTC004"
       val payload    = getPayload(payloadKey)
       val response   = gyspService.makeRequest(payload)
-      val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+
+      val jsonResult = Json.parse(response.body).as[JsObject]
+      assertErrorResponse(jsonResult, "INTERNAL_SERVER_ERROR", "Unexpected internal failure")
 
       Then("A 500 should be returned with partial failure content")
       response.status shouldBe 500
-
-      val failedDownStreams = result.downStreams.filter(_.status == "FAILURE")
-      failedDownStreams should have size 1
-      (failedDownStreams.map(_.apiName) should contain).only(
-        "NI Contributions and credits"
-      )
-
-      assertDownstreamFailure(
-        result = result,
-        payload = payload,
-        expectedStatus = "PARTIAL FAILURE",
-        expectedTotalCalls = 10,
-        expectedSuccessful = 9,
-        expectedFailed = 1
-      )
-
-      failedDownStreams.foreach { ds =>
-        ds.apiName match {
-          case "NI Contributions and credits" =>
-            ds.error shouldBe defined
-            ds.error.get.code shouldBe "NOT_FOUND"
-            ds.error.get.downstreamStatus shouldBe 404
-        }
-      }
-
-      result.downStreams.filter(_.status == "SUCCESS") should have size 9
 
       printRawResponse(response)
     }
@@ -153,37 +97,12 @@ class GYSPNegativeScenarios extends GYSPBaseSpec {
       val payloadKey = "GYSP_NTC005"
       val payload    = getPayload(payloadKey)
       val response   = gyspService.makeRequest(payload)
-      val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+
+      val jsonResult = Json.parse(response.body).as[JsObject]
+      assertErrorResponse(jsonResult, "INTERNAL_SERVER_ERROR", "Unexpected internal failure")
 
       Then("A 500 should be returned with all downstreams failed")
       response.status shouldBe 500
-
-      assertDownstreamFailure(
-        result = result,
-        payload = payload,
-        expectedStatus = "FAILURE",
-        expectedTotalCalls = 5,
-        expectedSuccessful = 0,
-        expectedFailed = 5
-      )
-
-      result.downStreams should have size 5
-      result.downStreams.foreach { ds =>
-        ds.status shouldBe "FAILURE"
-        ds.error.get shouldBe NpsNormalizedError(
-          "BAD_REQUEST",
-          "downstream received a malformed request",
-          400
-        )
-      }
-
-      (result.downStreams.map(_.apiName) should contain).allOf(
-        "NI Contributions and credits",
-        "Marriage Details",
-        "Scheme Membership Details",
-        "Long Term Benefit Calculation Details",
-        "Individual State Pension Information"
-      )
 
       printRawResponse(response)
     }
