@@ -54,9 +54,9 @@ class MAScenarios extends MABaseSpec {
       Given("The Benefit Eligibility Info API is up and running for MA")
       When("A request for MA is sent and Class2MAReceipts and LiabilitySummary return errors")
 
-      val payloadKey   = "MA_NTC001"
-      val payload      = getPayload(payloadKey)
-      val response     = maService.makeRequest(payload)
+      val payloadKey = "MA_NTC001"
+      val payload    = getPayload(payloadKey)
+      val response   = maService.makeRequest(payload)
 
       Then("A 500 should be returned with partial failure content")
       response.status shouldBe 500
@@ -68,9 +68,9 @@ class MAScenarios extends MABaseSpec {
       Given("The Benefit Eligibility Info API is up and running for MA")
       When("A request for MA is sent and all downstream services return errors")
 
-      val payloadKey   = "MA_NTC002"
-      val payload      = getPayload(payloadKey)
-      val response     = maService.makeRequest(payload)
+      val payloadKey = "MA_NTC002"
+      val payload    = getPayload(payloadKey)
+      val response   = maService.makeRequest(payload)
 
       Then("A 500 should be returned indicating complete downstream failure")
       response.status shouldBe 500

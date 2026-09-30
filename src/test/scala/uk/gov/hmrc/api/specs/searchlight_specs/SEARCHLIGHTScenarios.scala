@@ -58,9 +58,9 @@ class SEARCHLIGHTScenarios extends SEARCHLIGHTBaseSpec {
       Given("The Benefit Eligibility Info API is up and running for SEARCHLIGHT")
       When("A request for SEARCHLIGHT is sent and all downstream services return errors")
 
-      val payloadKey   = "SEARCHLIGHT_NTC001"
-      val payload      = getPayload(payloadKey)
-      val response     = searchlightService.makeRequest(payload)
+      val payloadKey = "SEARCHLIGHT_NTC001"
+      val payload    = getPayload(payloadKey)
+      val response   = searchlightService.makeRequest(payload)
 
       Then("A 500 should be returned indicating complete downstream failure")
       response.status shouldBe 500
