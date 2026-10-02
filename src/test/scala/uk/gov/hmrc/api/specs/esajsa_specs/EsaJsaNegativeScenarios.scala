@@ -17,7 +17,6 @@
 package uk.gov.hmrc.api.specs.esajsa_specs
 
 import play.api.libs.json.*
-import uk.gov.hmrc.api.models.common.{DownstreamErrorResponse, NpsNormalizedError}
 
 class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
 
@@ -47,19 +46,12 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         val payloadKey = s"${benefitType}_NTC002"
         val payload    = getPayload(payloadKey)
         val response   = esaJsaService.makeRequest(payload)
-        val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+
+        val jsonResult = Json.parse(response.body).as[JsObject]
+        assertErrorResponse(jsonResult, "INTERNAL_SERVER_ERROR", "Unexpected internal failure")
 
         Then("The API should return 500 with downstream failure details")
         response.status shouldBe 500
-        result.status shouldBe "FAILURE"
-        result.benefitType shouldBe payload.benefitType
-        result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-        result.downStreams.head.status shouldBe "FAILURE"
-        result.downStreams.head.error.head shouldBe NpsNormalizedError(
-          "ACCESS_FORBIDDEN",
-          "downstream resource cannot be accessed by the calling client",
-          403
-        )
 
         printRawResponse(response)
       }
@@ -171,19 +163,12 @@ class EsaJsaNegativeScenarios extends EsaJsaBaseSpec {
         val payloadKey = s"${benefitType}_NTC009"
         val payload    = getPayload(payloadKey)
         val response   = esaJsaService.makeRequest(payload)
-        val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+
+        val jsonResult = Json.parse(response.body).as[JsObject]
+        assertErrorResponse(jsonResult, "INTERNAL_SERVER_ERROR", "Unexpected internal failure")
 
         Then("The API should return 500 with downstream failure details")
         response.status shouldBe 500
-        result.status shouldBe "FAILURE"
-        result.benefitType shouldBe payload.benefitType
-        result.nationalInsuranceNumber shouldBe payload.nationalInsuranceNumber
-        result.downStreams.head.status shouldBe "FAILURE"
-        result.downStreams.head.error.head shouldBe NpsNormalizedError(
-          "INTERNAL_SERVER_ERROR",
-          "downstream failed to fulfil request",
-          500
-        )
 
         printRawResponse(response)
       }

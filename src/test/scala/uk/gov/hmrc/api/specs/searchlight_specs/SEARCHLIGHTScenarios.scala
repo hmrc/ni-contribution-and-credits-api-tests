@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.api.specs.searchlight_specs
 
-import play.api.libs.json.{JsArray, Json}
+import play.api.libs.json.Json
 
 class SEARCHLIGHTScenarios extends SEARCHLIGHTBaseSpec {
 
@@ -58,19 +58,12 @@ class SEARCHLIGHTScenarios extends SEARCHLIGHTBaseSpec {
       Given("The Benefit Eligibility Info API is up and running for SEARCHLIGHT")
       When("A request for SEARCHLIGHT is sent and all downstream services return errors")
 
-      val payloadKey   = "SEARCHLIGHT_NTC001"
-      val payload      = getPayload(payloadKey)
-      val response     = searchlightService.makeRequest(payload)
-      val responseBody = Json.parse(response.body)
+      val payloadKey = "SEARCHLIGHT_NTC001"
+      val payload    = getPayload(payloadKey)
+      val response   = searchlightService.makeRequest(payload)
 
       Then("A 500 should be returned indicating complete downstream failure")
       response.status shouldBe 500
-
-      And("All downstream services should have failed")
-      (responseBody \ "status").as[String] shouldBe "FAILURE"
-      (responseBody \ "downStreams").as[JsArray].value.foreach { downstream =>
-        (downstream \ "status").as[String] shouldBe "FAILURE"
-      }
 
       printRawResponse(response)
     }

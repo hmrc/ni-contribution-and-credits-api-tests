@@ -17,7 +17,6 @@
 package uk.gov.hmrc.api.specs.bsp_specs
 
 import play.api.libs.json.*
-import uk.gov.hmrc.api.models.common.DownstreamErrorResponse
 
 class BSPScenarios extends BSPBaseSpec {
 
@@ -59,36 +58,12 @@ class BSPScenarios extends BSPBaseSpec {
       val payloadKey = "BSP_NTC001"
       val payload    = getPayload(payloadKey)
       val response   = bspService.makeRequest(payload)
-      val result     = Json.parse(response.body).as[DownstreamErrorResponse]
+      val jsonResult = Json.parse(response.body).as[JsObject]
+
+      assertErrorResponse(jsonResult, "INTERNAL_SERVER_ERROR", "Unexpected internal failure")
 
       Then("A 500 should be returned with partial failure content")
       response.status shouldBe 500
-
-      assertDownstreamFailure(
-        result = result,
-        payload = payload,
-        expectedStatus = "PARTIAL FAILURE",
-        expectedTotalCalls = 2,
-        expectedSuccessful = 1,
-        expectedFailed = 1
-      )
-
-      val failedDownStreams = result.downStreams.filter(_.status == "FAILURE")
-      failedDownStreams should have size 1
-      failedDownStreams.map(_.apiName) should contain("Marriage Details")
-
-      failedDownStreams.foreach { ds =>
-        ds.apiName match {
-          case "Marriage Details" =>
-            ds.error shouldBe defined
-            ds.error.get.code shouldBe "BAD_REQUEST"
-            ds.error.get.downstreamStatus shouldBe 400
-        }
-      }
-
-      val successfulDownStreams = result.downStreams.filter(_.status == "SUCCESS")
-      successfulDownStreams should have size 1
-      successfulDownStreams.map(_.apiName) should contain("NI Contributions and credits")
 
       printRawResponse(response)
     }
@@ -98,19 +73,15 @@ class BSPScenarios extends BSPBaseSpec {
       Given("The Benefit Eligibility Info API is up and running for BSP")
       When("A request for BSP is sent and all downstream services return errors")
 
-      val payloadKey   = "BSP_NTC002"
-      val payload      = getPayload(payloadKey)
-      val response     = bspService.makeRequest(payload)
-      val responseBody = Json.parse(response.body)
+      val payloadKey = "BSP_NTC002"
+      val payload    = getPayload(payloadKey)
+      val response   = bspService.makeRequest(payload)
+
+      val jsonResult = Json.parse(response.body).as[JsObject]
+      assertErrorResponse(jsonResult, "INTERNAL_SERVER_ERROR", "Unexpected internal failure")
 
       Then("A 500 should be returned indicating complete downstream failure")
       response.status shouldBe 500
-
-      And("All downstream services should have failed")
-      (responseBody \ "status").as[String] shouldBe "FAILURE"
-      (responseBody \ "downStreams").as[JsArray].value.foreach { downstream =>
-        (downstream \ "status").as[String] shouldBe "FAILURE"
-      }
 
       printRawResponse(response)
     }
