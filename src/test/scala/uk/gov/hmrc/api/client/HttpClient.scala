@@ -43,7 +43,7 @@ trait HttpClient {
 
   def get(url: String, headers: (String, String)*): Future[StandaloneWSRequest#Response] =
     standAloneWsRequestWithProxyIfConfigSet(wsClient.url(url))
-      .withHttpHeaders()
+      .withHttpHeaders(headers: _*)
       .get()
 
   def post(url: String, bodyAsJson: String, headers: (String, String)*): Future[StandaloneWSRequest#Response] =
