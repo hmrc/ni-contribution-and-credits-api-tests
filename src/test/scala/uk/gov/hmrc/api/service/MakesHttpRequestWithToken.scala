@@ -35,8 +35,6 @@ trait MakesHttpRequestWithToken {
     .flatMap(_.headOption)
     .getOrElse(fail("Couldn't retrieve Auth Token"))
 
-  println(token)
-
   def makeRequestWithBearerToken(request: Request, bearerToken: String): StandaloneWSRequest#Response = {
 
     val url: String    = s"$host/contribution-and-credits/"
